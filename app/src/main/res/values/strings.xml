@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">poison_frog</string>
+    <string name="show_app_name">Poison Frog</string>
+    <string name="type_food_name">음식 이름을 적어주세요</string>
+
+
 </resources>
