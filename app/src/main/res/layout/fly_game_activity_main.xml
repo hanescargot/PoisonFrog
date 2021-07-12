@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+
+    android:background="@color/black"
+    >
+
+    <ImageView
+        android:id="@+id/game_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="40dp"
+        android:paddingLeft="40dp"
+        android:visibility="invisible"
+        android:src="@drawable/fly_game_over"/>
+
+
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:weightSum="10"
+         android:orientation="vertical"
+         android:padding="8dp">
+
+         <FrameLayout
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="3"
+             >
+             <ImageView
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+                 android:src="@drawable/fly_wood_notice"/>
+
+             <ImageView
+                 android:id="@+id/target_fly"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+                 android:layout_marginTop="8dp"
+                 android:src="@drawable/fly_fly01"
+                 android:tag="targetFly"/>
+
+             <ImageView
+                 android:id="@+id/censored"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center"
+                 android:padding="56dp"
+                 android:layout_marginTop="8dp"
+                 android:src="@drawable/fly_censored"
+                 android:visibility="invisible"
+                 android:tag="censored"/>
+
+         </FrameLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="2"
+             android:orientation="horizontal"
+             android:weightSum="9">
+
+             <ImageView
+                 android:id="@+id/fly1"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly1"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly2"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly2"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly3"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly3"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+
+         </LinearLayout>
+
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="2"
+             android:orientation="horizontal">
+
+             <ImageView
+                 android:id="@+id/fly4"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly4"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly5"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly5"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly6"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly6"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+
+         </LinearLayout>
+
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="0dp"
+             android:layout_weight="2"
+             android:orientation="horizontal">
+
+             <ImageView
+                 android:id="@+id/fly7"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly7"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly8"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly8"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+             <ImageView
+                 android:id="@+id/fly9"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="3"
+                 android:src="@drawable/fly_fly01"
+                 android:layout_gravity="center"
+                 android:visibility="visible"
+                 android:tag="fly9"
+                 android:clickable="true"
+                 android:onClick="flyButtonListener"/>
+
+         </LinearLayout>
+
+     </LinearLayout>
+
+
+</FrameLayout>

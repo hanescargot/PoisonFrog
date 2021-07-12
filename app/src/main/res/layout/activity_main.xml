@@ -7,54 +7,58 @@
     tools:context=".MainActivity"
     android:background="@color/black"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:weightSum="10">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:paddingTop="8dp"
+        android:layout_weight="0.8"
+        android:weightSum="10"
         android:orientation="horizontal"
        >
-
-
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/chef_hat"
-            android:padding="15dp"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="match_parent"
+            android:src="@drawable/main_chef_hat"
+            android:padding="2dp"
             />
         <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:padding="8dp"
             android:background="@color/white"
             android:layout_gravity="center"
+            android:textAllCaps="true"
+            android:singleLine="true"
             android:hint="@string/type_food_name"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:gravity="center">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/frog_jelly"
+            android:src="@drawable/mian_frog_jelly"
             android:layout_gravity="center"
             />
 
     </LinearLayout>
 
 
-
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:layout_height="80dp"
-        android:text=""
-        android:background="@color/white"
-        android:gravity="center"/>
-
+        android:layout_height="0dp"
+        android:layout_weight="4"
+        android:src="@drawable/mian_gold_notice"
+        android:layout_gravity="center"/>
 
 
 
