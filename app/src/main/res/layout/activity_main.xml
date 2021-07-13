@@ -26,6 +26,7 @@
             android:padding="2dp"
             />
         <EditText
+            android:id="@+id/food_name_input"
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
@@ -34,6 +35,7 @@
             android:layout_gravity="center"
             android:textAllCaps="true"
             android:singleLine="true"
+            android:inputType="textCapCharacters"
             android:hint="@string/type_food_name"/>
 
     </LinearLayout>
@@ -47,18 +49,30 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/mian_frog_jelly"
-            android:layout_gravity="center"
-            />
-
+            android:layout_gravity="center"/>
     </LinearLayout>
 
-
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:src="@drawable/mian_gold_notice"
-        android:layout_gravity="center"/>
+        android:layout_weight="4">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mian_gold_notice"
+            android:layout_gravity="center"/>
+        <TextView
+            android:id="@+id/food_log"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text=""
+            android:gravity="center_horizontal"/>
+    </FrameLayout>
+
 
 
 
