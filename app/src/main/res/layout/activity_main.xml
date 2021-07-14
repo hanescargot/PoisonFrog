@@ -27,38 +27,51 @@
             android:src="@drawable/main_chef_hat"
             android:padding="2dp"
             />
-        <EditText
-            android:id="@+id/food_name_input"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:textSize="16sp"
-            android:padding="8dp"
-            android:background="@color/white"
-            android:layout_gravity="center"
-            android:textAllCaps="true"
-            android:singleLine="true"
-            android:inputType="textCapCharacters"
-            android:hint="@string/type_food_name"/>
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/food_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16sp"
+                android:padding="8dp"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                android:inputType="text"
+                android:textColorHint="#A8A3A3"
+                android:hint="@string/type_food_name"
+                android:background="@drawable/border"/>
 
+        </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
+        android:clickable="true"
+        android:onClick="hideKeyboard"
         android:gravity="center">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/main_frog_jelly"
             android:layout_gravity="center"/>
-    </LinearLayout>
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/main_gold_notice"
+            android:layout_gravity="center"/>
 
         <ScrollView
             android:id="@+id/log_scroll"
@@ -74,16 +87,11 @@
                 android:layout_height="wrap_content"
                 android:text="Ready..."
                 android:textColor="@color/white"
-                android:textSize="24sp"
-                android:layout_gravity="center"
+                android:textSize="16sp"
                 android:textStyle="bold"/>
         </ScrollView>
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/main_gold_notice"
-            android:layout_gravity="center"/>
+
 
     </FrameLayout>
 
