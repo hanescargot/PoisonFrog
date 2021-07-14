@@ -32,7 +32,7 @@ public class FlyGameActivity extends AppCompatActivity {
         //맵 생성
         for(int count = 0; count< flysIV.length; count++ ) {
             flysIV[count] = findViewById(R.id.fly1 + count);
-            flysResNum[count] = random.nextInt(6);
+            flysResNum[count] = random.nextInt(5);
             flysIV[count].setImageResource(R.drawable.fly_fly01 + flysResNum[count]);
 
             String key = flysIV[count].getTag().toString();

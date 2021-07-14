@@ -88,7 +88,7 @@
                  android:visibility="visible"
                  android:tag="fly2"
                  android:clickable="true"
-                 android:onClick="flyButtonListener"/>
+                 android:onClick="flyButtonListener" />
              <ImageView
                  android:id="@+id/fly3"
                  android:layout_width="wrap_content"

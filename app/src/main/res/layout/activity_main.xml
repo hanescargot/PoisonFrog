@@ -54,6 +54,7 @@
         android:layout_weight="5"
         android:gravity="center">
         <ImageView
+            android:id="@+id/main_frog"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/main_frog_jelly"
