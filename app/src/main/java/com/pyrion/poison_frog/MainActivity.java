@@ -15,17 +15,18 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Random;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    Random random = new Random();
     EditText foodInputEditText;
     TextView foodLog;
     String foodLogString = "";
     ScrollView foodLogScroll;
     Stack<String> originFoodName = new Stack<>();
-    //생성자만, 매소드 호출이 안됨
-    Toast ateNotice;
+    int frogTochedCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if(newFoodName.length()>0) {
                     originFoodName.add(newFoodName);
-                    ateNotice = Toast.makeText(
-                            MainActivity.this,
-                            ("개구리가 "+newFoodName+"을 먹었습니다."),
-                            Toast.LENGTH_SHORT
-                    );
-                    ateNotice.show();
-                    ateNotice.setGravity(Gravity.CENTER_VERTICAL, 0 , 200);
-
-                    if(foodLogString.length()>0){
-                        foodLogString += "\n--------------------------------\n\n";
-                    }
-                    foodLogString += getNewFoodLogString(newFoodName);
+                    showToastString("개구리가 "+newFoodName+"을 먹었습니다.");
+                    foodLogString += "\n"+getNewFoodLogString(newFoodName);
                     Log.i("tag",foodLogString);
                     foodLog.setText(foodLogString);
                 }
@@ -99,8 +90,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO 개구리 터치 횟수 카운트 앤 무빙 리액션
-    public void hideKeyboard(View v) {
+    public void touchedFrog(View v) {
+        frogTochedCount++;
+        showToastString("개구리 찌름");
+        foodLogString += "\n";
+        switch (frogTochedCount){
+            case 1: foodLogString += "왜요?"+"\n"; break;
+            case 2: foodLogString += "잘 살아 있다구요."+"\n"; break;
+            case 3: foodLogString += "아파요."+"\n"; break;
+            case 4: foodLogString += "힘들어요. 그만 찌르세요"+"\n"; break;
+            case 5: foodLogString += "죽을 것 같아요."+"\n"; break;
+            default: {
+
+                if(random.nextInt(2)==1){
+                    foodLogString +="[개구리 죽음]"+"\n";
+                    frogTochedCount = 0;
+                }else{
+                    foodLogString +="[개구리 상태가 이상하다.]"+"\n";
+                    frogTochedCount = random.nextInt(6);
+                }
+            } break;
+        }
+
+        foodLog.setText(foodLogString);
+        foodLogScroll.fullScroll(View.FOCUS_DOWN);
     }
 
+    public void logEraser(View v){
+        foodLogString="Ready...";
+        foodLog.setText(foodLogString);
+        foodLogScroll.fullScroll(View.FOCUS_DOWN);
+    }
+
+    public void showToastString(String text){
+        Toast toast = Toast.makeText(
+                MainActivity.this,
+                text,
+                Toast.LENGTH_SHORT
+        );
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0 , 200);
+        toast.show();
+
+    }
 
 }

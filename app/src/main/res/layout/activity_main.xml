@@ -43,7 +43,7 @@
                 android:inputType="text"
                 android:textColorHint="#A8A3A3"
                 android:hint="@string/type_food_name"
-                android:background="@drawable/border"/>
+                android:background="@drawable/main_border"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -52,17 +52,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:clickable="true"
-        android:onClick="hideKeyboard"
         android:gravity="center">
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/main_frog_jelly"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:onClick="touchedFrog"/>
     </FrameLayout>
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5">
@@ -91,8 +91,15 @@
                 android:textStyle="bold"/>
         </ScrollView>
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_main_eraser"
+            android:clickable="true"
+            android:onClick="logEraser"
+            app:layout_constraintRight_toRightOf="@id/log_scroll"
+            app:layout_constraintBottom_toBottomOf="@id/log_scroll"/>
 
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
