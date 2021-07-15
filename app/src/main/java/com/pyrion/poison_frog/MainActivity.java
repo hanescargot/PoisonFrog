@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             if(event == null){
                 String newFoodName = v.getText().toString();
                 if(!isAlive){
-                    foodLogString += "[죽은 개구리는 "+newFoodName+" 못 먹음.]\n\n";
+                    foodLogString += "[죽은 개구리는 "+newFoodName+" 먹지 못함.]\n\n";
                     foodLog.setText(foodLogString);
                     foodLogScroll.fullScroll(View.FOCUS_DOWN);
                     v.setText("");
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             case 5: foodLogString += "죽을 것 같아요."; break;
             default: {
 
-                if(random.nextInt(2)==1){
+                if(random.nextInt(3)==1){
                     frogTouchedCount = 0;
                     foodLogString +="[개구리 죽음]";
                     showToastString("개구리 사망");
