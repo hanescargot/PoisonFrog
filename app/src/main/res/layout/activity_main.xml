@@ -38,6 +38,7 @@
                 android:layout_height="match_parent"
                 android:textSize="16sp"
                 android:padding="8dp"
+                android:imeOptions="actionSend"
                 android:textColor="@color/white"
                 android:layout_gravity="center"
                 android:inputType="text"
