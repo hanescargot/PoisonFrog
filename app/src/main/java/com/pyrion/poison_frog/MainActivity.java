@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             "[미련가지지마. 개구리는 죽었어.]",
             "[너는 개구리를 죽게했어.]",
             "[그런다고 개구리가 살아나지는 않아.]",
-            "[죽은개구리는 찔러도 반응이없어.]"
+            "[죽은 개구리는 찔러도 반응이없어.]"
     };
 
 
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         foodLog.setText("");
                     }
                     originFoodNameStack.add(newFoodName);
-                    showToastString("개구리가 "+newFoodName+"을 먹었습니다.");/////error
+                    showToastString("개구리가 "+newFoodName+" 먹었다.");/////error
                     foodLogString += getNewFoodLogString(newFoodName);
                     foodLogString += "\n";
                     foodLog.setText(foodLogString);
