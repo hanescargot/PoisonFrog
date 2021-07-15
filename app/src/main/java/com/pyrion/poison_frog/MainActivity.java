@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             "[미련가지지마. 개구리는 죽었어.]",
             "[너는 개구리를 죽게했어.]",
             "[그런다고 개구리가 살아나지는 않아.]",
-            "[죽은 개구리는 찔러도 반응이없어.]"
+            "[죽은개구리는 찔러도 반응이없어.]"
     };
 
 
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             if(event == null){
                 String newFoodName = v.getText().toString();
                 if(!isAlive){
-                    foodLogString += "[죽은 개구리는 "+newFoodName+" 먹지 못함.]\n\n";
+                    foodLogString += "[죽은 개구리는 "+newFoodName+" 못 먹음.]\n\n";
                     foodLog.setText(foodLogString);
                     foodLogScroll.fullScroll(View.FOCUS_DOWN);
                     v.setText("");
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                         foodLog.setText("");
                     }
                     originFoodNameStack.add(newFoodName);
-                    showToastString("개구리가 "+newFoodName+" 먹었다.");/////error
+                    showToastString("개구리가 "+newFoodName+"을 먹었습니다.");/////error
                     foodLogString += getNewFoodLogString(newFoodName);
                     foodLogString += "\n";
                     foodLog.setText(foodLogString);
@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             case 5: foodLogString += "죽을 것 같아요."; break;
             default: {
 
-                if(random.nextInt(3)==1){
+                if(random.nextInt(2)==1){
                     frogTouchedCount = 0;
                     foodLogString +="[개구리 죽음]";
                     showToastString("개구리 사망");
