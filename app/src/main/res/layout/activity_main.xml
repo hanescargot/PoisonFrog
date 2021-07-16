@@ -42,6 +42,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="match_parent"
+                android:clickable="true"
+                android:onClick="healthCareClicked"
                 android:src="@drawable/main_ic_baseline_healing_24"/>
             <ImageView
                 android:id="@+id/game_play"
@@ -130,6 +132,7 @@
                     android:src="@drawable/dollar"
                     />
                 <TextView
+                    android:id="@+id/money_string"
                     android:layout_width="wrap_content"
                     android:textStyle="bold"
                     android:textSize="23sp"
@@ -146,11 +149,11 @@
                     />
 
             </LinearLayout>
+<!--            com.xw.repo.widget.BounceScrollView-->
             <ScrollView
                 android:id="@+id/log_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:layout_marginVertical="96dp"
                 android:layout_marginHorizontal="40dp">
                 <TextView
