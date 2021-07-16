@@ -21,87 +21,154 @@
         android:orientation="horizontal"
        >
         <ImageView
+            android:id="@+id/chef_hat"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:src="@drawable/main_chef_hat"
+            android:clickable="true"
+            android:onClick="chefHatClicked"
             android:padding="2dp"
             />
         <LinearLayout
+            android:id="@+id/menu_list"
+            android:visibility="visible"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="8"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/health"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:src="@drawable/main_ic_baseline_healing_24"/>
+            <ImageView
+                android:id="@+id/game_play"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_videogame_asset_24"/>
+            <ImageView
+                android:id="@+id/sell"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_monetization_on_24"/>
+            <ImageView
+                android:id="@+id/settings"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_baseline_settings_24"/>
+        </LinearLayout>
+        <EditText
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_weight="8"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <EditText
-                android:id="@+id/food_name_input"
+            android:id="@+id/food_name_input"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:imeOptions="actionSend"
+            android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:inputType="text"
+            android:textColorHint="#A8A3A3"
+            android:hint="@string/type_food_name"
+            android:background="@drawable/main_border"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/back_ground"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="vertical"
+        android:weightSum="2"
+        android:clickable="true"
+        android:onClick="backGroundClicked">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+            <ImageView
+                android:id="@+id/main_frog"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/main_frog_jelly"
+                android:layout_gravity="center"
+                android:clickable="true"
+                android:onClick="touchedFrog"/>
+        </FrameLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/log_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="16sp"
-                android:padding="8dp"
-                android:imeOptions="actionSend"
-                android:textColor="@color/white"
-                android:layout_gravity="center"
-                android:inputType="text"
-                android:textColorHint="#A8A3A3"
-                android:hint="@string/type_food_name"
-                android:background="@drawable/main_border"/>
+                android:src="@drawable/main_gold_notice"
+                android:layout_gravity="center"/>
 
-        </LinearLayout>
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                app:layout_constraintRight_toRightOf="@id/log_layout"
+                app:layout_constraintTop_toTopOf="@id/log_layout"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:layout_constraintRight_toRightOf="@id/log_scroll"
+                    app:layout_constraintTop_toTopOf="@id/log_layout"
+                    android:src="@drawable/dollar"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="23sp"
+                    android:textColor="@color/white"
+                    android:text="100"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"/>
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    app:layout_constraintRight_toRightOf="@id/log_scroll"
+                    app:layout_constraintTop_toTopOf="@id/log_layout"
+                    android:src="@drawable/ic_baseline_attach_money_24"
+                    />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:gravity="center">
-        <ImageView
-            android:id="@+id/main_frog"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/main_frog_jelly"
-            android:layout_gravity="center"
-            android:clickable="true"
-            android:onClick="touchedFrog"/>
-    </FrameLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/main_gold_notice"
-            android:layout_gravity="center"/>
-
-        <ScrollView
-            android:id="@+id/log_scroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginVertical="96dp"
-            android:layout_marginHorizontal="40dp">
-
-            <TextView
-                android:id="@+id/food_log"
+            </LinearLayout>
+            <ScrollView
+                android:id="@+id/log_scroll"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ready..."
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-        </ScrollView>
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_main_eraser"
-            android:clickable="true"
-            android:onClick="logEraser"
-            app:layout_constraintRight_toRightOf="@id/log_scroll"
-            app:layout_constraintBottom_toBottomOf="@id/log_scroll"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginVertical="96dp"
+                android:layout_marginHorizontal="40dp">
+                <TextView
+                    android:id="@+id/food_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ready..."
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+            </ScrollView>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/main_ic_eraser"
+                android:clickable="true"
+                android:onClick="logEraser"
+                app:layout_constraintRight_toRightOf="@id/log_scroll"
+                app:layout_constraintBottom_toBottomOf="@id/log_scroll"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </LinearLayout>
