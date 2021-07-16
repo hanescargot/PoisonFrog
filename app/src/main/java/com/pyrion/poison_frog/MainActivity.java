@@ -170,15 +170,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToastString(String text){
-        if(toast == null) {
-            toast = Toast.makeText(
-                    MainActivity.this,
-                    text,
-                    Toast.LENGTH_SHORT
-            );
-        } else {
-            toast.setText(text);
+        if(toast != null) {
+            toast.cancel();
         }
+        toast = Toast.makeText(
+                MainActivity.this,
+                text,
+                Toast.LENGTH_SHORT
+        );
         toast.setGravity(Gravity.CENTER_VERTICAL, 0 , 200);
         toast.show();
     }
