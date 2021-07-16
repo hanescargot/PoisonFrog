@@ -2,6 +2,7 @@ package com.pyrion.poison_frog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             "[죽은 개구리는 찔러도 반응이없어.]",
             "[개구리를 다시 살리려면 치료 아이콘 클릭]"
     };
-
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +65,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        //포커스 뷰는 마우스 커서이다.
         View focusView = getCurrentFocus();
         if( focusView != null){
+            //hide and clean
+            foodInputEditText.setText("");
+            hideFoodInputEditText(null);
+
             Rect rect = new Rect();
             focusView.getGlobalVisibleRect(rect);
             int x = (int) ev.getX(), y = (int) ev.getY();
             if (!rect.contains(x, y)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                //show keyboard
+                imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 if (imm != null)
                     imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
                 focusView.clearFocus();
@@ -186,12 +193,17 @@ public class MainActivity extends AppCompatActivity {
         if(menuIcons.getVisibility()==View.VISIBLE){
             menuIcons.setVisibility(View.GONE);
             foodInputEditText.setVisibility(View.VISIBLE);
+
+            //keyboard popup
+            foodInputEditText.requestFocus();
+            imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             return;
         }
-        backGroundClicked(view);
+        hideFoodInputEditText(null);
     }
 
-    public void backGroundClicked(View view) {
+    public void hideFoodInputEditText(View view) {
         menuIcons.setVisibility(View.VISIBLE);
         foodInputEditText.setVisibility(View.GONE);
     }
