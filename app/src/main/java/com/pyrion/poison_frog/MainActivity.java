@@ -64,17 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
-
-
-        foodInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if ( !hasFocus) {
-                    //포커스 이동 했을 때  키패드 지우기
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
-        });
     }
 
     EditText.OnEditorActionListener foodInputActionListener = new EditText.OnEditorActionListener() {
@@ -84,10 +73,12 @@ public class MainActivity extends AppCompatActivity {
             //event.keypad현재 키패드에서 누른 글자 알수있음 한글인지 알아보기// actionID==EditorInfo.IME_ACTION_SEARCH
             //actionID 는 무조건 오른쪽 아래에
             if(event == null){
+                //엔터 눌렀을 때
                 String newFoodName = v.getText().toString();
                 if(!isAlive){
-                    addFoodLogString("[죽은 개구리는 "+newFoodName+" 먹지 못함.]");;
-                    v.setText("");
+                    addFoodLogString("[죽은 개구리는 "+newFoodName+" 먹지 못함.]");
+                    showToastString("반응 없음");
+                    hideFoodInputEditText();
                     return false;
                 }
 
@@ -100,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                     showNewFoodLogSet(newFoodName);
                     v.setText("");
                 }
-                hideFoodInputEditText(null);
+                hideFoodInputEditText();
             }
             return false;
         }
@@ -182,13 +173,14 @@ public class MainActivity extends AppCompatActivity {
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             return;
         }
-        hideFoodInputEditText(null);
+        hideFoodInputEditText();
     }
 
-    public void hideFoodInputEditText(View v) {
+    public void hideFoodInputEditText() {
         menuIcons.setVisibility(View.VISIBLE);
         foodInputEditText.setVisibility(View.GONE);
         foodInputEditText.setText("");
+        imm.hideSoftInputFromWindow(foodInputEditText.getWindowToken(), 0);
     }
 
 
@@ -217,5 +209,9 @@ public class MainActivity extends AppCompatActivity {
         //
         int currentMoney = Integer.parseInt(moneyString.getText().toString());
         moneyString.setText((currentMoney-100)+"");
+    }
+
+    public void backgroundClicked(View view) {
+        hideFoodInputEditText();
     }
 }

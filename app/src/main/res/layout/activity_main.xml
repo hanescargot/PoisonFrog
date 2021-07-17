@@ -89,7 +89,7 @@
         android:layout_weight="10"
         android:orientation="vertical"
         android:weightSum="2"
-        android:onClick="hideFoodInputEditText">
+        android:onClick="backgroundClicked">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
