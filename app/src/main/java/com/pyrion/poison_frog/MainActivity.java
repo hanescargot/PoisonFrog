@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -56,39 +57,30 @@ public class MainActivity extends AppCompatActivity {
         mainFrog = findViewById(R.id.main_frog);
         chefHat = findViewById(R.id.chef_hat);
         menuIcons = findViewById(R.id.menu_list);
-        mainBackground =findViewById(R.id.back_ground);
+        mainBackground = findViewById(R.id.back_ground);
         healthCare = findViewById(R.id.health);
         moneyString = findViewById(R.id.money_string);
 
+
+        imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
-    }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        //포커스 뷰는 마우스 커서이다.
-        View focusView = getCurrentFocus();
-        if( focusView != null){
-            //hide and clean
-            foodInputEditText.setText("");
-            hideFoodInputEditText(null);
 
-            Rect rect = new Rect();
-            focusView.getGlobalVisibleRect(rect);
-            int x = (int) ev.getX(), y = (int) ev.getY();
-            if (!rect.contains(x, y)) {
-                //show keyboard
-                imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if (imm != null)
-                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-                focusView.clearFocus();
+        foodInputEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if ( !hasFocus) {
+                    //포커스 이동 했을 때  키패드 지우기
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
             }
-        }
-        return super.dispatchTouchEvent(ev);
+        });
     }
 
-    TextView.OnEditorActionListener foodInputActionListener = new TextView.OnEditorActionListener() {
+    EditText.OnEditorActionListener foodInputActionListener = new EditText.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            //들어오는 글자 하나하나 알수있음
             //event.keypad현재 키패드에서 누른 글자 알수있음 한글인지 알아보기// actionID==EditorInfo.IME_ACTION_SEARCH
             //actionID 는 무조건 오른쪽 아래에
             if(event == null){
@@ -108,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     showNewFoodLogSet(newFoodName);
                     v.setText("");
                 }
+                hideFoodInputEditText(null);
             }
             return false;
         }
@@ -186,16 +179,16 @@ public class MainActivity extends AppCompatActivity {
 
             //keyboard popup
             foodInputEditText.requestFocus();
-            imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             return;
         }
         hideFoodInputEditText(null);
     }
 
-    public void hideFoodInputEditText(View view) {
+    public void hideFoodInputEditText(View v) {
         menuIcons.setVisibility(View.VISIBLE);
         foodInputEditText.setVisibility(View.GONE);
+        foodInputEditText.setText("");
     }
 
 
