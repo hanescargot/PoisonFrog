@@ -56,7 +56,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_baseline_monetization_on_24"/>
+                android:src="@drawable/ic_baseline_monetization_on_24"
+                android:onClick="sellBtnClicked"/>
             <ImageView
                 android:id="@+id/settings"
                 android:layout_width="0dp"
@@ -98,8 +99,8 @@
             >
             <ImageView
                 android:id="@+id/main_frog"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/main_frog_jelly"
                 android:layout_gravity="center"
                 android:clickable="true"
