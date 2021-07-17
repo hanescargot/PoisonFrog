@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
                     originFoodNameStack.add(newFoodName);
                     showToastString("개구리가 "+newFoodName+" 먹음");/////error
                     showNewFoodLogSet(newFoodName);
-                    foodLog.setText(foodLogString);
-                    foodLogScroll.fullScroll(View.FOCUS_DOWN);
                     v.setText("");
                 }
             }
