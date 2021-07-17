@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity {
     };
 
     void showNewFoodLogSet(String newFoodName){
-        addFoodLogString("[먹인음식: "+newFoodName+"]");
+        addFoodLogString("[먹인 음식: "+newFoodName+"]");
         addFoodLogString("[_씹"+"는 중...]");
-        addFoodLogString("옴뇸뇸뇸"+"_맛있는"+ newFoodName+"입니다.");
+        addFoodLogString("옴뇸뇸뇸"+"_맛있는 "+ newFoodName+"입니다.");
         addFoodLogString("_건강해지는"+"맛이예요.");
         addFoodLogString("방금 먹은 음식과"+"_잘 안"+ "어울리네요.");
         addFoodLogString("또 먹고싶" +"_지 않아"+"요.");
