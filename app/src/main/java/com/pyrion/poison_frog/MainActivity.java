@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -24,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     Toast toast;
     Random random = new Random();
     EditText foodInputEditText;
-    TextView foodLog;
-    ImageView mainFrog, chefHat;
+    TextView foodLog, moneyString;
+    ImageView mainFrog, chefHat, healthCare;
     View menuIcons, mainBackground;
     String foodLogString = "";
     ScrollView foodLogScroll;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             "[죽은 개구리는 찔러도 반응이없어.]",
             "[개구리를 다시 살리려면 치료 아이콘 클릭]"
     };
-
+    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +57,27 @@ public class MainActivity extends AppCompatActivity {
         chefHat = findViewById(R.id.chef_hat);
         menuIcons = findViewById(R.id.menu_list);
         mainBackground =findViewById(R.id.back_ground);
+        healthCare = findViewById(R.id.health);
+        moneyString = findViewById(R.id.money_string);
 
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        //포커스 뷰는 마우스 커서이다.
         View focusView = getCurrentFocus();
         if( focusView != null){
+            //hide and clean
+            foodInputEditText.setText("");
+            hideFoodInputEditText(null);
+
             Rect rect = new Rect();
             focusView.getGlobalVisibleRect(rect);
             int x = (int) ev.getX(), y = (int) ev.getY();
             if (!rect.contains(x, y)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                //show keyboard
+                imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 if (imm != null)
                     imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
                 focusView.clearFocus();
@@ -87,9 +94,7 @@ public class MainActivity extends AppCompatActivity {
             if(event == null){
                 String newFoodName = v.getText().toString();
                 if(!isAlive){
-                    foodLogString += "[죽은 개구리는 "+newFoodName+" 못 먹음.]\n\n";
-                    foodLog.setText(foodLogString);
-                    foodLogScroll.fullScroll(View.FOCUS_DOWN);
+                    addFoodLogString("[죽은 개구리는 "+newFoodName+" 먹지 못함.]");;
                     v.setText("");
                     return false;
                 }
@@ -100,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     originFoodNameStack.add(newFoodName);
                     showToastString("개구리가 "+newFoodName+" 먹음");/////error
-                    foodLogString += getNewFoodLogString(newFoodName);
-                    foodLogString += "\n";
+                    showNewFoodLogSet(newFoodName);
                     foodLog.setText(foodLogString);
                     foodLogScroll.fullScroll(View.FOCUS_DOWN);
                     v.setText("");
@@ -112,16 +116,14 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
-    String getNewFoodLogString(String newFoodName){
-        String sumString="";
-        sumString += "[먹인음식: "+newFoodName+"]\n";
-        sumString += "[_씹"+"는 중...]"+"\n"; //텍스트 마이닝
-        sumString += "옴뇸뇸뇸"+"_맛있는"+ newFoodName+"입니다."+"\n"; //텍스트마이닝 후 단어 라벨 판단
-        sumString += "_건강해지는"+"맛이예요."+"\n"; //텍스트 마이닝
-        sumString += "방금 먹은 음식과"+"_잘 안"+ "어울리네요."+"\n"; //이전 음식과 수 계산
-        sumString += "또 먹고싶" +"_지 않아"+"요."+"\n"; //0과1랜덤
-        sumString += "짜증나"+"요."+"\n"; //수 계산
-        return sumString;
+    void showNewFoodLogSet(String newFoodName){
+        addFoodLogString("[먹인음식: "+newFoodName+"]");
+        addFoodLogString("[_씹"+"는 중...]");
+        addFoodLogString("옴뇸뇸뇸"+"_맛있는"+ newFoodName+"입니다.");
+        addFoodLogString("_건강해지는"+"맛이예요.");
+        addFoodLogString("방금 먹은 음식과"+"_잘 안"+ "어울리네요.");
+        addFoodLogString("또 먹고싶" +"_지 않아"+"요.");
+        addFoodLogString("짜증나"+"요.");
     }
 
     //TODO 개구리 터치 횟수 카운트 앤 무빙 리액션
@@ -138,29 +140,26 @@ public class MainActivity extends AppCompatActivity {
             foodLog.setText("");
         }
         switch (frogTouchedCount){
-            case 1: foodLogString += "왜요?"; break;
-            case 2: foodLogString += "잘 살아 있다구요."; break;
-            case 3: foodLogString += "아파요."; break;
-            case 4: foodLogString += "힘들어요. 그만 찌르세요"; break;
-            case 5: foodLogString += "죽을 것 같아요."; break;
+            case 1: addFoodLogString("왜요?"); break;
+            case 2: addFoodLogString("잘 살아 있다구요."); break;
+            case 3: addFoodLogString("아파요."); break;
+            case 4: addFoodLogString("힘들어요. 그만 찌르세요"); break;
+            case 5: addFoodLogString("죽을 것 같아요."); break;
             default: {
 
                 if(random.nextInt(2)==1){
                     frogTouchedCount = 0;
-                    foodLogString +="[개구리 죽음]";
+                    addFoodLogString("[개구리 죽음]");
                     showToastString("개구리 사망");
                     isAlive = false;
                     mainFrog.setImageResource(R.drawable.main_dead_frog);
 
                 }else{
-                    foodLogString +="[개구리 상태가 이상하다.]";
+                    addFoodLogString("[개구리 상태가 이상하다.]");
                     frogTouchedCount = random.nextInt(6);
                 }
             } break;
         }
-        foodLogString += "\n\n";
-        foodLog.setText(foodLogString);
-        foodLogScroll.fullScroll(View.FOCUS_DOWN);
     }
 
     public void logEraser(View v){
@@ -170,15 +169,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToastString(String text){
-        if(toast == null) {
-            toast = Toast.makeText(
-                    MainActivity.this,
-                    text,
-                    Toast.LENGTH_SHORT
-            );
-        } else {
-            toast.setText(text);
+        if(toast != null) {
+            toast.cancel();
         }
+        toast = Toast.makeText(
+                MainActivity.this,
+                text,
+                Toast.LENGTH_SHORT
+        );
         toast.setGravity(Gravity.CENTER_VERTICAL, 0 , 200);
         toast.show();
     }
@@ -187,13 +185,46 @@ public class MainActivity extends AppCompatActivity {
         if(menuIcons.getVisibility()==View.VISIBLE){
             menuIcons.setVisibility(View.GONE);
             foodInputEditText.setVisibility(View.VISIBLE);
+
+            //keyboard popup
+            foodInputEditText.requestFocus();
+            imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
             return;
         }
-        backGroundClicked(view);
+        hideFoodInputEditText(null);
     }
 
-    public void backGroundClicked(View view) {
+    public void hideFoodInputEditText(View view) {
         menuIcons.setVisibility(View.VISIBLE);
         foodInputEditText.setVisibility(View.GONE);
+    }
+
+
+    public void healthCareClicked(View view) {
+        //개구리 되살리기
+        if(!isAlive){
+            //죽어있으면 되살리기 살아있으면 회복
+            resurrection();
+        }
+    }
+
+    public void addFoodLogString(String string){
+        foodLogString += string;
+        foodLogString += "\n\n";
+        foodLog.setText(foodLogString);
+        foodLogScroll.fullScroll(View.FOCUS_DOWN);
+    }
+
+    void resurrection(){
+        addFoodLogString("죽었다가 살아났습니다.");
+        showToastString("개구리 부활");
+        isAlive=true;
+        mainFrog.setImageResource(R.drawable.main_frog_jelly);
+        //체력 0
+        //-100$ ask
+        //
+        int currentMoney = Integer.parseInt(moneyString.getText().toString());
+        moneyString.setText((currentMoney-100)+"");
     }
 }
