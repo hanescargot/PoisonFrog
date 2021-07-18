@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         foodLog = findViewById(R.id.food_log);
         foodLogScroll = findViewById(R.id.log_scroll);
         mainFrog = findViewById(R.id.main_frog);
-        chefHat = findViewById(R.id.chef_hat);
+        chefHat = findViewById(R.id.cook_book);
         menuIcons = findViewById(R.id.menu_list);
         mainBackground = findViewById(R.id.back_ground);
         healthCare = findViewById(R.id.health);
