@@ -118,6 +118,21 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                app:layout_constraintLeft_toLeftOf="@id/log_layout"
+                app:layout_constraintTop_toTopOf="@id/log_layout"
+                android:layout_marginLeft="16dp"
+                android:orientation="horizontal">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/main_meat_stake"
+                android:onClick="foodClicked"/>
+            </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -130,7 +145,8 @@
                 app:layout_constraintRight_toRightOf="@id/log_layout"
                 app:layout_constraintTop_toTopOf="@id/log_layout"
                 android:layout_marginRight="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:onClick="moneyClicked">
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
@@ -156,7 +172,6 @@
                     />
 
             </LinearLayout>
-<!--            com.xw.repo.widget.BounceScrollView-->
             <ScrollView
                 android:id="@+id/log_scroll"
                 android:layout_width="match_parent"

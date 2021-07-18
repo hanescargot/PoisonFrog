@@ -130,10 +130,9 @@ public class MainActivity extends AppCompatActivity {
                     for(String poisonFood: poisonFood){
                         if(newFoodName.equals(poisonFood)){
                             addLogString("커어어억... 이 맛은!!!");
-                            addLogString("[개구리가 급격히 성장 함]");
-
                             if(random.nextBoolean()){
                                 changeFrogSizePrice(randomLikeFoodNum*30);
+                                addLogString("[개구리가 급격히 성장 함]");
                             }else{
                                 killFrog();
                             }
@@ -179,7 +178,6 @@ public class MainActivity extends AppCompatActivity {
             addLogString("[개구리를 새로 구매 하셨습니다.]");
             changeCurrentMoney(-100);
             setNewFrog();
-            isSold=false;
             return;
         }
 
@@ -215,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void setNewFrog() {
         mainFrog.setImageResource(R.drawable.main_frog_jelly);
+        isAlive=true;
+        isSold=false;
         frogSizePriceReset();
     }
 
@@ -260,9 +260,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void healthCareClicked(View view) {
         //개구리 되살리기
-        if(!isAlive){
-            //죽어있으면 되살리기 살아있으면 회복
-            resurrection();
+        if(!isAlive && !isSold){
+            //죽었고 시체 팔리지 않았으면 되살리기 살아있으면 회복
+            int resurrectionPrice = (int) (currentFrogPrice*0.7);
+            addLogString("[치료비: "+resurrectionPrice+"$]");
+            if(currentMoney>=resurrectionPrice){
+                changeCurrentMoney(-resurrectionPrice);
+                resurrection();
+                return;
+            }
+            showToastString("돈 부족");
+            addLogString("[돈이 부족해서 치료를 못했습니다.]");
+
         }else if(isSold){
             showToastString("치료할 개구리가 없음");
             addLogString("[개구리를 새로 구매해 주세요.]");
@@ -280,12 +289,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void resurrection(){
-        addLogString("죽었다가 살아났습니다.");
+        addLogString("[개구리가 치료되었습니다.]");
+        if(random.nextBoolean()){
+            addLogString("죽었다가 살아났습니다.");
+        }else{
+            addLogString("살려줘서 고맙다 개굴.");
+        }
         showToastString("개구리 부활");
         isAlive=true;
-        setNewFrog();
-        int coast = currentFrogPrice*3;
-        changeCurrentMoney(-100);
+        mainFrog.setImageResource(R.drawable.main_frog_jelly);
     }
 
     // TODO 함정멘트 만들기
@@ -321,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
             addLogString("[개구리 시체는 쓸모가 없는데...]");//
             showToastString("헐값에 판매 완료");
             isSold=true;
-            mainFrog.setImageResource(R.drawable.dollar);
+            setGift();
             changeCurrentMoney(currentFrogPrice/10);
             return;
         }
@@ -329,10 +341,16 @@ public class MainActivity extends AppCompatActivity {
         addLogString("[개구리가 판매되었습니다.]");
         showToastString("판매 완료");
         isSold=true;
-        mainFrog.setImageResource(R.drawable.dollar);
         changeCurrentMoney(currentFrogPrice);
-        frogSizePriceReset();
 
+        setGift();
+        mainFrog.requestLayout();
+
+    }
+    public void setGift(){
+        mainFrog.setImageResource(R.drawable.main_gift);
+        mainFrog.getLayoutParams().height=160;
+        mainFrog.getLayoutParams().width=160;
     }
 
     public void killFrog(){
@@ -341,12 +359,11 @@ public class MainActivity extends AppCompatActivity {
         showToastString("개구리 사망");
         isAlive = false;
         mainFrog.setImageResource(R.drawable.main_dead_frog);
-        frogSizePriceReset();
     }
 
     public void frogSizePriceReset(){
-        currentFrogPrice = 40;
-        currentFrogSize = 40;
+        currentFrogPrice = 80;
+        currentFrogSize = 80;
         mainFrog.getLayoutParams().height=currentFrogSize;
         mainFrog.getLayoutParams().width=currentFrogSize;
         mainFrog.requestLayout();
@@ -358,5 +375,35 @@ public class MainActivity extends AppCompatActivity {
         mainFrog.getLayoutParams().height=currentFrogSize;
         mainFrog.getLayoutParams().width=currentFrogSize;
         mainFrog.requestLayout();
+    }
+
+    public void foodClicked(View view) {
+        if(isSold){
+            showToastString("밥먹이기 불가능");
+            addLogString("[팔려간 개구리는 밥을 먹지 못함.]");
+            return;
+        }
+        if(!isAlive){
+            showToastString("밥먹이기 불가능");
+            addLogString("[죽은 개구리는 밥을 법지 못함.]");
+            return;
+        }
+        changeFrogSizePrice(+1);
+        showToastString("+1Size");
+    }
+
+    public void moneyClicked(View view) {
+        if(isSold){
+            showToastString("돈벌기 불가능");
+            addLogString("[일할 개구리가 없음.]");
+            return;
+        }
+        if(!isAlive){
+            showToastString("돈벌기 불가능");
+            addLogString("[죽은 개구리는 일을 못함.]");
+            return;
+        }
+        changeCurrentMoney(+1);
+        showToastString("+1$");
     }
 }
