@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black"
+    android:padding="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/frog_src"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:src="@drawable/main_frog_jelly"
+            android:scaleType="centerCrop"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/frog_src"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            android:paddingBottom="16dp"
+            android:layout_marginLeft="16dp"
+
+            >
+            <TextView
+                android:id="@+id/frog_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NULL NAME"
+                android:textSize="24dp"
+                android:layout_toRightOf="@id/frog_src"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:id="@+id/frog_property"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PROPERTY: null"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:id="@+id/frog_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SIZE : null"
+                android:layout_toRightOf="@id/frog_src"
+                android:layout_below="@id/frog_property"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:id="@+id/frog_power"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="POWER: null"
+                android:layout_toRightOf="@id/frog_src"
+                android:layout_below="@id/frog_size"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -2,6 +2,7 @@ package com.pyrion.poison_frog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -404,5 +405,28 @@ public class MainActivity extends AppCompatActivity {
         }
         changeCurrentMoney(+1);
         showToastString("+1$");
+    }
+
+    public void houseClicked(View view) {
+        Intent intent = new Intent(this, frogHouseActivity.class);
+
+        intent.putExtra("name", "name");
+        intent.putExtra("age","age");
+        intent.putExtra("etc","etc");
+
+
+
+
+        //결과 값도 돌려 받을 거임
+        startActivityForResult(intent, 999);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if( requestCode == 999){
+            showToastString("yes");
+        }
+
     }
 }
