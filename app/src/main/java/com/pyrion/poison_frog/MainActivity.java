@@ -21,22 +21,23 @@ public class MainActivity extends AppCompatActivity {
     Toast toast;
     Random random = new Random();
     EditText foodInputEditText;
-    TextView foodLog, moneyString;
-    ImageView mainFrog, chefHat, healthCare;
-    View menuIcons, mainBackground;
-    String foodLogString = "";
-    ScrollView foodLogScroll;
+    TextView logTextView, moneyStringTextView;
+    String logString = "";
+    ImageView mainFrogImageView, chefHatIconView, healthCareIconView;
+    View menuIconsView, mainBackgroundView;
+    ScrollView logScrollView;
     Stack<String> originFoodNameStack = new Stack<>();
+    InputMethodManager imm;
     int frogTouchedCount = 0;
-    int currentFrogPrice = 40;
+    int currentFrogPrice = 80;
     int currentMoney = 0;
-    int currentFrogSize = 40;
+    int currentFrogSize = 80;
 // 못외워서 일단 써둠                    Log.i("tag",foodLogString);
 
     Boolean isAlive = true;
     Boolean isSold = false;
 
-    String[] deadFrogMsg = new String[]{
+    String[] deadFrogMsgs = new String[]{
             "[개구리는 지금 시체일 뿐이야.]",
             "[죽은 개구리는 대답이없다.]",
             "[개구리 죽었다니까.]",
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             "[죽은 개구리는 찔러도 반응이없어.]",
             "[개구리를 다시 살리려면 치료 아이콘 클릭]"
     };
-    String[] selledFrogMsg = new String[]{
+    String[] soledFrogMsgs = new String[]{
             "안녕 주인아...고마웠어",
             "키워줘서 고마웠어.",
             "이제 자유가 되는구나...",
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             "끄악...개굴!!!",
             "개구리 살려!!!"
     };
-    String[] poisonFood = new String[]{
+    String[] poisonFoods = new String[]{
             "독",
             "모기",
             "소금",
@@ -66,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             "복어",
             "뱀"
     };
-    InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +74,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         foodInputEditText = findViewById(R.id.food_name_input);
-        foodLog = findViewById(R.id.food_log);
-        foodLogScroll = findViewById(R.id.log_scroll);
-        mainFrog = findViewById(R.id.main_frog);
-        chefHat = findViewById(R.id.chef_hat);
-        menuIcons = findViewById(R.id.menu_list);
-        mainBackground = findViewById(R.id.back_ground);
-        healthCare = findViewById(R.id.health);
-        moneyString = findViewById(R.id.money_string);
+        logTextView = findViewById(R.id.food_log);
+        logScrollView = findViewById(R.id.log_scroll);
+        mainFrogImageView = findViewById(R.id.main_frog);
+        chefHatIconView = findViewById(R.id.chef_hat);
+        menuIconsView = findViewById(R.id.menu_list);
+        mainBackgroundView = findViewById(R.id.back_ground);
+        healthCareIconView = findViewById(R.id.health);
+        moneyStringTextView = findViewById(R.id.money_string);
 
 
         imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
 
-        currentMoney = Integer.parseInt(moneyString.getText().toString());
+        currentMoney = Integer.parseInt(moneyStringTextView.getText().toString());
 
 
         //temp
@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if(newFoodName.length()>0) {
-                    if(foodLogString.length()==0) {
-                        foodLog.setText("");
+                    if(logString.length()==0) {
+                        logTextView.setText("");
                     }
                     originFoodNameStack.add(newFoodName);
 
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                     int randomLikeFoodNum = random.nextInt(10)-1;//-1~9
 
 
-                    for(String poisonFood: poisonFood){
+                    for(String poisonFood: poisonFoods){
                         if(newFoodName.equals(poisonFood)){
                             addLogString("커어어억... 이 맛은!!!");
                             if(random.nextBoolean()){
@@ -183,15 +183,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(!isAlive) {
-            foodLogString += deadFrogMsg[random.nextInt(8)]+"\n\n";
-            foodLog.setText(foodLogString);
-            foodLogScroll.fullScroll(View.FOCUS_DOWN);
+            logString += deadFrogMsgs[random.nextInt(8)]+"\n\n";
+            logTextView.setText(logString);
+            logScrollView.fullScroll(View.FOCUS_DOWN);
             return;
         }
         frogTouchedCount++;
         showToastString("개구리 찌름");
-        if(foodLogString.length()==0){
-            foodLog.setText("");
+        if(logString.length()==0){
+            logTextView.setText("");
         }
         switch (frogTouchedCount){
             case 1: addLogString("왜요?"); break;
@@ -212,16 +212,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setNewFrog() {
-        mainFrog.setImageResource(R.drawable.main_frog_jelly);
+        mainFrogImageView.setImageResource(R.drawable.main_frog_jelly);
         isAlive=true;
         isSold=false;
         frogSizePriceReset();
     }
 
     public void logEraser(View v){
-        foodLogString="";
-        foodLog.setText("Ready...");
-        foodLogScroll.fullScroll(View.FOCUS_DOWN);
+        logString ="";
+        logTextView.setText("Ready...");
+        logScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     public void showToastString(String text){
@@ -238,8 +238,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void chefHatClicked(View view) {
-        if(menuIcons.getVisibility()==View.VISIBLE){
-            menuIcons.setVisibility(View.GONE);
+        if(menuIconsView.getVisibility()==View.VISIBLE){
+            menuIconsView.setVisibility(View.GONE);
             foodInputEditText.setVisibility(View.VISIBLE);
 
             //keyboard popup
@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void hideFoodInputEditText() {
-        menuIcons.setVisibility(View.VISIBLE);
+        menuIconsView.setVisibility(View.VISIBLE);
         foodInputEditText.setVisibility(View.GONE);
         foodInputEditText.setText("");
         imm.hideSoftInputFromWindow(foodInputEditText.getWindowToken(), 0);
@@ -282,10 +282,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addLogString(String string){
-        foodLogString += string;
-        foodLogString += "\n\n";
-        foodLog.setText(foodLogString);
-        foodLogScroll.fullScroll(View.FOCUS_DOWN);
+        logString += string;
+        logString += "\n\n";
+        logTextView.setText(logString);
+        logScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
     void resurrection(){
@@ -297,14 +297,21 @@ public class MainActivity extends AppCompatActivity {
         }
         showToastString("개구리 부활");
         isAlive=true;
-        mainFrog.setImageResource(R.drawable.main_frog_jelly);
+        mainFrogImageView.setImageResource(R.drawable.main_frog_jelly);
     }
-
-    // TODO 함정멘트 만들기
 
     public void changeCurrentMoney(int diff){
         currentMoney += diff;
-        moneyString.setText((currentMoney)+"");
+        moneyStringTextView.setText((currentMoney)+"");
+    }
+
+
+    public void changeFrogSizePrice(int diff) {
+        currentFrogSize += diff;
+        currentFrogPrice += diff;
+        mainFrogImageView.getLayoutParams().height=currentFrogSize;
+        mainFrogImageView.getLayoutParams().width=currentFrogSize;
+        mainFrogImageView.requestLayout();
     }
 
     public void backgroundClicked(View view) {
@@ -337,20 +344,20 @@ public class MainActivity extends AppCompatActivity {
             changeCurrentMoney(currentFrogPrice/10);
             return;
         }
-        addLogString(selledFrogMsg[random.nextInt(8)]);
+        addLogString(soledFrogMsgs[random.nextInt(8)]);
         addLogString("[개구리가 판매되었습니다.]");
         showToastString("판매 완료");
         isSold=true;
         changeCurrentMoney(currentFrogPrice);
 
         setGift();
-        mainFrog.requestLayout();
+        mainFrogImageView.requestLayout();
 
     }
     public void setGift(){
-        mainFrog.setImageResource(R.drawable.main_gift);
-        mainFrog.getLayoutParams().height=160;
-        mainFrog.getLayoutParams().width=160;
+        mainFrogImageView.setImageResource(R.drawable.main_gift);
+        mainFrogImageView.getLayoutParams().height=160;
+        mainFrogImageView.getLayoutParams().width=160;
     }
 
     public void killFrog(){
@@ -358,23 +365,15 @@ public class MainActivity extends AppCompatActivity {
         addLogString("[개구리 죽음]");
         showToastString("개구리 사망");
         isAlive = false;
-        mainFrog.setImageResource(R.drawable.main_dead_frog);
+        mainFrogImageView.setImageResource(R.drawable.main_dead_frog);
     }
 
     public void frogSizePriceReset(){
         currentFrogPrice = 80;
         currentFrogSize = 80;
-        mainFrog.getLayoutParams().height=currentFrogSize;
-        mainFrog.getLayoutParams().width=currentFrogSize;
-        mainFrog.requestLayout();
-    }
-
-    public void changeFrogSizePrice(int diff) {
-        currentFrogSize += diff;
-        currentFrogPrice += diff;
-        mainFrog.getLayoutParams().height=currentFrogSize;
-        mainFrog.getLayoutParams().width=currentFrogSize;
-        mainFrog.requestLayout();
+        mainFrogImageView.getLayoutParams().height=currentFrogSize;
+        mainFrogImageView.getLayoutParams().width=currentFrogSize;
+        mainFrogImageView.requestLayout();
     }
 
     public void foodClicked(View view) {

@@ -47,7 +47,7 @@
                 android:layout_height="match_parent"
                 android:clickable="true"
                 android:onClick="healthCareClicked"
-                android:src="@drawable/pill"/>
+                android:src="@drawable/main_pill"/>
             <ImageView
                 android:padding="4dp"
                 android:id="@+id/game_play"
@@ -152,7 +152,7 @@
                     android:layout_height="32dp"
                     app:layout_constraintRight_toRightOf="@id/log_scroll"
                     app:layout_constraintTop_toTopOf="@id/log_layout"
-                    android:src="@drawable/dollar"
+                    android:src="@drawable/main_dollar"
                     />
                 <TextView
                     android:id="@+id/money_string"
