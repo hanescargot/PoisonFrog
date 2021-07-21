@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Random random = new Random();
     EditText foodInputEditText;
     TextView logTextView, moneyStringTextView;
+    StringBuffer logStringBuffer = new StringBuffer();
     String logString = "";
     ImageView mainFrogImageView, chefHatIconView, healthCareIconView;
     View menuIconsView, mainBackgroundView;
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if(newFoodName.length()>0) {
-                    if(logString.length()==0) {
+                    if(logStringBuffer.length()==0) {
                         logTextView.setText("");
                     }
                     originFoodNameStack.add(newFoodName);
@@ -184,14 +185,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         if(!isAlive) {
-            logString += deadFrogMsgs[random.nextInt(8)]+"\n\n";
-            logTextView.setText(logString);
-            logScrollView.fullScroll(View.FOCUS_DOWN);
+            addLogString(deadFrogMsgs[random.nextInt(8)]);
             return;
         }
         frogTouchedCount++;
         showToastString("개구리 찌름");
-        if(logString.length()==0){
+        if(logStringBuffer.length()==0){
             logTextView.setText("");
         }
         switch (frogTouchedCount){
@@ -220,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logEraser(View v){
-        logString ="";
+        logStringBuffer= new StringBuffer();
         logTextView.setText("Ready...");
         logScrollView.fullScroll(View.FOCUS_DOWN);
     }
@@ -283,9 +282,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addLogString(String string){
-        logString += string;
-        logString += "\n\n";
-        logTextView.setText(logString);
+        logStringBuffer.append(string + "\n\n");
+        logTextView.setText(logStringBuffer.toString());
         logScrollView.fullScroll(View.FOCUS_DOWN);
     }
 
