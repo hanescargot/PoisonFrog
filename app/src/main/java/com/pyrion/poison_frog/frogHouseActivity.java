@@ -4,8 +4,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Adapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 public class frogHouseActivity extends AppCompatActivity {
 
     ArrayList<oneFrogSet> oneFrogSet= new ArrayList<>();
-    customAdapter adapter;
+    frogHouseAdapter adapter;
     ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class frogHouseActivity extends AppCompatActivity {
                 "퐁퐁Frog2", "fire", 80, 80));
 
 
-        adapter = new customAdapter( this, oneFrogSet);
+        adapter = new frogHouseAdapter( this, oneFrogSet);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정

@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class customAdapter extends BaseAdapter {
+public class frogHouseAdapter extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
     ArrayList<oneFrogSet> oneFrogSet;
 
-    public customAdapter(Context context, ArrayList<oneFrogSet> oneFrogSet){
+    public frogHouseAdapter(Context context, ArrayList<oneFrogSet> oneFrogSet){
         this.context= context;
         this.oneFrogSet= oneFrogSet;
     }
@@ -46,7 +46,7 @@ public class customAdapter extends BaseAdapter {
 
             //재활용 할 뷰로 만들기
             //빈 객체 xml 만들기 인플레이터로
-            convertView= inflater.inflate(R.layout.one_frog_house_frame, null);
+            convertView= inflater.inflate(R.layout.listview_frog_house, null);
         }
 
         //기존에 있던 convertView 쓰거나 위에서 새로 만든 프레임을 쓰게 됨
@@ -65,7 +65,7 @@ public class customAdapter extends BaseAdapter {
         //각 뷰들에 값 설정!
         frogSrc.setImageResource( currentOneFrogSet.frogSrc );
         frogName.setText( currentOneFrogSet.frogName );
-        frogProperty.setText( "속성: " +(currentOneFrogSet.frogProperty) );
+        frogProperty.setText( "품종: " +(currentOneFrogSet.frogProperty) );
         frogSize.setText( "크기: "+(currentOneFrogSet.frogSize) );
         frogPower.setText( "힘: "+(currentOneFrogSet.frogPower) );
 
