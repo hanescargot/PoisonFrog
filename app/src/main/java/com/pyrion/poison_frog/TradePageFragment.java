@@ -7,13 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.List;
-
-public class tradeCenterFragment extends Fragment {
+public class TradePageFragment extends Fragment {
 
     ImageView tradeFrog;
     ListView tradeFrogListView;
@@ -29,7 +25,7 @@ public class tradeCenterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View returnView = inflater.inflate(R.layout.fragment_trade_center, container, false);
+        View returnView = inflater.inflate(R.layout.fragment_trade_page, container, false);
         return returnView;
     }
 

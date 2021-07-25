@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fly_wood_notice"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        app:layout_constraintLeft_toLeftOf="@id/iv"
+        app:layout_constraintBottom_toTopOf="@+id/iv"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:text="새 개구리를 구매하시겠 습니니까?"/>
+
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:padding="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv"
+        android:src="@drawable/main_frog_jelly"/>
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintLeft_toRightOf="@+id/buy"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/main_cancel_button" />
+
+    <LinearLayout
+        android:id="@+id/buy"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/iv"
+        app:layout_constraintBottom_toBottomOf="@+id/iv"
+        app:layout_constraintStart_toEndOf="@+id/iv">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="-100 "
+            android:textSize="24sp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/main_dollar" />
+
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

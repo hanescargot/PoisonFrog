@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
         <activity
-            android:name=".frogHouseActivity"
+            android:name=".FrogHouseActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.Poison_frog">
         </activity>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_fight_center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="싸움 페이지는 아직 준비중 입니다."
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

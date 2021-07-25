@@ -39,6 +39,15 @@
                 />
 
             <TextView
+                android:id="@+id/creator_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Creator: null"
+                android:textSize="16dp"
+                android:textColor="#FFFFFF"
+                />
+
+            <TextView
                 android:id="@+id/frog_property"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

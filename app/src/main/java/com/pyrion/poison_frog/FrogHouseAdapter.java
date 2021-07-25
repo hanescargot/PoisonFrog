@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class frogHouseAdapter extends BaseAdapter {
+public class FrogHouseAdapter extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
-    ArrayList<oneFrogSet> oneFrogSet;
+    ArrayList<OneFrogSet> oneFrogSet;
 
-    public frogHouseAdapter(Context context, ArrayList<oneFrogSet> oneFrogSet){
+    public FrogHouseAdapter(Context context, ArrayList<OneFrogSet> oneFrogSet){
         this.context= context;
         this.oneFrogSet= oneFrogSet;
     }
@@ -46,13 +46,14 @@ public class frogHouseAdapter extends BaseAdapter {
 
             //재활용 할 뷰로 만들기
             //빈 객체 xml 만들기 인플레이터로
-            convertView= inflater.inflate(R.layout.listview_frog_house, null);
+            convertView= inflater.inflate(R.layout.listview_afrog_house, null);
         }
 
         //기존에 있던 convertView 쓰거나 위에서 새로 만든 프레임을 쓰게 됨
         //생성된 뷰객체에게 값을 설정하는 작업 - bind view
         //항목 뷰 (convertView) 안에 있는  뷰 들 참조하기
         ImageView frogSrc= convertView.findViewById(R.id.frog_src);
+        TextView creatorName= convertView.findViewById(R.id.creator_name);
         TextView frogName= convertView.findViewById(R.id.frog_name);
         TextView frogProperty= convertView.findViewById(R.id.frog_property);
         TextView frogSize= convertView.findViewById(R.id.frog_size);
@@ -61,10 +62,11 @@ public class frogHouseAdapter extends BaseAdapter {
 
         //////////////////////////////////////////////////////////
         //설정할 현재번째 데.이.터.를 얻어오기
-        oneFrogSet currentOneFrogSet= oneFrogSet.get(position);
+        OneFrogSet currentOneFrogSet= oneFrogSet.get(position);
         //각 뷰들에 값 설정!
         frogSrc.setImageResource( currentOneFrogSet.frogSrc );
         frogName.setText( currentOneFrogSet.frogName );
+        creatorName.setText("제작자: " +currentOneFrogSet.creatorName);
         frogProperty.setText( "품종: " +(currentOneFrogSet.frogProperty) );
         frogSize.setText( "크기: "+(currentOneFrogSet.frogSize) );
         frogPower.setText( "힘: "+(currentOneFrogSet.frogPower) );

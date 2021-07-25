@@ -1,10 +1,10 @@
 package com.pyrion.poison_frog;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
-
 import android.os.Bundle;
-
+import android.util.Log;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +20,12 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.main_view_paper);
         mainPaperAdapter = new MainPaperAdapter(this);
         viewPager.setAdapter(mainPaperAdapter);
+
+        Log.i("tag!!!",viewPager.getCurrentItem()+""); // 0page로 갔다가 1로 감
+        viewPager.setCurrentItem(1, false); //default page
+        // TODO Q.0번째 item으로 돌아가야는 0째 item에서 이동한 Activity라는 걸 어떻게 구분 하지..
     }
+
+
 }
 

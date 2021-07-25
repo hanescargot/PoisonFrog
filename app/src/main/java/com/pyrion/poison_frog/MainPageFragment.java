@@ -1,6 +1,13 @@
 package com.pyrion.poison_frog;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +30,7 @@ import androidx.fragment.app.Fragment;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class MainCenterFragment extends Fragment {
+public class MainPageFragment extends Fragment {
 
     Toast toast;
     Random random = new Random();
@@ -40,7 +47,7 @@ public class MainCenterFragment extends Fragment {
     int currentFrogPrice = 80;
     int currentUserMoney = 0;
     int currentFrogSize = 80;
-    int currentPower = 0;
+    int currentFrogPower = 0;
 // 못외워서 일단 써둠                    Log.i("tag",foodLogString);
 
 
@@ -82,18 +89,18 @@ public class MainCenterFragment extends Fragment {
     ImageView mainEraserIcon;
 
 
+    SQLiteDatabase database;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //서버로 부터 데이터 받아서 리스트에 넣는거 넣기
+        //TODO 서버로 부터 데이터 받아서 리스트에 넣는거 넣기
         super.onCreate(savedInstanceState);
-
-
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View returnView = inflater.inflate(R.layout.fragment_main_center, container, false);
+        View returnView = inflater.inflate(R.layout.fragment_main_page, container, false);
         return returnView;
     }
 
@@ -207,10 +214,10 @@ public class MainCenterFragment extends Fragment {
         mainHouseIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), frogHouseActivity.class);//this가 getActivity()로
+                Intent intent = new Intent(getActivity(), FrogHouseActivity.class);//this가 getActivity()로
                 //"퐁퐁Frog", "fire", 80, 80));
                 intent.putExtra("name", "Frog Name");
-                intent.putExtra("property","fire");
+                intent.putExtra("property",Frog.SPECIES_BASIC);
                 intent.putExtra("size",currentFrogSize);
                 intent.putExtra("power",currentFrogSize);
 
@@ -242,7 +249,7 @@ public class MainCenterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 showToastString("힘+1");
-                currentPower+=1;            }
+                currentFrogPower +=1;            }
         });
 
 
@@ -275,8 +282,9 @@ public class MainCenterFragment extends Fragment {
                         addLogString("[돈이 부족하네..]");
                         return;
                     }
-                    addLogString("[개구리를 새로 구매 하셨습니다.]");
-                    changeCurrentMoney(-100);
+
+
+
                     buyNewFrog();
                     return;
                 }
@@ -494,11 +502,90 @@ public class MainCenterFragment extends Fragment {
 
 
     private void buyNewFrog() {
-        //TODO 새로 사는 개구리 이름 바꾸게 하기
-        currentFrogPrice = 80;
-        currentFrogSize = 80;
-        updateFrogState(Frog.ALIVE);
-    }
+        //TODO 새로 사는 개구리 창고 데이터 업데이트
+
+
+
+        //AlertDialog
+        AlertDialog.Builder isBuyBuilder= new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater= getLayoutInflater();
+        View alertIsBuyNewFrog= inflater.inflate(R.layout.alert_is_buy_new_frog, null);
+        isBuyBuilder.setView(alertIsBuyNewFrog);
+
+
+        View buyButton = alertIsBuyNewFrog.findViewById(R.id.buy);
+
+
+        //건축가에게 위 설정할 모양으로 AlertDialog 객체를 만들어 달라고 요청!
+        AlertDialog isBuyAlertDialog= isBuyBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
+        isBuyAlertDialog.setCanceledOnTouchOutside(false);
+
+        //다이얼로그를 화면에 보이기
+        isBuyAlertDialog.show();
+        isBuyAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+
+
+
+        buyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    AlertDialog.Builder frogNameBuilder= new AlertDialog.Builder(getActivity());//R.style.Theme_TransparentBackground
+    //                frogNameBuilder.setTitle("새 개구리 이름 정하기");
+                    View alertNewFrogName= inflater.inflate(R.layout.alert_set_new_frog_name, null);
+                    frogNameBuilder.setView(alertNewFrogName);
+
+
+                    ImageView buyButton = alertNewFrogName.findViewById(R.id.main_buy_button);
+                    EditText et= alertNewFrogName.findViewById(R.id.et);
+
+                    AlertDialog frogNameAlertDialog= frogNameBuilder.create();
+                    frogNameAlertDialog.setCanceledOnTouchOutside(true);
+
+                    frogNameAlertDialog.show();
+                    frogNameAlertDialog.getWindow().setBackgroundDrawable(
+                            new ColorDrawable(Color.parseColor("#00000000")));
+
+
+                    isBuyAlertDialog.cancel();
+
+                    buyButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String newFrogName = et.getText().toString();
+                            showToastString(newFrogName + "생성");
+                            addLogString("[개구리를 새로 구매 하셨습니다.]");
+                            changeCurrentMoney(-100);
+
+                            // TODO real data
+
+                            database = getActivity().openOrCreateDatabase("frogsDB.db", getActivity().MODE_PRIVATE, null);
+                            database.execSQL("CREATE TABLE IF NOT EXISTS frogs_data_set(" +
+                                    "num_key INTEGER PRIMARY KEY AUTOINCREMENT, creator_name  VARCHAR(40),  frog_name VARCHAR(40), frog_property INTEGER, frog_size DOUBLE, frog_power DOUBLE)");
+
+                            currentFrogPrice = 80;
+                            currentFrogSize = 80;
+                            database.execSQL("INSERT INTO frogs_data_set(creator_name, frog_name, frog_property, frog_size, frog_power) VALUES('"
+                                    + "Hyunju" + "','"
+                                    + newFrogName + "','"
+                                    + 0 + "','"
+                                    + currentFrogSize + "','"
+                                    + currentFrogPower + "')"
+                            );
+
+                            updateFrogState(Frog.ALIVE);
+                            frogNameAlertDialog.cancel();
+
+                        }
+                    });
+
+            }
+        });
+
+
+    }//TODO buy new frog  코드 정리하기 
 
     public void updateFrogState(int frogState){
         switch (frogState){
@@ -532,6 +619,8 @@ public class MainCenterFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if( requestCode == 999){
             showToastString("yes");
+            //Fragment바꾸기
+
         }
 
     }
