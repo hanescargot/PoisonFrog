@@ -32,7 +32,7 @@
             android:textColor="@color/black"
             android:layout_marginBottom="16dp"/>
         <EditText
-            android:id="@+id/et"
+            android:id="@+id/new_frog_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="개구리 이름 "

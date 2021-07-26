@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class FrogHouseAdapter extends BaseAdapter {
+public class MainAdapterFrogHouse extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
     ArrayList<OneFrogSet> oneFrogSet;
 
-    public FrogHouseAdapter(Context context, ArrayList<OneFrogSet> oneFrogSet){
+    public MainAdapterFrogHouse(Context context, ArrayList<OneFrogSet> oneFrogSet){
         this.context= context;
-        this.oneFrogSet= oneFrogSet;
+        this.oneFrogSet = oneFrogSet;
     }
 
     @Override
@@ -62,11 +62,11 @@ public class FrogHouseAdapter extends BaseAdapter {
 
         //////////////////////////////////////////////////////////
         //설정할 현재번째 데.이.터.를 얻어오기
-        OneFrogSet currentOneFrogSet= oneFrogSet.get(position);
+        OneFrogSet currentOneFrogSet = oneFrogSet.get(position);
         //각 뷰들에 값 설정!
         frogSrc.setImageResource( currentOneFrogSet.frogSrc );
         frogName.setText( currentOneFrogSet.frogName );
-        creatorName.setText("제작자: " +currentOneFrogSet.creatorName);
+        creatorName.setText("제작자: " + currentOneFrogSet.creatorName);
         frogProperty.setText( "품종: " +(currentOneFrogSet.frogProperty) );
         frogSize.setText( "크기: "+(currentOneFrogSet.frogSize) );
         frogPower.setText( "힘: "+(currentOneFrogSet.frogPower) );

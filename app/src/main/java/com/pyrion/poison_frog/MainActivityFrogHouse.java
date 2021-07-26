@@ -10,10 +10,10 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class FrogHouseActivity extends AppCompatActivity {
+public class MainActivityFrogHouse extends AppCompatActivity {
 
     ArrayList<OneFrogSet> frogSet = new ArrayList<>();
-    FrogHouseAdapter adapter;
+    MainAdapterFrogHouse adapter;
     ListView listView;
 
     SQLiteDatabase database;
@@ -31,6 +31,7 @@ public class FrogHouseActivity extends AppCompatActivity {
                 +"num_key INTEGER PRIMARY KEY AUTOINCREMENT,"
                 +" creator_name  VARCHAR(40),"
                 +"  frog_name VARCHAR(40),"
+                +" frog_state INTEGER,"
                 +" frog_property INTEGER,"
                 +" frog_size DOUBLE,"
                 +" frog_power DOUBLE)");
@@ -42,21 +43,22 @@ public class FrogHouseActivity extends AppCompatActivity {
             //columnIndex: 0 is origin number
             String creator_name = cursor.getString(1);
             String frog_name = cursor.getString(2);
-            int frog_property = cursor.getInt(3);
-            int frog_size = cursor.getInt(4);
-            int frog_power = cursor.getInt(5);
+            int frog_state = cursor.getInt(3);
+            int frog_property = cursor.getInt(4);
+            int frog_size = cursor.getInt(5);
+            int frog_power = cursor.getInt(6);
 
             frogSet.add(new OneFrogSet(
                     Frog.SPECIES_BASIC,
                     creator_name,
                     frog_name,
+                    frog_state,
                     frog_property,
                     frog_size,
                     frog_power));
         }
 
-
-        adapter = new FrogHouseAdapter( this, frogSet);
+        adapter = new MainAdapterFrogHouse( this, frogSet);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정
