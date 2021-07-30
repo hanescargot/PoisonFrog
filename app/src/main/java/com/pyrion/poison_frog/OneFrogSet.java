@@ -1,30 +1,39 @@
 package com.pyrion.poison_frog;
 
 public class OneFrogSet {
+    int cursor;
+    int houseType;
+    String creatorName;
+    String frogName;
+    int frogSpecies;
+    int frogSize;
+    int frogPower;
+    int frogState;
 
-    int frogSrc = 0;
-    String creatorName = "Anonymous";
-    String frogName = "NullFrogName";
-    String frogID = creatorName + frogName;
-    int frogProperty = Frog.SPECIES_BASIC; //9가지 더 있음
-    int frogSize = 80;
-    int frogPower = 1;
-    int frogState = Frog.ALIVE;
+    public OneFrogSet(){
+        this.cursor = Frog.CURSOR_STORED;
+        this.houseType = Frog.HOUSE_TYPE_LENT;
+        this.creatorName = "Anonymous";
+        this.frogName = "NullFrogName";
+        this.frogState = Frog.STATE_ALIVE;
+        this.frogSpecies = Frog.SPECIES_BASIC;
+        this.frogSize = Frog.SIZE_DEFAULT;
+        this.frogPower = Frog.POWER_DEFAULT;
+    }
 
     public OneFrogSet(
-            int frogSrc,
-            String userName,
+            int houseType,
+            String creatorName,
             String frogName,
             int frogSTate,
-            int frogProperty,
+            int frogSpecies,
             int frogSize,
             int frogPower){
-        this.frogSrc = frogSrc;
-        this.creatorName = userName;
+        this.houseType = houseType;
+        this.creatorName = creatorName;
         this.frogName = frogName;
         this.frogState = frogSTate;
-        this.frogID = userName + frogName;
-        this.frogProperty = frogProperty;
+        this.frogSpecies = frogSpecies;
         this.frogSize = frogSize;
         this.frogPower = frogPower;
     }

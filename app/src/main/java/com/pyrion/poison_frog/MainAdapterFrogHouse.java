@@ -64,10 +64,10 @@ public class MainAdapterFrogHouse extends BaseAdapter {
         //설정할 현재번째 데.이.터.를 얻어오기
         OneFrogSet currentOneFrogSet = oneFrogSet.get(position);
         //각 뷰들에 값 설정!
-        frogSrc.setImageResource( currentOneFrogSet.frogSrc );
+        frogSrc.setImageResource( currentOneFrogSet.frogSpecies);
         frogName.setText( currentOneFrogSet.frogName );
         creatorName.setText("제작자: " + currentOneFrogSet.creatorName);
-        frogProperty.setText( "품종: " +(currentOneFrogSet.frogProperty) );
+        frogProperty.setText( "품종: " +(currentOneFrogSet.frogSpecies) );
         frogSize.setText( "크기: "+(currentOneFrogSet.frogSize) );
         frogPower.setText( "힘: "+(currentOneFrogSet.frogPower) );
 

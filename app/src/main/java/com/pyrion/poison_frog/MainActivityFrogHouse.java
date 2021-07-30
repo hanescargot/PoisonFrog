@@ -22,13 +22,15 @@ public class MainActivityFrogHouse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_frog_house);
 
+        //actionbar setting
         ActionBar actionbar = getSupportActionBar();
         actionbar.setTitle("Frog House");
-        actionbar.setDisplayHomeAsUpEnabled(true); //add back buttn
+        actionbar.setDisplayHomeAsUpEnabled(true); //show back button
 
         database= openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
         database.execSQL("CREATE TABLE IF NOT EXISTS frogs_data_set("
                 +"num_key INTEGER PRIMARY KEY AUTOINCREMENT,"
+                +"house_type INTEGER,"
                 +" creator_name  VARCHAR(40),"
                 +"  frog_name VARCHAR(40),"
                 +" frog_state INTEGER,"
@@ -41,15 +43,16 @@ public class MainActivityFrogHouse extends AppCompatActivity {
 
         while(cursor.moveToNext()){//[레코드:row]로 커서이동
             //columnIndex: 0 is origin number
-            String creator_name = cursor.getString(1);
-            String frog_name = cursor.getString(2);
-            int frog_state = cursor.getInt(3);
-            int frog_property = cursor.getInt(4);
-            int frog_size = cursor.getInt(5);
-            int frog_power = cursor.getInt(6);
+            int house_type = cursor.getInt(1);
+            String creator_name = cursor.getString(2);
+            String frog_name = cursor.getString(3);
+            int frog_state = cursor.getInt(4);
+            int frog_property = cursor.getInt(5);
+            int frog_size = cursor.getInt(6);
+            int frog_power = cursor.getInt(7);
 
             frogSet.add(new OneFrogSet(
-                    Frog.SPECIES_BASIC,
+                    house_type,
                     creator_name,
                     frog_name,
                     frog_state,
