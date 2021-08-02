@@ -1,4 +1,4 @@
-package com.pyrion.poison_frog;
+package com.pyrion.poison_frog.fight;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+
+import com.pyrion.poison_frog.R;
 
 public class MainFragmentFight extends Fragment {
 

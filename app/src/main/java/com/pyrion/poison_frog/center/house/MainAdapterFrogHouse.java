@@ -1,5 +1,6 @@
-package com.pyrion.poison_frog;
+package com.pyrion.poison_frog.center.house;
 
+import com.pyrion.poison_frog.data.OneFrogSet;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.pyrion.poison_frog.R;
 
 import java.util.ArrayList;
 
@@ -64,12 +67,12 @@ public class MainAdapterFrogHouse extends BaseAdapter {
         //설정할 현재번째 데.이.터.를 얻어오기
         OneFrogSet currentOneFrogSet = oneFrogSet.get(position);
         //각 뷰들에 값 설정!
-        frogSrc.setImageResource( currentOneFrogSet.frogSpecies);
-        frogName.setText( currentOneFrogSet.frogName );
-        creatorName.setText("제작자: " + currentOneFrogSet.creatorName);
-        frogProperty.setText( "품종: " +(currentOneFrogSet.frogSpecies) );
-        frogSize.setText( "크기: "+(currentOneFrogSet.frogSize) );
-        frogPower.setText( "힘: "+(currentOneFrogSet.frogPower) );
+        frogSrc.setImageResource( currentOneFrogSet.getFrogSpecies());
+        frogName.setText( currentOneFrogSet.getFrogName() );
+        creatorName.setText("제작자: " + currentOneFrogSet.getCreatorName());
+        frogProperty.setText( "품종: " +(currentOneFrogSet.getFrogSpecies() ));
+        frogSize.setText( "크기: "+(currentOneFrogSet.getFrogSize() ));
+        frogPower.setText( "힘: "+(currentOneFrogSet.getFrogPower() ));
 
         //위에서 만들어진 View를 리턴하면 리스트뷰가 이를 보여줌.
         return convertView;

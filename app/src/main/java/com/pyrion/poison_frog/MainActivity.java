@@ -5,6 +5,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.pyrion.poison_frog.center.MainAdapterCenter;
+
 
 public class MainActivity extends AppCompatActivity {
     ViewPager2 viewPager;

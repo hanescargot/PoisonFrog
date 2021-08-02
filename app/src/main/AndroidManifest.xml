@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
         <activity
-            android:name=".MainActivityFrogHouse"
+            android:name=".center.house.MainActivityFrogHouse"
             android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.Poison_frog">
         </activity>
@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FlyGameActivity"></activity>
+        <activity android:name=".center.fly_game.FlyGameActivity"></activity>
     </application>
 
 </manifest>

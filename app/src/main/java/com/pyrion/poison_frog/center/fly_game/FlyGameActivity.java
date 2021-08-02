@@ -1,10 +1,12 @@
-package com.pyrion.poison_frog;
+package com.pyrion.poison_frog.center.fly_game;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.pyrion.poison_frog.R;
 
 import java.util.HashMap;
 import java.util.Random;

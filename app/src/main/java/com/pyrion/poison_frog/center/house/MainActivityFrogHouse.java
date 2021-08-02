@@ -1,4 +1,4 @@
-package com.pyrion.poison_frog;
+package com.pyrion.poison_frog.center.house;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,11 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.pyrion.poison_frog.data.OneFrogSet;
+import com.pyrion.poison_frog.R;
+
 import java.util.ArrayList;
 
 public class MainActivityFrogHouse extends AppCompatActivity {
 
-    ArrayList<OneFrogSet> frogSet = new ArrayList<>();
+    ArrayList<OneFrogSet> frogSetList = new ArrayList<>();
     MainAdapterFrogHouse adapter;
     ListView listView;
 
@@ -38,30 +41,31 @@ public class MainActivityFrogHouse extends AppCompatActivity {
                 +" frog_size DOUBLE,"
                 +" frog_power DOUBLE)");
 
-        Cursor cursor= database.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
-        if(cursor==null) return;
+        Cursor cursor_frog= database.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
+        if(cursor_frog==null) return;
 
-        while(cursor.moveToNext()){//[레코드:row]로 커서이동
+        while(cursor_frog.moveToNext()){//[레코드:row]로 커서이동
             //columnIndex: 0 is origin number
-            int house_type = cursor.getInt(1);
-            String creator_name = cursor.getString(2);
-            String frog_name = cursor.getString(3);
-            int frog_state = cursor.getInt(4);
-            int frog_property = cursor.getInt(5);
-            int frog_size = cursor.getInt(6);
-            int frog_power = cursor.getInt(7);
+            int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
+            String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
+            String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
+            int frog_state = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_state"));
+            int frog_species = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_species"));
+            int frog_size = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_size"));
+            int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
 
-            frogSet.add(new OneFrogSet(
+            frogSetList.add(new OneFrogSet(
                     house_type,
                     creator_name,
                     frog_name,
                     frog_state,
-                    frog_property,
+                    frog_species,
                     frog_size,
                     frog_power));
         }
+        cursor_frog.close();
 
-        adapter = new MainAdapterFrogHouse( this, frogSet);
+        adapter = new MainAdapterFrogHouse( this, frogSetList);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정

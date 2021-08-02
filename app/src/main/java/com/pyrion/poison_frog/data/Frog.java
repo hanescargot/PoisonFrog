@@ -1,6 +1,9 @@
-package com.pyrion.poison_frog;
+package com.pyrion.poison_frog.data;
+
+import com.pyrion.poison_frog.R;
 
 public class Frog {
+    public static final String FROG_NAME_NULL = "NULL NAME";
 
     public static final int SIZE_DEFAULT = 80;
     public static final int POWER_DEFAULT = 1;
