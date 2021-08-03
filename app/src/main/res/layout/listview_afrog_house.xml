@@ -29,7 +29,7 @@
                 android:id="@+id/frog_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NULL NAME"
+                android:text="null_frog_name"
                 android:textSize="24dp"
                 android:layout_toRightOf="@id/frog_src"
                 android:layout_marginBottom="8dp"

@@ -2,6 +2,7 @@ package com.pyrion.poison_frog.center;
 
 import android.app.AlertDialog;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -164,7 +165,7 @@ public class FragmentCenter extends Fragment {
             //when there is data
             cursor_frog = database_frog.rawQuery("SELECT * FROM frogs_data_set WHERE frog_key = "+selectedFrogKey, null);//WHERE절이 없기에 모든 레코드가 검색됨
             cursor_frog.moveToNext();//[레코드:row]로 커서이동
-            int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("selected_frog_key"));
+            int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
             int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
             String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
             String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
@@ -183,10 +184,9 @@ public class FragmentCenter extends Fragment {
                     frog_power
             );
             cursor_frog.close();
-        } catch (Exception e) {
+        } catch (CursorIndexOutOfBoundsException e) {
             //TODO 만약 movetToNext()한후에도 데이터가 하나도 없었다면 UNBOXING MODE
             // 유저 이름 입력받고 개구리 이름 입력 받는 페이지로 넘어가는 전역변수 모드 순자 바꾸기
-
             int frog_key = selectedFrogKey;
             int house_type = Frog.HOUSE_TYPE_LENT;
             String creator_name = userName;
@@ -669,25 +669,26 @@ public class FragmentCenter extends Fragment {
             addLogString("[개구리를 새로 구매 하셨습니다.]");
             changeCurrentMoney(-100);
 
-            currentFrogSet.setFrogSize(80);
-            database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
-                    + Frog.HOUSE_TYPE_LENT + "','"
-                    + userName + "','"
-                    + newFrogName + "','"
-                    + Frog.STATE_ALIVE + "','"
-                    + Frog.SPECIES_BASIC + "','"
-                    + Frog.SIZE_DEFAULT + "','"
-                    + Frog.POWER_DEFAULT + "')"
-            );
-
-            updateCurrentFrogDataSet();
+            frogDataReset();
+            currentFrogSet.setFrogName(newFrogName);
             updateFrogState(Frog.STATE_ALIVE);
-            updateFrogDB();
 
             frogNameAlertDialog.cancel();
 
         }
     };
+
+    public void frogDataReset(){
+        currentFrogSet.setHouseType(Frog.HOUSE_TYPE_LENT);
+        currentFrogSet.setCreatorName(userName);
+        currentFrogSet.setFrogName(Frog.FROG_NAME_NULL);
+        currentFrogSet.setFrogState(Frog.STATE_ALIVE);
+        currentFrogSet.setFrogSpecies(Frog.SPECIES_BASIC);
+        currentFrogSet.setFrogSize(Frog.SIZE_DEFAULT);
+        currentFrogSet.setFrogPower(Frog.POWER_DEFAULT);
+
+        updateFrogState(Frog.STATE_ALIVE);
+    }
 
     public void updateFrogState(int frogState){
         switch (frogState){
@@ -711,15 +712,14 @@ public class FragmentCenter extends Fragment {
                 frogTouchedCount = 0;
                 break;
         }
-
+        updateCurrentFrogDataSet();
         updateFrogDB();
         mainFrogImageView.requestLayout();
     }
 
     void updateFrogDB(){
-
         database_frog.execSQL("UPDATE frogs_data_set SET"
-                +" house_type = " +currentFrogSet.getHouseType()
+                +" frog_name =" + "'"+ currentFrogSet.getFrogName() +"'"
                 +", frog_state =" + currentFrogSet.getFrogState()
                 +", frog_species =" + currentFrogSet.getFrogSpecies()
                 +", frog_size =" + currentFrogSet.getFrogSize()
@@ -730,14 +730,11 @@ public class FragmentCenter extends Fragment {
 
     void updateCurrentFrogDataSet(){
         //Current frog data setting
-        currentFrogSet.setHouseType(Frog.HOUSE_TYPE_LENT);
-        currentFrogSet.setCreatorName(userName);
-        currentFrogSet.setFrogName(Frog.FROG_NAME_NULL);
-        currentFrogSet.setFrogState(Frog.STATE_ALIVE);
-        currentFrogSet.setFrogSpecies(Frog.SPECIES_BASIC);
-        currentFrogSet.setFrogSize(Frog.SIZE_DEFAULT);
-        currentFrogSet.setFrogPower(Frog.POWER_DEFAULT);
-
+        currentFrogSet.setFrogName(currentFrogSet.getFrogName());
+        currentFrogSet.setFrogState(currentFrogSet.getFrogState());
+        currentFrogSet.setFrogSpecies(currentFrogSet.getFrogSpecies());
+        currentFrogSet.setFrogSize(currentFrogSet.getFrogSize());
+        currentFrogSet.setFrogPower(currentFrogSet.getFrogPower());
     }
 
     void updateUserDB(){

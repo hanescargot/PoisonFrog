@@ -1,5 +1,7 @@
 package com.pyrion.poison_frog.data;
 
+import com.pyrion.poison_frog.R;
+
 public class OneFrogSet {
     private int frogKey = 1;
     private int cursor;
@@ -78,6 +80,22 @@ public class OneFrogSet {
 
     public int getFrogState() {
         return getFrogState;
+    }
+
+
+
+    public int getFrogSrc(){
+        int frogState = this.getFrogState;
+        switch (frogState){
+            case (Frog.STATE_ALIVE):
+                return (R.drawable.main_frog_jelly);
+            case (Frog.STATE_DEATH):
+                return (R.drawable.main_dead_frog);
+            case (Frog.STATE_SOLD):
+                return (R.drawable.main_gift);
+        }
+        // Null Image
+        return (R.drawable.main_frog_jelly);
     }
 
 

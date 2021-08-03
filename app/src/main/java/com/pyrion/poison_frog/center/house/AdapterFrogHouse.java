@@ -2,6 +2,7 @@ package com.pyrion.poison_frog.center.house;
 
 import com.pyrion.poison_frog.center.FragmentCenter;
 
+import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -74,7 +75,17 @@ public class AdapterFrogHouse extends BaseAdapter {
         if(oneFrogSet.getFrogKey() == FragmentCenter.getSelectedFrogKey()){
             //배경만 추가적으로 바꾸기
         }
-        frogSrc.setImageResource( oneFrogSet.getFrogSpecies());
+
+        frogSrc.setImageResource( oneFrogSet.getFrogSrc());
+
+        if(oneFrogSet.getFrogState()==Frog.STATE_SOLD){
+            frogName.setText( "빈집" );
+            creatorName.setText("[구매된 집] 영구적으로 사용 가능");
+            frogProperty.setText( "텅~~ 새 개구리를 구매하세요");
+            frogSize.setText("");
+            frogPower.setText("");
+            return convertView;
+        }
         frogName.setText( oneFrogSet.getFrogName() );
         creatorName.setText("제작자: " + oneFrogSet.getCreatorName());
         frogProperty.setText( "품종: " +(oneFrogSet.getFrogSpecies() ));
@@ -84,4 +95,5 @@ public class AdapterFrogHouse extends BaseAdapter {
         //위에서 만들어진 View를 리턴하면 리스트뷰가 이를 보여줌.
         return convertView;
     }
+
 }
