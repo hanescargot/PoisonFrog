@@ -13,13 +13,14 @@ import com.pyrion.poison_frog.R;
 
 import java.util.ArrayList;
 
-public class MainActivityFrogHouse extends AppCompatActivity {
+public class ActivityFrogHouse extends AppCompatActivity {
 
     ArrayList<OneFrogSet> frogSetList = new ArrayList<>();
-    MainAdapterFrogHouse adapter;
+    AdapterFrogHouse adapter;
     ListView listView;
+    Cursor cursor_frog;
+    SQLiteDatabase database_frog;
 
-    SQLiteDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,22 +31,11 @@ public class MainActivityFrogHouse extends AppCompatActivity {
         actionbar.setTitle("Frog House");
         actionbar.setDisplayHomeAsUpEnabled(true); //show back button
 
-        database= openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
-        database.execSQL("CREATE TABLE IF NOT EXISTS frogs_data_set("
-                +"num_key INTEGER PRIMARY KEY AUTOINCREMENT,"
-                +"house_type INTEGER,"
-                +" creator_name  VARCHAR(40),"
-                +"  frog_name VARCHAR(40),"
-                +" frog_state INTEGER,"
-                +" frog_property INTEGER,"
-                +" frog_size DOUBLE,"
-                +" frog_power DOUBLE)");
-
-        Cursor cursor_frog= database.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
-        if(cursor_frog==null) return;
-
+        //TODO intent로 안받고 db나 static으로 받아도 될까?
+        database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
+        cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
         while(cursor_frog.moveToNext()){//[레코드:row]로 커서이동
-            //columnIndex: 0 is origin number
+            int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("selected_frog_key"));
             int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
             String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
             String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
@@ -55,6 +45,7 @@ public class MainActivityFrogHouse extends AppCompatActivity {
             int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
 
             frogSetList.add(new OneFrogSet(
+                    frog_key,
                     house_type,
                     creator_name,
                     frog_name,
@@ -63,9 +54,10 @@ public class MainActivityFrogHouse extends AppCompatActivity {
                     frog_size,
                     frog_power));
         }
-        cursor_frog.close();
 
-        adapter = new MainAdapterFrogHouse( this, frogSetList);
+        cursor_frog.close();
+        //add function of to get a new house
+        adapter = new AdapterFrogHouse( this, frogSetList);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정

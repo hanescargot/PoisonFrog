@@ -9,11 +9,7 @@
         android:roundIcon="@drawable/main_frog_jelly"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity
-            android:name=".center.house.MainActivityFrogHouse"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.Poison_frog">
-        </activity>
+        <activity android:name=".center.house.ActivityFrogHouse"></activity>
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing">
@@ -23,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".center.fly_game.FlyGameActivity"></activity>
+        <activity android:name=".center.fly_game.FlyGameActivity" />
     </application>
 
 </manifest>

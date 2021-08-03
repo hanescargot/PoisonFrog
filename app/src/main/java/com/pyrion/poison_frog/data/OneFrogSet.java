@@ -1,7 +1,7 @@
 package com.pyrion.poison_frog.data;
 
 public class OneFrogSet {
-    private int key = 0;
+    private int frogKey = 1;
     private int cursor;
     private int houseType;
     private String creatorName;
@@ -14,7 +14,6 @@ public class OneFrogSet {
     // constructor
 
     public OneFrogSet(){
-        this.cursor = Frog.CURSOR_STORED;
         this.houseType = Frog.HOUSE_TYPE_LENT;
         this.creatorName = "Anonymous";
         this.frogName = "NullFrogName";
@@ -25,6 +24,7 @@ public class OneFrogSet {
     }
 
     public OneFrogSet(
+            int frogKey,
             int houseType,
             String creatorName,
             String frogName,
@@ -32,6 +32,7 @@ public class OneFrogSet {
             int frogSpecies,
             int frogSize,
             int frogPower){
+        this.frogKey = frogKey;
         this.houseType = houseType;
         this.creatorName = creatorName;
         this.frogName = frogName;
@@ -43,8 +44,8 @@ public class OneFrogSet {
 
     //getter
 
-    public int getKey() {
-        return key;
+    public int getFrogKey() {
+        return frogKey;
     }
 
     public int getCursor() {
@@ -82,8 +83,8 @@ public class OneFrogSet {
 
     //setter
 
-    public void setKey(int key) {
-        this.key = key;
+    public void setFrogKey(int frogKey) {
+        this.frogKey = frogKey;
     }
 
     public void setCursor(int cursor) {
@@ -111,7 +112,7 @@ public class OneFrogSet {
     }
 
     public void setFrogPower(int frogPower) {
-        this.frogPower += frogPower;
+        this.frogPower = frogPower;
     }
 
 
@@ -119,14 +120,5 @@ public class OneFrogSet {
         this.getFrogState = frogState;
     }
 
-    //change countable number
-
-    public void changeFrogSize(int frogSize) {
-        this.frogSize += frogSize;
-    }
-
-    public void changeFrogPower(int frogPower) {
-        this.frogPower += frogPower;
-    }
 
 }

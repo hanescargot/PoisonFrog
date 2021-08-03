@@ -8,9 +8,6 @@ public class Frog {
     public static final int SIZE_DEFAULT = 80;
     public static final int POWER_DEFAULT = 1;
 
-    public static final int CURSOR_STORED = 0; //창고에 있는 개구리
-    public static final int CURSOR_SELECTED = 1; //선택 된 최신 개구리
-
     //frog state
     public static final int STATE_ALIVE = 1;
     public static final int STATE_SOLD = 2;

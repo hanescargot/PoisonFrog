@@ -1,5 +1,7 @@
 package com.pyrion.poison_frog.center.house;
 
+import com.pyrion.poison_frog.center.FragmentCenter;
+
 import com.pyrion.poison_frog.data.OneFrogSet;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,25 +15,25 @@ import com.pyrion.poison_frog.R;
 
 import java.util.ArrayList;
 
-public class MainAdapterFrogHouse extends BaseAdapter {
+public class AdapterFrogHouse extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
-    ArrayList<OneFrogSet> oneFrogSet;
+    ArrayList<OneFrogSet> oneFrogSetList;
 
-    public MainAdapterFrogHouse(Context context, ArrayList<OneFrogSet> oneFrogSet){
+    public AdapterFrogHouse(Context context, ArrayList<OneFrogSet> oneFrogSetList){
         this.context= context;
-        this.oneFrogSet = oneFrogSet;
+        this.oneFrogSetList = oneFrogSetList;
     }
 
     @Override
     public int getCount() {
         //이 아답터가 만들 총 뷰의 개수를 리턴(데이터의 총 개수)
-        return oneFrogSet.size();
+        return oneFrogSetList.size();
     }
 
     @Override
     public Object getItem(int position) {
         //아답터가 가지고 있는 대량의 데이터 중에 특정한 위치 요소를 리턴
-        return oneFrogSet.get(position);
+        return oneFrogSetList.get(position);
     }
 
     @Override
@@ -65,14 +67,19 @@ public class MainAdapterFrogHouse extends BaseAdapter {
 
         //////////////////////////////////////////////////////////
         //설정할 현재번째 데.이.터.를 얻어오기
-        OneFrogSet currentOneFrogSet = oneFrogSet.get(position);
+        OneFrogSet oneFrogSet = this.oneFrogSetList.get(position);
+
+
         //각 뷰들에 값 설정!
-        frogSrc.setImageResource( currentOneFrogSet.getFrogSpecies());
-        frogName.setText( currentOneFrogSet.getFrogName() );
-        creatorName.setText("제작자: " + currentOneFrogSet.getCreatorName());
-        frogProperty.setText( "품종: " +(currentOneFrogSet.getFrogSpecies() ));
-        frogSize.setText( "크기: "+(currentOneFrogSet.getFrogSize() ));
-        frogPower.setText( "힘: "+(currentOneFrogSet.getFrogPower() ));
+        if(oneFrogSet.getFrogKey() == FragmentCenter.getSelectedFrogKey()){
+            //배경만 추가적으로 바꾸기
+        }
+        frogSrc.setImageResource( oneFrogSet.getFrogSpecies());
+        frogName.setText( oneFrogSet.getFrogName() );
+        creatorName.setText("제작자: " + oneFrogSet.getCreatorName());
+        frogProperty.setText( "품종: " +(oneFrogSet.getFrogSpecies() ));
+        frogSize.setText( "크기: "+(oneFrogSet.getFrogSize() ));
+        frogPower.setText( "힘: "+(oneFrogSet.getFrogPower() ));
 
         //위에서 만들어진 View를 리턴하면 리스트뷰가 이를 보여줌.
         return convertView;
