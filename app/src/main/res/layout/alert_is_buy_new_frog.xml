@@ -31,14 +31,15 @@
         android:src="@drawable/main_frog_jelly"/>
 
     <ImageView
+        android:id="@+id/cancel_button"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:layout_constraintLeft_toRightOf="@+id/is_buy_button"
+        app:layout_constraintLeft_toRightOf="@+id/pay_button"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/main_cancel_button" />
 
     <LinearLayout
-        android:id="@+id/is_buy_button"
+        android:id="@+id/pay_button"
         android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

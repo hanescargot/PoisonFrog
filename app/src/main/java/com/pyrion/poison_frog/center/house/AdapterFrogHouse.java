@@ -1,10 +1,13 @@
 package com.pyrion.poison_frog.center.house;
 
+import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.center.FragmentCenter;
 
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,15 +48,30 @@ public class AdapterFrogHouse extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //뷰 재활용 함 : convertView
-            //convertiView란 화면밖 벗어난 view를 자동으로 참조!!!!!!!!!!!!!
-        if( convertView == null ){ //재활용할 뷰가 없음.
-            LayoutInflater inflater= LayoutInflater.from(context);
+        //////////////////////////////////////////////////////////
+        //설정할 현재번째 데.이.터.를 얻어오기
+        OneFrogSet oneFrogSet = this.oneFrogSetList.get(position);
 
-            //재활용 할 뷰로 만들기
-            //빈 객체 xml 만들기 인플레이터로
-            convertView= inflater.inflate(R.layout.listview_afrog_house, null);
+        LayoutInflater inflater= LayoutInflater.from(context);
+
+        if(oneFrogSet.getHouseType()==Frog.HOUSE_TYPE_BUY_NEW){
+            convertView = inflater.inflate(R.layout.listview_house_event_item, null);
+            return convertView;
         }
+
+        if(oneFrogSet.getFrogState()==Frog.STATE_SOLD){
+            convertView = inflater.inflate(R.layout.listview_house_event_item, null);
+            ImageView mainSrc= convertView.findViewById(R.id.main_house_icon);
+            ImageView subSrc= convertView.findViewById(R.id.main_buy_icon);
+            mainSrc.setImageResource(R.drawable.main_gift);
+            mainSrc.setPadding(80,80,80,80);
+            subSrc.setVisibility(View.GONE);
+
+            return convertView;
+        }
+        convertView= inflater.inflate(R.layout.listview_house_frog_item, null);
+
+
 
         //기존에 있던 convertView 쓰거나 위에서 새로 만든 프레임을 쓰게 됨
         //생성된 뷰객체에게 값을 설정하는 작업 - bind view
@@ -65,27 +83,13 @@ public class AdapterFrogHouse extends BaseAdapter {
         TextView frogSize= convertView.findViewById(R.id.frog_size);
         TextView frogPower= convertView.findViewById(R.id.frog_power);
 
-
-        //////////////////////////////////////////////////////////
-        //설정할 현재번째 데.이.터.를 얻어오기
-        OneFrogSet oneFrogSet = this.oneFrogSetList.get(position);
-
-
-        //각 뷰들에 값 설정!
+        //현재 선택되어있는 개구리 집
         if(oneFrogSet.getFrogKey() == FragmentCenter.getSelectedFrogKey()){
             //배경만 추가적으로 바꾸기
         }
-
-        frogSrc.setImageResource( oneFrogSet.getFrogSrc());
-
-        if(oneFrogSet.getFrogState()==Frog.STATE_SOLD){
-            frogName.setText( "빈집" );
-            creatorName.setText("[구매된 집] 영구적으로 사용 가능");
-            frogProperty.setText( "텅~~ 새 개구리를 구매하세요");
-            frogSize.setText("");
-            frogPower.setText("");
-            return convertView;
-        }
+        Log.i("!!!!",oneFrogSet.getFrogSrc() + "");
+//        frogSrc.setImageResource( oneFrogSet.getFrogSrc());
+        Glide.with(context).load( oneFrogSet.getFrogSrc() ).into(frogSrc);
         frogName.setText( oneFrogSet.getFrogName() );
         creatorName.setText("제작자: " + oneFrogSet.getCreatorName());
         frogProperty.setText( "품종: " +(oneFrogSet.getFrogSpecies() ));

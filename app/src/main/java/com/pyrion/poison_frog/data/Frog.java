@@ -3,7 +3,8 @@ package com.pyrion.poison_frog.data;
 import com.pyrion.poison_frog.R;
 
 public class Frog {
-    public static final String FROG_NAME_NULL = "null_frog_name";
+    public static final String FROG_NAME_NULL = "frog_null_name";
+    public static final String USER_NAME_NULL = "user_null_name";
 
     public static final int SIZE_DEFAULT = 80;
     public static final int POWER_DEFAULT = 1;
@@ -27,6 +28,7 @@ public class Frog {
     public static final int SPECIES_I = 10;
 
     //house type
+    public static final int HOUSE_TYPE_BUY_NEW = 0;
     public static final int HOUSE_TYPE_LENT = 1;
     public static final int HOUSE_TYPE_BOUGHT = 2;
 

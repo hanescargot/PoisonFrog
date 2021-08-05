@@ -2,11 +2,11 @@ package com.pyrion.poison_frog.center;
 
 import android.app.AlertDialog;
 import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +36,10 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class FragmentCenter extends Fragment {
 
-    SQLiteDatabase database_frog;
     SQLiteDatabase database_user;
+    SQLiteDatabase database_frog;
+    Cursor cursor_user;
+    Cursor cursor_frog;
 
     OneFrogSet currentFrogSet;
 
@@ -113,40 +115,6 @@ public class FragmentCenter extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //User data settings
-        database_user = getActivity().openOrCreateDatabase("userDB.db", getActivity().MODE_PRIVATE, null);
-        database_user.execSQL("CREATE TABLE IF NOT EXISTS user_data_set("
-                + "user_name String,"
-                + "selected_frog_key INTEGER,"
-                + "user_money INTEGER)"
-        );
-
-        Cursor cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
-        if (cursor_user == null) return;
-        cursor_user.moveToNext();
-        try{
-            //기존 데이터가 존재할 때
-            userName = cursor_user.getString(cursor_user.getColumnIndex("user_name"));
-            selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
-            currentUserMoney = cursor_user.getInt(cursor_user.getColumnIndex("user_money"));
-
-        } catch (Exception e) {
-            userName = "Anonymous";
-            selectedFrogKey = 1;
-            currentUserMoney = 100;
-
-            database_user.execSQL("INSERT INTO user_data_set(user_name, selected_frog_key, user_money) VALUES('"
-                    + userName + "','"
-                    + selectedFrogKey + "','"
-                    + currentUserMoney + "')"
-            );
-        }
-
-
-        //TODO 언제? 왜 닫아줘야하지? 크진 않지만 메모리 누수를 막기 위해 Adapter가 닫힐 때 닫아준다.
-//        database_user.close();
-        cursor_user.close();
-
         //Frog data settings
         database_frog = getActivity().openOrCreateDatabase("frogsDB.db", getActivity().MODE_PRIVATE, null);
         database_frog.execSQL("CREATE TABLE IF NOT EXISTS frogs_data_set("
@@ -160,62 +128,15 @@ public class FragmentCenter extends Fragment {
                 + "frog_power DOUBLE)"
         );
 
-        Cursor cursor_frog;
-        try {
-            //when there is data
-            cursor_frog = database_frog.rawQuery("SELECT * FROM frogs_data_set WHERE frog_key = "+selectedFrogKey, null);//WHERE절이 없기에 모든 레코드가 검색됨
-            cursor_frog.moveToNext();//[레코드:row]로 커서이동
-            int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
-            int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
-            String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
-            String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
-            int frog_state = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_state"));
-            int frog_species = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_species"));
-            int frog_size = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_size"));
-            int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
-            currentFrogSet = new OneFrogSet(
-                    frog_key,
-                    house_type,
-                    creator_name,
-                    frog_name,
-                    frog_state,
-                    frog_species,
-                    frog_size,
-                    frog_power
-            );
-            cursor_frog.close();
-        } catch (CursorIndexOutOfBoundsException e) {
-            //TODO 만약 movetToNext()한후에도 데이터가 하나도 없었다면 UNBOXING MODE
-            // 유저 이름 입력받고 개구리 이름 입력 받는 페이지로 넘어가는 전역변수 모드 순자 바꾸기
-            int frog_key = selectedFrogKey;
-            int house_type = Frog.HOUSE_TYPE_LENT;
-            String creator_name = userName;
-            String frog_name = Frog.FROG_NAME_NULL;
-            int frog_state = Frog.STATE_ALIVE;
-            int frog_species = Frog.SPECIES_BASIC;
-            int frog_size = Frog.SIZE_DEFAULT;
-            int frog_power = Frog.POWER_DEFAULT;
-            database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
-                    + house_type + "','"
-                    + creator_name + "','"
-                    + frog_name + "','"
-                    + frog_state + "','"
-                    + frog_species + "','"
-                    + frog_size + "','"
-                    + frog_power + "')"
-            );
-            currentFrogSet = new OneFrogSet(
-                    frog_key,
-                    house_type,
-                    creator_name,
-                    frog_name,
-                    frog_state,
-                    frog_species,
-                    frog_size,
-                    frog_power
-            );
-        }
+        //User data settings
+        database_user = getActivity().openOrCreateDatabase("userDB.db", getActivity().MODE_PRIVATE, null);
+        database_user.execSQL("CREATE TABLE IF NOT EXISTS user_data_set("
+                + "user_name String,"
+                + "selected_frog_key INTEGER,"
+                + "user_money INTEGER)"
+        );
 
+        Log.i("tag","ON CREAT");
     }
 
     @Override
@@ -243,9 +164,9 @@ public class FragmentCenter extends Fragment {
 
         imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE); //getActivity(). 해줘야함.
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
-
-        setStart();
+        Log.i("tag","ON CREAT View");
         return view;
+
     }
 
 
@@ -327,7 +248,7 @@ public class FragmentCenter extends Fragment {
 
                 addLogString(soledFrogMsgs[random.nextInt(soledFrogMsgs.length)]);
                 addLogString("[개구리가 판매되었습니다.]");
-                updateFrogState(Frog.STATE_SOLD);
+                updateSelectedFrogState(Frog.STATE_SOLD);
             }
         });
 
@@ -355,7 +276,7 @@ public class FragmentCenter extends Fragment {
                 changeFrogSize(+1);
                 showToastString("크기+1");
 
-                updateFrogDB();
+                updateCurrentFrogDB();
             }
         });
 
@@ -374,7 +295,7 @@ public class FragmentCenter extends Fragment {
                 }
                 changeFrogPower(1);
                 showToastString("힘+1");
-                updateFrogDB();
+                updateCurrentFrogDB();
             }
         });
 
@@ -405,7 +326,7 @@ public class FragmentCenter extends Fragment {
                         addLogString("[돈이 부족하네..]");
                         return;
                     }
-                    buyNewFrog();
+                    alertDialogIsBuy();
                     return;
                 }
                 if (currentFrogSet.getFrogState() == Frog.STATE_DEATH) {
@@ -436,7 +357,7 @@ public class FragmentCenter extends Fragment {
                     default: {
 
                         if (random.nextInt(2) == 1) {
-                            updateFrogState(Frog.STATE_DEATH);
+                            updateSelectedFrogState(Frog.STATE_DEATH);
                             addLogString("[개구리 죽음]");
                             showToastString("개구리 사망");
                         } else {
@@ -506,7 +427,7 @@ public class FragmentCenter extends Fragment {
                                 changeFrogSize(randomFoodPoint *30);
                                 addLogString("[개구리가 급격히 성장 함]");
                             }else{
-                                updateFrogState(Frog.STATE_DEATH);
+                                updateSelectedFrogState(Frog.STATE_DEATH);
                                 addLogString("[개구리 죽음]");
                                 showToastString("개구리 사망");
                             }
@@ -527,6 +448,19 @@ public class FragmentCenter extends Fragment {
 
     };
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getCurrentUserDB();
+        getCurrentFrogDB();
+        updateSelectedFrogState(currentFrogSet.getFrogState());
+        //커런트 개구리 이름이 널이라면 개구리 새로 사기페이지로 이동
+
+        //main frog view setting
+        Log.i("tag","ON Resume");
+    }
+
     int getCurrentFrogPrice(){
         return currentFrogSet.getFrogSize()+currentFrogSet.getFrogPower();
     }
@@ -543,11 +477,6 @@ public class FragmentCenter extends Fragment {
         addLogString("방금 먹은 음식과"+"_잘 안"+ "어울리네요.");
         addLogString("또 먹고싶" +"_지 않아"+"요.");
         addLogString("짜증나"+"요.");
-    }
-
-    public void setStart() {
-        updateFrogState(currentFrogSet.getFrogState());
-        moneyStringTextView.setText((currentUserMoney)+"");
     }
 
     public void showToastString(String text){
@@ -585,19 +514,18 @@ public class FragmentCenter extends Fragment {
             addLogString("살려줘서 고맙다 개굴.");
         }
         showToastString("개구리 부활");
-        updateFrogState(Frog.STATE_ALIVE);
+        updateSelectedFrogState(Frog.STATE_ALIVE);
         mainFrogImageView.setImageResource(R.drawable.main_frog_jelly);
     }
 
     public void changeCurrentMoney(int diff){
         currentUserMoney += diff;
-        moneyStringTextView.setText((currentUserMoney)+"");
         updateUserDB();
     }
 
     public void changeFrogSize(int diff) {
         currentFrogSet.setFrogSize(currentFrogSet.getFrogSize() + diff);
-        updateFrogDB();
+        updateCurrentFrogDB();
 
         mainFrogImageView.getLayoutParams().height=currentFrogSet.getFrogSize();
         mainFrogImageView.getLayoutParams().width=currentFrogSet.getFrogSize();
@@ -606,19 +534,15 @@ public class FragmentCenter extends Fragment {
 
     public void changeFrogPower(int diff){
         currentFrogSet.setFrogPower(currentFrogSet.getFrogPower() + diff);
-        updateFrogDB();
+        updateCurrentFrogDB();
     }
 
-    private void buyNewFrog() {
+    private void alertDialogIsBuy() {
         //TODO 새로 사는 개구리 창고 데이터 업데이트
         //AlertDialog
-        AlertDialog.Builder isBuyBuilder= new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder isBuyBuilder = new AlertDialog.Builder(getActivity());
         alertIsBuyNewFrog= inflater.inflate(R.layout.alert_is_buy_new_frog, null);
         isBuyBuilder.setView(alertIsBuyNewFrog);
-
-
-        View isBuyButton = alertIsBuyNewFrog.findViewById(R.id.is_buy_button);
-
 
         //건축가에게 위 설정할 모양으로 AlertDialog 객체를 만들어 달라고 요청!
         isBuyAlertDialog= isBuyBuilder.create();
@@ -630,38 +554,44 @@ public class FragmentCenter extends Fragment {
         isBuyAlertDialog.show();
         isBuyAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
 
-        isBuyButton.setOnClickListener(isBuyButtonClickListener);
+        View payButton = alertIsBuyNewFrog.findViewById(R.id.pay_button);
+        View cancelButton = alertIsBuyNewFrog.findViewById(R.id.cancel_button);
+
+        payButton.setOnClickListener(payFrogButtonClickListener);
+        cancelButton.setOnClickListener(cancelBuyFrogButton);
 
     }//TODO buy new frog  코드 정리하기
 
-    View.OnClickListener isBuyButtonClickListener = new View.OnClickListener() {
+    View.OnClickListener payFrogButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AlertDialog.Builder frogNameBuilder= new AlertDialog.Builder(getActivity());//R.style.Theme_TransparentBackground
-            //                frogNameBuilder.setTitle("새 개구리 이름 정하기");
+            isBuyAlertDialog.cancel();
+
+            AlertDialog.Builder frogNameBuilder = new AlertDialog.Builder(getActivity());
             alertNewFrogName= inflater.inflate(R.layout.alert_set_new_frog_name, null);
             frogNameBuilder.setView(alertNewFrogName);
 
+            ImageView newFrogNameConfirmButton = alertNewFrogName.findViewById(R.id.main_buy_button);
+            newFrogNameEditText = alertNewFrogName.findViewById(R.id.new_frog_name_edit_text);
 
-            ImageView frogNewNameButton = alertNewFrogName.findViewById(R.id.main_buy_button);
-            newFrogNameEditText= alertNewFrogName.findViewById(R.id.new_frog_name_edit_text);
-
-            frogNameAlertDialog= frogNameBuilder.create();
+            frogNameAlertDialog = frogNameBuilder.create();
             frogNameAlertDialog.setCanceledOnTouchOutside(true);
-
-            frogNameAlertDialog.show();
             frogNameAlertDialog.getWindow().setBackgroundDrawable(
                     new ColorDrawable(Color.parseColor("#00000000")));
+            frogNameAlertDialog.show();
 
-
-            isBuyAlertDialog.cancel();
-            frogNewNameButton.setOnClickListener(newFrogNameButtonOnClickListener);
-            //TODO add cancel button
-
+            newFrogNameConfirmButton.setOnClickListener(newFrogNameConfirmButtonOnClickListener);
         }
     };
 
-    View.OnClickListener newFrogNameButtonOnClickListener = new View.OnClickListener() {
+    View.OnClickListener cancelBuyFrogButton = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            isBuyAlertDialog.cancel();
+        }
+    };
+
+    View.OnClickListener newFrogNameConfirmButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             String newFrogName = newFrogNameEditText.getText().toString();
@@ -671,7 +601,7 @@ public class FragmentCenter extends Fragment {
 
             frogDataReset();
             currentFrogSet.setFrogName(newFrogName);
-            updateFrogState(Frog.STATE_ALIVE);
+            updateSelectedFrogState(Frog.STATE_ALIVE);
 
             frogNameAlertDialog.cancel();
 
@@ -687,10 +617,10 @@ public class FragmentCenter extends Fragment {
         currentFrogSet.setFrogSize(Frog.SIZE_DEFAULT);
         currentFrogSet.setFrogPower(Frog.POWER_DEFAULT);
 
-        updateFrogState(Frog.STATE_ALIVE);
+        updateSelectedFrogState(Frog.STATE_ALIVE);
     }
 
-    public void updateFrogState(int frogState){
+    public void updateSelectedFrogState(int frogState){
         switch (frogState){
             case Frog.STATE_ALIVE:
                 currentFrogSet.setFrogState(Frog.STATE_ALIVE);
@@ -712,39 +642,146 @@ public class FragmentCenter extends Fragment {
                 frogTouchedCount = 0;
                 break;
         }
-        updateCurrentFrogDataSet();
-        updateFrogDB();
+        updateCurrentFrogDB();
         mainFrogImageView.requestLayout();
     }
 
-    void updateFrogDB(){
+    void getCurrentFrogDB(){
+        cursor_frog = database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
+        int countFrogDB = cursor_frog.getCount();
+        if(countFrogDB != 0) {
+            try {//when there is selected frog data
+                cursor_frog = database_frog.rawQuery("SELECT * FROM frogs_data_set WHERE frog_key = " + selectedFrogKey, null);//WHERE절이 없기에 모든 레코드가 검색됨
+                cursor_frog.moveToNext();//[레코드:row]로 커서이동
+
+                int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
+                int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
+                String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
+                String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
+                int frog_state = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_state"));
+                int frog_species = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_species"));
+                int frog_size = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_size"));
+                int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
+
+                currentFrogSet = new OneFrogSet(
+                        frog_key,
+                        house_type,
+                        creator_name,
+                        frog_name,
+                        frog_state,
+                        frog_species,
+                        frog_size,
+                        frog_power
+                );
+            } catch (Exception e) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("개구리 불러오기 오류").setPositiveButton("OK", null).show();
+                getActivity().onBackPressed();
+            }
+        }
+
+        if(countFrogDB == 0) {
+            //TODO 만약 movetToNext()한후에도 데이터가 하나도 없었다면 UNBOXING MODE
+            // 유저 이름 입력받고 개구리 이름 입력 받는 페이지로 넘어가는 전역변수 모드 순자 바꾸기
+            int frog_key = selectedFrogKey;
+            int house_type = Frog.HOUSE_TYPE_LENT;
+            String creator_name = userName;
+            String frog_name = Frog.FROG_NAME_NULL;
+            int frog_state = Frog.STATE_ALIVE;
+            int frog_species = Frog.SPECIES_BASIC;
+            int frog_size = Frog.SIZE_DEFAULT;
+            int frog_power = Frog.POWER_DEFAULT;
+            database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
+                    + house_type + "','"
+                    + creator_name + "','"
+                    + frog_name + "','"
+                    + frog_state + "','"
+                    + frog_species + "','"
+                    + frog_size + "','"
+                    + frog_power + "')"
+            );
+            currentFrogSet = new OneFrogSet(
+                    frog_key,
+                    house_type,
+                    creator_name,
+                    frog_name,
+                    frog_state,
+                    frog_species,
+                    frog_size,
+                    frog_power
+            );
+        }
+    }
+
+    void updateCurrentFrogDB(){
         database_frog.execSQL("UPDATE frogs_data_set SET"
                 +" frog_name =" + "'"+ currentFrogSet.getFrogName() +"'"
                 +", frog_state =" + currentFrogSet.getFrogState()
                 +", frog_species =" + currentFrogSet.getFrogSpecies()
                 +", frog_size =" + currentFrogSet.getFrogSize()
                 +", frog_power =" + currentFrogSet.getFrogPower()
+
                 +" WHERE frog_key =" + currentFrogSet.getFrogKey()
         );
     }
 
-    void updateCurrentFrogDataSet(){
-        //Current frog data setting
-        currentFrogSet.setFrogName(currentFrogSet.getFrogName());
-        currentFrogSet.setFrogState(currentFrogSet.getFrogState());
-        currentFrogSet.setFrogSpecies(currentFrogSet.getFrogSpecies());
-        currentFrogSet.setFrogSize(currentFrogSet.getFrogSize());
-        currentFrogSet.setFrogPower(currentFrogSet.getFrogPower());
+    void getCurrentUserDB(){
+        cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+        int countUserDB = cursor_user.getCount();
+        cursor_user.moveToNext();
+
+        if(countUserDB != 0) {
+            //기존 데이터가 존재할 때
+            try {
+                userName = cursor_user.getString(cursor_user.getColumnIndex("user_name"));
+                selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
+                currentUserMoney = cursor_user.getInt(cursor_user.getColumnIndex("user_money"));
+            } catch (Exception e) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("사용자 데이터 불러오기 오류").setPositiveButton("OK", null).show();
+                getActivity().onBackPressed();
+            }
+        }
+        if(countUserDB == 0){
+            userName = "Anonymous";
+            selectedFrogKey = 1;
+            currentUserMoney = 100;
+
+            database_user.execSQL("INSERT INTO user_data_set(user_name, selected_frog_key, user_money) VALUES('"
+                    + userName + "','"
+                    + selectedFrogKey + "','"
+                    + currentUserMoney + "')"
+            );
+        }
+
+        //TODO 언제? 왜 닫아줘야하지? 크진 않지만 메모리 누수를 막기 위해 Adapter가 닫힐 때 닫아준다.
     }
+
 
     void updateUserDB(){
         database_user.execSQL("UPDATE user_data_set SET"
-                +" user_money = " + currentUserMoney
+                +" user_name =" + "'"+userName+"'"
+                +", selected_frog_key = " + selectedFrogKey
+                +", user_money = " + currentUserMoney
         );
+        moneyStringTextView.setText((currentUserMoney)+"");
     }
+
+
 
     public static int getSelectedFrogKey(){
         return selectedFrogKey;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        database_user.close();
+        cursor_user.close();
+
+        database_frog.close();
+        cursor_frog.close();
     }
 
     //TODO 개구리 롱프래스 하면 개구리 상태 보기, 지금 상대와 거래하기

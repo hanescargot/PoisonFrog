@@ -3,19 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/black"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <ImageView
+            android:padding="16dp"
             android:id="@+id/frog_src"
             android:layout_width="140dp"
             android:layout_height="140dp"
-            android:src="@drawable/main_frog_jelly"
-            android:scaleType="centerCrop"/>
+            android:src="@drawable/main_frog_jelly"/>
 
         <LinearLayout
+            android:id="@+id/linear_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/frog_src"
@@ -76,6 +78,14 @@
                 android:textColor="#FFFFFF"
                 />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/sell_house_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/main_dollar"
+            android:layout_alignBottom="@+id/linear_layout"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 </RelativeLayout>

@@ -16,7 +16,7 @@ public class OneFrogSet {
     // constructor
 
     public OneFrogSet(){
-        this.houseType = Frog.HOUSE_TYPE_LENT;
+        this.houseType = Frog.HOUSE_TYPE_BUY_NEW;
         this.creatorName = "Anonymous";
         this.frogName = "NullFrogName";
         this.getFrogState = Frog.STATE_ALIVE;
@@ -88,11 +88,11 @@ public class OneFrogSet {
         int frogState = this.getFrogState;
         switch (frogState){
             case (Frog.STATE_ALIVE):
-                return (R.drawable.main_frog_jelly);
+                return R.drawable.main_frog_jelly;
             case (Frog.STATE_DEATH):
-                return (R.drawable.main_dead_frog);
+                return R.drawable.main_dead_frog;
             case (Frog.STATE_SOLD):
-                return (R.drawable.main_gift);
+                return R.drawable.main_gift;
         }
         // Null Image
         return (R.drawable.main_frog_jelly);

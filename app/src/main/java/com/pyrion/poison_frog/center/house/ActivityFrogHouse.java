@@ -4,12 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.pyrion.poison_frog.MainActivity;
+import com.pyrion.poison_frog.center.FragmentCenter;
+import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 import com.pyrion.poison_frog.R;
 
@@ -22,6 +31,7 @@ public class ActivityFrogHouse extends AppCompatActivity {
     ListView listView;
     Cursor cursor_frog;
     SQLiteDatabase database_frog;
+    SQLiteDatabase database_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +69,48 @@ public class ActivityFrogHouse extends AppCompatActivity {
                         frog_power));
             }
         }
-        cursor_frog.close();
-        //add function of to get a new house
+
+        //add buy new house event
+        frogSetList.add(new OneFrogSet());
+
         adapter = new AdapterFrogHouse( this, frogSetList);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                OneFrogSet selectedFrogSet = frogSetList.get(position);
+                int newFrogKey = selectedFrogSet.getFrogKey();
+
+                if(selectedFrogSet.getHouseType()== Frog.HOUSE_TYPE_BUY_NEW){
+                    //TODO  Buy New Frog house
+                    database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
+                            + Frog.HOUSE_TYPE_LENT + "','"
+                            + Frog.USER_NAME_NULL + "','"
+                            + Frog.FROG_NAME_NULL + "','"
+                            + Frog.STATE_ALIVE + "','"
+                            + Frog.SPECIES_BASIC + "','"
+                            + Frog.SIZE_DEFAULT + "','"
+                            + Frog.POWER_DEFAULT + "')"
+                    );
+                    ///TODO AUTO increase 된 마지막 추가 된 값 가져오기
+                    cursor_frog.moveToLast();
+                    newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
+                }
+
+
+                database_user = openOrCreateDatabase("userDB.db", MODE_PRIVATE, null);
+                database_user.execSQL("UPDATE user_data_set SET"
+                        +" selected_frog_key = " + newFrogKey
+                );
+
+                Intent intent = new Intent();
+                onBackPressed();
+            }
+        });
     }
 
     @Override
