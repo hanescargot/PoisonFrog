@@ -16,6 +16,7 @@ public class OneFrogSet {
     // constructor
 
     public OneFrogSet(){
+        //default is buy new house
         this.houseType = Frog.HOUSE_TYPE_BUY_NEW;
         this.creatorName = "Anonymous";
         this.frogName = "NullFrogName";

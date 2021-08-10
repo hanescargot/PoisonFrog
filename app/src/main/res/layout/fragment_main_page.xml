@@ -65,7 +65,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_height="match_parent"
-                android:src="@drawable/main_house"/>
+                android:clickable="true"
+                android:src="@drawable/change_button_clicked"/>
         </LinearLayout>
         <EditText
             android:visibility="gone"

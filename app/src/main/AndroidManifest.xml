@@ -9,17 +9,21 @@
         android:roundIcon="@drawable/main_frog_jelly"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity android:name=".center.house.ActivityFrogHouse"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:windowSoftInputMode="adjustNothing">
+        <activity android:name=".IntroActivity"
+            android:theme="@style/Theme.Poison_frog_no_actionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".center.house.ActivityFrogHouse"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing">
         </activity>
         <activity android:name=".center.fly_game.FlyGameActivity" />
     </application>

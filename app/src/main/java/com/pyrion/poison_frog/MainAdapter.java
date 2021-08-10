@@ -1,22 +1,23 @@
-package com.pyrion.poison_frog.center;
+package com.pyrion.poison_frog;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.pyrion.poison_frog.fight.MainFragmentFight;
-import com.pyrion.poison_frog.trade.MainFragmentTrade;
+import com.pyrion.poison_frog.center.FragmentCenter;
+import com.pyrion.poison_frog.fight.FragmentFight;
+import com.pyrion.poison_frog.trade.FragmentTrade;
 
-public class AdapterCenter extends FragmentStateAdapter {
+public class MainAdapter extends FragmentStateAdapter {
 
     Fragment[] fragments = new Fragment[3];
 
-    public AdapterCenter(FragmentActivity fragmentActivity){
+    public MainAdapter(FragmentActivity fragmentActivity){
         super(fragmentActivity);
 
-        fragments[0] = new MainFragmentFight();
+        fragments[0] = new FragmentFight();
         fragments[1] = new FragmentCenter();
-        fragments[2] = new MainFragmentTrade();
+        fragments[2] = new FragmentTrade();
 
     }
     @Override

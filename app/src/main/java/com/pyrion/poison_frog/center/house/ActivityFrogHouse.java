@@ -4,20 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.pyrion.poison_frog.MainActivity;
-import com.pyrion.poison_frog.center.FragmentCenter;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 import com.pyrion.poison_frog.R;
@@ -26,7 +21,7 @@ import java.util.ArrayList;
 
 public class ActivityFrogHouse extends AppCompatActivity {
 
-    ArrayList<OneFrogSet> frogSetList = new ArrayList<>();
+    ArrayList<OneFrogSet> oneFrogSetList = new ArrayList<>();
     AdapterFrogHouse adapter;
     ListView listView;
     Cursor cursor_frog;
@@ -44,7 +39,7 @@ public class ActivityFrogHouse extends AppCompatActivity {
         actionbar.setDisplayHomeAsUpEnabled(true); //show back button
 
         //TODO intent로 안받고 db나 static으로 받아도 될까?
-        frogSetList.clear();
+        oneFrogSetList.clear();
         database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
         cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
         if(cursor_frog!=null) {
@@ -58,7 +53,7 @@ public class ActivityFrogHouse extends AppCompatActivity {
                 int frog_size = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_size"));
                 int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
 
-                frogSetList.add(new OneFrogSet(
+                oneFrogSetList.add(new OneFrogSet(
                         frog_key,
                         house_type,
                         creator_name,
@@ -71,9 +66,9 @@ public class ActivityFrogHouse extends AppCompatActivity {
         }
 
         //add buy new house event
-        frogSetList.add(new OneFrogSet());
+        oneFrogSetList.add(new OneFrogSet());
 
-        adapter = new AdapterFrogHouse( this, frogSetList);
+        adapter = new AdapterFrogHouse( this, oneFrogSetList);
 
         listView= findViewById(R.id.house_activity);
         //리스트뷰에게 아답터 설정
@@ -82,7 +77,7 @@ public class ActivityFrogHouse extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                OneFrogSet selectedFrogSet = frogSetList.get(position);
+                OneFrogSet selectedFrogSet = oneFrogSetList.get(position);
                 int newFrogKey = selectedFrogSet.getFrogKey();
 
                 if(selectedFrogSet.getHouseType()== Frog.HOUSE_TYPE_BUY_NEW){
@@ -96,7 +91,6 @@ public class ActivityFrogHouse extends AppCompatActivity {
                             + Frog.SIZE_DEFAULT + "','"
                             + Frog.POWER_DEFAULT + "')"
                     );
-                    ///TODO AUTO increase 된 마지막 추가 된 값 가져오기
                     cursor_frog.moveToLast();
                     newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
                 }
