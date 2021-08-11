@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/black"
+    android:id="@+id/click_back_ground"
     android:padding="16dp">
 
     <RelativeLayout
@@ -28,6 +29,14 @@
             android:padding="24dp"
             android:scaleType="centerCrop"
             android:src="@drawable/main_buy_button" />
+
+        <ImageView
+            android:id="@+id/sell_house_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/main_dollar"
+            android:layout_alignBottom="@+id/main_house_icon"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

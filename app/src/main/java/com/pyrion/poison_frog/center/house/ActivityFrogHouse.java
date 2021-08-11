@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 import com.pyrion.poison_frog.R;
@@ -27,6 +28,8 @@ public class ActivityFrogHouse extends AppCompatActivity {
     Cursor cursor_frog;
     SQLiteDatabase database_frog;
     SQLiteDatabase database_user;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,8 +104,9 @@ public class ActivityFrogHouse extends AppCompatActivity {
                         +" selected_frog_key = " + newFrogKey
                 );
 
-                Intent intent = new Intent();
-                onBackPressed();
+                intent = new Intent(ActivityFrogHouse.this, MainActivity.class);
+                intent.putExtra("fragment_navigation", 1);
+                startActivity(intent);
             }
         });
     }

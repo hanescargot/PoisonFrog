@@ -35,6 +35,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/fly_wood_notice"/>
             <TextView
+                android:id="@+id/notice_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16dp"

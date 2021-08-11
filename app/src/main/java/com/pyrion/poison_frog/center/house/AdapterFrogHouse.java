@@ -7,6 +7,8 @@ import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 public class AdapterFrogHouse extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
     ArrayList<OneFrogSet> oneFrogSetList;
+    Cursor cursor_user;
+    SQLiteDatabase database_user;
 
     public AdapterFrogHouse(Context context, ArrayList<OneFrogSet> oneFrogSetList){
         this.context= context;
@@ -71,8 +75,6 @@ public class AdapterFrogHouse extends BaseAdapter {
         }
         convertView= inflater.inflate(R.layout.listview_house_frog_item, null);
 
-
-
         //기존에 있던 convertView 쓰거나 위에서 새로 만든 프레임을 쓰게 됨
         //생성된 뷰객체에게 값을 설정하는 작업 - bind view
         //항목 뷰 (convertView) 안에 있는  뷰 들 참조하기
@@ -84,10 +86,11 @@ public class AdapterFrogHouse extends BaseAdapter {
         TextView frogPower= convertView.findViewById(R.id.frog_power);
 
         //현재 선택되어있는 개구리 집
-        if(oneFrogSet.getFrogKey() == FragmentCenter.getSelectedFrogKey()){
-            //배경만 추가적으로 바꾸기
-        }
-        Log.i("!!!!",oneFrogSet.getFrogSrc() + "");
+        database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
+        cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+        cursor_user.moveToNext();
+        int selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
+
 //        frogSrc.setImageResource( oneFrogSet.getFrogSrc());
         Glide.with(context).load( oneFrogSet.getFrogSrc() ).into(frogSrc);
         frogName.setText( oneFrogSet.getFrogName() );

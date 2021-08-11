@@ -70,7 +70,7 @@ public class FragmentCenter extends Fragment {
     InputMethodManager imm;
 
     //current data
-    private static int selectedFrogKey = 1;
+    private int selectedFrogKey = 1;
     String userName = "Anonymous";
     int currentUserMoney = 100;
     int frogTouchedCount = 0;
@@ -164,9 +164,22 @@ public class FragmentCenter extends Fragment {
 
         imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE); //getActivity(). 해줘야함.
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
-        Log.i("tag","ON CREAT View");
+
+        getCurrentUserDB();
+        getCurrentFrogDB();
+        updateSelectedFrogState(currentFrogSet.getFrogState());
         return view;
 
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getCurrentUserDB();
+        getCurrentFrogDB();
+        updateSelectedFrogState(currentFrogSet.getFrogState());
     }
 
 
@@ -447,19 +460,6 @@ public class FragmentCenter extends Fragment {
         }
 
     };
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        getCurrentUserDB();
-        getCurrentFrogDB();
-        updateSelectedFrogState(currentFrogSet.getFrogState());
-        //커런트 개구리 이름이 널이라면 개구리 새로 사기페이지로 이동
-
-        //main frog view setting
-        Log.i("tag","ON Resume");
-    }
 
     int getCurrentFrogPrice(){
         return currentFrogSet.getFrogSize()+currentFrogSet.getFrogPower();
@@ -769,7 +769,7 @@ public class FragmentCenter extends Fragment {
 
 
 
-    public static int getSelectedFrogKey(){
+    public int getSelectedFrogKey(){
         return selectedFrogKey;
     }
 
