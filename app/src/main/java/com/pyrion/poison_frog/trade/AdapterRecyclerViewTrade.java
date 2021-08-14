@@ -89,7 +89,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
             viewHolderEvent.backGround.setBackgroundColor(R.color.black);
             viewHolderEvent.mainSrc.setImageResource(R.drawable.main_gift);
-            viewHolderEvent.mainSrc.setPadding(80, 80, 80, 80);
+            viewHolderEvent.mainSrc.setPadding(40, 40, 40, 40);
             viewHolderEvent.subSrc.setVisibility(View.GONE);
 
             if(position == 0){

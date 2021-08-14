@@ -7,14 +7,15 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 
 public class MainActivity extends AppCompatActivity {
+    private static int changeFrogSize=0;
     ViewPager2 viewPager;
 
     MainAdapter mainAdapter;
     Intent intent;
+
 
     int fragmentNavigation = 1;
 
@@ -27,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         mainAdapter = new MainAdapter(this);
         viewPager.setAdapter(mainAdapter);
 
-        Log.i("tag!!!",viewPager.getCurrentItem()+""); // 0page로 갔다가 1로 감
-        // TODO Q.0번째 item으로 돌아가야는 0째 item에서 이동한 Activity라는 걸 어떻게 구분 하지..
         viewPager.setCurrentItem(fragmentNavigation, false); //default page
     }
 
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         fragmentNavigation = intent.getIntExtra("fragment_navigation", 1);
         viewPager.setCurrentItem(fragmentNavigation, false); //default page
+
     }
 
     //디바이스 뒤로가기 클릭 했을 때
@@ -49,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.super.onBackPressed(); // 이 코드를 통해 꺼짐
                     }
         }).setNegativeButton("Cancel", null).create().show();
+    }
+
+    public static int getChangeFrogSize() {
+        return changeFrogSize;
+    }
+
+    public static void setChangeFrogSize(int changeSize) {
+        changeFrogSize = changeSize;
     }
 }
 

@@ -27,6 +27,8 @@ import java.util.Stack;
 
 import androidx.fragment.app.Fragment;
 
+import com.pyrion.poison_frog.MainActivity;
+import com.pyrion.poison_frog.center.fly_game.FlyGameActivity;
 import com.pyrion.poison_frog.center.house.ActivityFrogHouse;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
@@ -136,7 +138,6 @@ public class FragmentCenter extends Fragment {
                 + "user_money INTEGER)"
         );
 
-        Log.i("tag","ON CREAT");
     }
 
     @Override
@@ -176,7 +177,6 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         getCurrentUserDB();
         getCurrentFrogDB();
         updateSelectedFrogState(currentFrogSet.getFrogState());
@@ -286,10 +286,10 @@ public class FragmentCenter extends Fragment {
                     addLogString("[죽은 개구리는 밥을 법지 못함.]");
                     return;
                 }
-                changeFrogSize(+1);
-                showToastString("크기+1");
-
-                updateCurrentFrogDB();
+                Intent intent = new Intent(getActivity(), FlyGameActivity.class);
+                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                intent.putExtra("currentFrogSize", currentFrogSet.getFrogSize());
+                getActivity().startActivity(intent);
             }
         });
 
@@ -530,6 +530,8 @@ public class FragmentCenter extends Fragment {
         mainFrogImageView.getLayoutParams().height=currentFrogSet.getFrogSize();
         mainFrogImageView.getLayoutParams().width=currentFrogSet.getFrogSize();
         mainFrogImageView.requestLayout();
+        Log.i("size",diff+"");
+        showToastString("크기+"+diff);
     }
 
     public void changeFrogPower(int diff){

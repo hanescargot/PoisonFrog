@@ -12,9 +12,8 @@
 
         <ImageView
             android:id="@+id/main_house_icon"
-            android:padding="16dp"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:src="@drawable/main_house"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"/>
