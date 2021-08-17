@@ -34,10 +34,10 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     TextView woodNoticeText;
     RecyclerView tradeFrogRecyclerView;
 
-    public AdapterRecyclerViewTrade(Context context, ArrayList<OneFrogSet> oneFrogSetList, View view){
+    public AdapterRecyclerViewTrade(Context context, View view){
         this.context = context;
-        this.oneFrogSetList = oneFrogSetList;
-
+//        this.oneFrogSetList = oneFrogSetList;
+        setOneFrogSetList();
         tradeCenterFrog = view.findViewById(R.id.trade_frog_center_src);
         tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
         woodNoticeText = view.findViewById(R.id.notice_text);
@@ -189,7 +189,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
                     OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
 
-                    // Buy new frog clicked
+                    // clicked buy new house
                     //TODO 집을 산다는 얼럿 다이어로그 띄우기
 
                     database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
@@ -203,16 +203,18 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                                 + Frog.SIZE_DEFAULT + "','"
                                 + Frog.POWER_DEFAULT + "')"
                         );
+
+
                     cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
                     cursor_frog.moveToLast();
                     int newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
                         updateNewFrogKeyDB(newFrogKey);
+                    }else{
+                        //clicked empty house
+                        int newFrogKey = selectedFrogSet.getFrogKey();
+                        updateNewFrogKeyDB(newFrogKey);
+
                     }
-
-                    //clicked empty house
-                    int newFrogKey = selectedFrogSet.getFrogKey();
-                    updateNewFrogKeyDB(newFrogKey);
-
                     updateListView();
                 }
             });
@@ -262,13 +264,13 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
 
     synchronized void updateListView(){
-        setNewFrogList();
+        setOneFrogSetList();
         setSelectedViews();
         notifyDataSetChanged();
         //
     }
 
-    void setNewFrogList(){
+    void setOneFrogSetList(){
         oneFrogSetList.clear();
 
         database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
