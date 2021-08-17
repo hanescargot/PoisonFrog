@@ -1,6 +1,7 @@
 package com.pyrion.poison_frog.center;
 
 import android.app.AlertDialog;
+import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -22,28 +23,31 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
 import androidx.fragment.app.Fragment;
 
-import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.center.fly_game.FlyGameActivity;
-import com.pyrion.poison_frog.center.house.ActivityFrogHouse;
+import com.pyrion.poison_frog.center.ItemStore.ActivityItemStore;
 import com.pyrion.poison_frog.data.Frog;
+import com.pyrion.poison_frog.data.Item;
 import com.pyrion.poison_frog.data.OneFrogSet;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.data.OneItemSet;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class FragmentCenter extends Fragment {
 
-    SQLiteDatabase database_user;
-    SQLiteDatabase database_frog;
-    Cursor cursor_user;
-    Cursor cursor_frog;
+    SQLiteDatabase database_user, database_frog, database_item;
+    Cursor cursor_user, cursor_frog, cursor_item;
+
+    ArrayList<OneItemSet> itemDataArrayList = new ArrayList<>();
 
     OneFrogSet currentFrogSet;
+
 
     //Main FragMents
     AlertDialog isBuyAlertDialog;
@@ -77,45 +81,29 @@ public class FragmentCenter extends Fragment {
     int currentUserMoney = 100;
     int frogTouchedCount = 0;
 
-// 못외워서 일단 써둠                    Log.i("tag",foodLogString);
-
-
-    String[] deadFrogMsgs = new String[]{
-            "[개구리는 지금 시체일 뿐이야.]",
-            "[죽은 개구리는 대답이없다.]",
-            "[개구리 죽었다니까.]",
-            "[미련가지지마. 개구리는 죽었어.]",
-            "[너는 개구리를 죽게했어.]",
-            "[그런다고 개구리가 살아나지는 않아.]",
-            "[죽은 개구리는 찔러도 반응이없어.]",
-            "[개구리를 다시 살리려면 치료 아이콘 클릭]"
-    };
-    String[] soledFrogMsgs = new String[]{
-            "안녕 주인아...고마웠어",
-            "키워줘서 고마웠어.",
-            "이제 자유가 되는구나...",
-            "나 먼저 간다... 행복해라...",
-            "개굴개굴...고기가 되는건가..",
-            "안돼...가기싫어...",
-            "끄악...개굴!!!",
-            "개구리 살려!!!"
-    };
-    String[] poisonFoods = new String[]{
-            "독",
-            "모기",
-            "소금",
-            "해삼",
-            "고추",
-            "거미",
-            "복어",
-            "뱀",
-            "전갈"
-    };
-
+    String[] deadFrogMsgs;
+    String[] soledFrogMsgs;
+    String[] poisonFoods;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        deadFrogMsgs = getResources().getStringArray(R.array.dead_frog_msg);
+        soledFrogMsgs = getResources().getStringArray(R.array.soled_frog_msg);
+        poisonFoods = getResources().getStringArray(R.array.poison_food);
+
+        //Item data settings
+        database_item = getActivity().openOrCreateDatabase("itemDB.db", getActivity().MODE_PRIVATE, null);
+        database_item.execSQL("CREATE TABLE IF NOT EXISTS item_data_set("
+                + "item_name VARCHAR(40),"
+                + "item_explain STRING,"
+                + "current_item_price INTEGER,"
+                + "current_level INTEGER,"
+                + "max_level INTEGER,"
+                + "upgrade_price_times DOUBLE,"
+                + "item_case VARCHAR(40))"
+        );
 
         //Frog data settings
         database_frog = getActivity().openOrCreateDatabase("frogsDB.db", getActivity().MODE_PRIVATE, null);
@@ -166,8 +154,10 @@ public class FragmentCenter extends Fragment {
         imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE); //getActivity(). 해줘야함.
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
 
-        getCurrentUserDB();
+        getCurrentUserDB(); // set current data from DB
         getCurrentFrogDB();
+        getCurrentItemDB();
+
         updateSelectedFrogState(currentFrogSet.getFrogState());
         return view;
 
@@ -177,9 +167,15 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        // set current data from DB
         getCurrentUserDB();
         getCurrentFrogDB();
-        updateSelectedFrogState(currentFrogSet.getFrogState());
+        getCurrentItemDB();
+
+        // set userDB from current and set money UI
+        moneyStringTextView.setText((currentUserMoney)+"");
+        updateSelectedFrogState(currentFrogSet.getFrogState()); //set frog UI
     }
 
 
@@ -268,7 +264,8 @@ public class FragmentCenter extends Fragment {
         mainHouseIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ActivityFrogHouse.class);
+                Intent intent = new Intent(getActivity(), ActivityItemStore.class);
+                intent.putExtra("user_money", currentUserMoney);
                 getActivity().startActivity(intent);
             }
         });
@@ -730,11 +727,10 @@ public class FragmentCenter extends Fragment {
     void getCurrentUserDB(){
         cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
         int countUserDB = cursor_user.getCount();
-        cursor_user.moveToNext();
-
         if(countUserDB != 0) {
             //기존 데이터가 존재할 때
             try {
+                cursor_user.moveToNext();
                 userName = cursor_user.getString(cursor_user.getColumnIndex("user_name"));
                 selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
                 currentUserMoney = cursor_user.getInt(cursor_user.getColumnIndex("user_money"));
@@ -756,7 +752,7 @@ public class FragmentCenter extends Fragment {
             );
         }
 
-        //TODO 언제? 왜 닫아줘야하지? 크진 않지만 메모리 누수를 막기 위해 Adapter가 닫힐 때 닫아준다.
+        //TODO Adapter가 닫힐 때 닫아주기
     }
 
 
@@ -770,10 +766,75 @@ public class FragmentCenter extends Fragment {
     }
 
 
+    void getCurrentItemDB(){
+        cursor_item = database_item.rawQuery("SELECT * FROM item_data_set", null);
+        int countItemDB = cursor_item.getCount();
+        itemDataArrayList.clear();
+        if(countItemDB != 0) {
+            //기존 데이터가 존재할 때
+            try {
+                while (cursor_item.moveToNext()) {//[레코드:row]로 커서이동
+                    String ItemName = cursor_item.getString(cursor_item.getColumnIndex("item_name"));
+                    String ItemExplain = cursor_item.getString(cursor_item.getColumnIndex("item_explain"));
+                    int CurrentItemPrice = cursor_item.getInt(cursor_item.getColumnIndex("current_item_price"));
+                    int CurrentLevel = cursor_item.getInt(cursor_item.getColumnIndex("current_level"));
+                    int MaxLevel = cursor_item.getInt(cursor_item.getColumnIndex("max_level"));
+                    int UpgradePriceTimes = cursor_item.getInt(cursor_item.getColumnIndex("upgrade_price_times"));
+                    String ItemCase = cursor_item.getString(cursor_item.getColumnIndex("item_case"));
 
-    public int getSelectedFrogKey(){
-        return selectedFrogKey;
+                    itemDataArrayList.add(new OneItemSet(
+                            ItemName,
+                            ItemExplain,
+                            CurrentItemPrice,
+                            CurrentLevel,
+                            MaxLevel,
+                            UpgradePriceTimes,
+                            ItemCase
+                            )
+                    );
+                }
+            } catch (Exception e) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("아이템 불러오기 오류").setPositiveButton("OK", null).show();
+                getActivity().onBackPressed();
+            }
+        }
+        if(countItemDB == 0){
+
+            // default item data xml 에서 받아오기
+            TypedArray itemIDArrayList = getResources().obtainTypedArray(R.array.item_name_list);
+            int itemIDArrayListLength = itemIDArrayList.length();
+            for(int i = 0; i< itemIDArrayListLength; i++){
+                int id = itemIDArrayList.getResourceId(i, R.array.food);
+                String[] stringOneItemSet = getResources().getStringArray(id);
+                OneItemSet currentItemSet = new OneItemSet();
+
+                currentItemSet.setItemName(stringOneItemSet[Item.NAME]);
+                currentItemSet.setItemExplain(stringOneItemSet[Item.EXPLAIN]);
+                currentItemSet.setItemPrice(Integer.parseInt(stringOneItemSet[Item.PRICE]));
+                currentItemSet.setCurrentLevel(Integer.parseInt(stringOneItemSet[Item.CURRENT_LEVEL]));
+                currentItemSet.setMaxLevel(Integer.parseInt(stringOneItemSet[Item.MAX_LEVEL]));
+                currentItemSet.setUpgradePriceTimes(Double.parseDouble(stringOneItemSet[Item.UPGRADE_PRICE]));
+                currentItemSet.setItemCase(stringOneItemSet[Item.TYPE]);
+
+
+                database_item.execSQL("INSERT INTO item_data_set(item_name, item_explain, current_item_price, current_level, max_level, upgrade_price_times, item_case) VALUES('"
+                        + currentItemSet.getItemName() + "','"
+                        + currentItemSet.getItemExplain() + "','"
+                        + currentItemSet.getItemPrice() + "','"
+                        + currentItemSet.getCurrentLevel() + "','"
+                        + currentItemSet.getMaxLevel() + "','"
+                        + currentItemSet.getUpgradePriceTimes() + "','"
+                        + currentItemSet.getItemCase() + "')"
+                );
+
+                itemDataArrayList.add( currentItemSet );
+            }
+        }
     }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -786,5 +847,5 @@ public class FragmentCenter extends Fragment {
         cursor_frog.close();
     }
 
-    //TODO 개구리 롱프래스 하면 개구리 상태 보기, 지금 상대와 거래하기
+    //TODO 개구리 롱프래스 하면 개구리 상태 보기
 }

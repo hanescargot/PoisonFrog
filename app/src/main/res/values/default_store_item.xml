@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <!-- private String ItemName = "";
+    private String ItemExplain = "";
+    private int CurrentItemPrice;
+    private int CurrentLevel;
+    private int MaxLevel;
+    private double UpgradePriceTimes;
+    private String ItemCase = "";-->
+
+<!--    default item list data-->
+    <array name="item_name_list">
+        <item>@array/food</item>
+        <item>@array/exercise_effect</item>
+        <item>@array/exercise_time</item>
+    </array>
+
+    <string-array name="food">
+        <item>Food</item>
+        <item>Food so good</item>
+        <item>1000</item>
+        <item>1</item>
+        <item>15</item>
+        <item>3</item>
+        <item>Upgrade</item>
+    </string-array>
+
+    <string-array name="exercise_effect">
+        <item>Exercise Effect</item>
+        <item>Exercise Effect so good</item>
+        <item>1000</item>
+        <item>1</item>
+        <item>15</item>
+        <item>3</item>
+        <item>Upgrade</item>
+    </string-array>
+
+    <string-array name="exercise_time">
+        <item>Exercise Time</item>
+        <item>Exercise Time so good</item>
+        <item>1000</item>
+        <item>1</item>
+        <item>-1</item>
+        <item>1.5</item>
+        <item>Upgrade</item>
+    </string-array>
+
+</resources>

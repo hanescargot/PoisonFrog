@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="dead_frog_msg">
+        <item>[개구리는 지금 시체일 뿐이야.]</item>
+        <item>[죽은 개구리는 대답이없다.]</item>
+        <item>[개구리 죽었다니까.]</item>
+        <item>[미련가지지마. 개구리는 죽었어.]</item>
+        <item>[너는 개구리를 죽게했어.]</item>
+        <item>[그런다고 개구리가 살아나지는 않아.]</item>
+        <item>[죽은 개구리는 찔러도 반응이없어.]</item>
+        <item>[개구리를 다시 살리려면 치료 아이콘 클릭]</item>
+    </string-array>
+
+    <string-array name="soled_frog_msg">
+        <item>안녕 주인아...고마웠어</item>
+        <item>키워줘서 고마웠어.</item>
+        <item>이제 자유가 되는구나...</item>
+        <item>나 먼저 간다... 행복해라...</item>
+        <item>개굴개굴...고기가 되는건가..</item>
+        <item>안돼...가기싫어...</item>
+        <item>끄악...개굴!!!</item>
+        <item>개구리 살려!!!</item>
+    </string-array>
+
+    <string-array name="poison_food">
+        <item>독</item>
+        <item>모기</item>
+        <item>소금</item>
+        <item>해삼</item>
+        <item>고추</item>
+        <item>거미</item>
+        <item>복어</item>
+        <item>뱀</item>
+        <item>전갈</item>
+    </string-array>
+
+</resources>

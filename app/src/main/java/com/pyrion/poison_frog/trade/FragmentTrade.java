@@ -29,6 +29,7 @@ public class FragmentTrade extends Fragment {
 
     AdapterRecyclerViewTrade adapter;
 
+    View view;
     ImageView tradeCenterFrog;
     TextView woodNoticeText;
     RecyclerView tradeFrogRecyclerView;
@@ -43,7 +44,7 @@ public class FragmentTrade extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_trade_page, container, false);
+        view = inflater.inflate(R.layout.fragment_trade_page, container, false);
 
         tradeCenterFrog = view.findViewById(R.id.trade_frog_center_src);
         tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
@@ -51,8 +52,9 @@ public class FragmentTrade extends Fragment {
 
         setSelectedViews();
 
-        adapter = new AdapterRecyclerViewTrade(getActivity(), oneFrogSetList);
+        adapter = new AdapterRecyclerViewTrade(getActivity(), oneFrogSetList, view);
         tradeFrogRecyclerView.setAdapter(adapter);
+
         return view;
     }
 
@@ -63,7 +65,7 @@ public class FragmentTrade extends Fragment {
         updateFrogListDB();
         setSelectedViews();
         
-        adapter = new AdapterRecyclerViewTrade(getActivity(), oneFrogSetList);
+        adapter = new AdapterRecyclerViewTrade(getActivity(), oneFrogSetList, view);
         tradeFrogRecyclerView.setAdapter(adapter);
     }
 
@@ -142,4 +144,6 @@ public class FragmentTrade extends Fragment {
             woodNoticeText.setText("개구리를 꾹 누르면 근처 사람에게 공유됩니다.");
         }
     }
+
+
 }

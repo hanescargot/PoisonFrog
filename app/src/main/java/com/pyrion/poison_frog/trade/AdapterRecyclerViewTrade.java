@@ -2,7 +2,6 @@ package com.pyrion.poison_frog.trade;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -17,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
@@ -28,13 +26,21 @@ import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
 
 public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     Context context;
-    ArrayList<OneFrogSet> oneFrogSetList;
+    ArrayList<OneFrogSet> oneFrogSetList = new ArrayList<>();
     Cursor cursor_frog, cursor_user;
     SQLiteDatabase database_frog, database_user;
 
-    public AdapterRecyclerViewTrade(Context context, ArrayList<OneFrogSet> oneFrogSetList){
+    ImageView tradeCenterFrog;
+    TextView woodNoticeText;
+    RecyclerView tradeFrogRecyclerView;
+
+    public AdapterRecyclerViewTrade(Context context, ArrayList<OneFrogSet> oneFrogSetList, View view){
         this.context = context;
         this.oneFrogSetList = oneFrogSetList;
+
+        tradeCenterFrog = view.findViewById(R.id.trade_frog_center_src);
+        tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
+        woodNoticeText = view.findViewById(R.id.notice_text);
     }
 
 
@@ -142,13 +148,15 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //select frog
                     OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
                     int newFrogKey = selectedFrogSet.getFrogKey();
                     updateNewFrogKeyDB(newFrogKey);
 
-                    Intent intent= new Intent(context, MainActivity.class);
-                    intent.putExtra("fragment_navigation", 2);
-                    context.startActivity(intent);
+
+                    //TODO
+                    updateListView();
+
                 }
             });
 
@@ -182,32 +190,30 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
 
                     // Buy new frog clicked
+                    //TODO 집을 산다는 얼럿 다이어로그 띄우기
+
                     database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
                     if(selectedFrogSet.getHouseType()== Frog.HOUSE_TYPE_BUY_NEW){
-                        //TODO  Buy New Frog house
                         database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
                                 + Frog.HOUSE_TYPE_LENT + "','"
                                 + Frog.USER_NAME_NULL + "','"
                                 + Frog.FROG_NAME_NULL + "','"
-                                + Frog.STATE_ALIVE + "','"
+                                + Frog.STATE_SOLD + "','"
                                 + Frog.SPECIES_BASIC + "','"
                                 + Frog.SIZE_DEFAULT + "','"
                                 + Frog.POWER_DEFAULT + "')"
                         );
                     cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
                     cursor_frog.moveToLast();
-                    //집을 산다는 얼럿 다이어로그 띄우기
                     int newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
-                    updateNewFrogKeyDB(newFrogKey);
+                        updateNewFrogKeyDB(newFrogKey);
                     }
 
                     //clicked empty house
                     int newFrogKey = selectedFrogSet.getFrogKey();
                     updateNewFrogKeyDB(newFrogKey);
 
-                    Intent intent= new Intent(context, MainActivity.class);
-                    intent.putExtra("fragment_navigation", 2);
-                    context.startActivity(intent);
+                    updateListView();
                 }
             });
 
@@ -238,19 +244,88 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             Toast.makeText(context, "팔수 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
-        Log.i("lay", oneFrogSetList.get(layoutPosition).getFrogKey()+"");
 
         int currentFrogKey = oneFrogSetList.get(layoutPosition).getFrogKey();
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
         database_frog.execSQL("DELETE FROM frogs_data_set "+
                 "WHERE frog_key =" +"'"+currentFrogKey+"'");
 
+
+
         if(layoutPosition == 0){
             //oneFrogSetList 요소는 삭제할 필요없이 mainActivity에서 DB업데이트 할때 적용 됨
             updateNewFrogKeyDB(oneFrogSetList.get(1).getFrogKey());
         }
-        Intent intent= new Intent(context, MainActivity.class);
-        intent.putExtra("fragment_navigation", 2);
-        context.startActivity(intent);
+
+        updateListView();
     }
+
+
+    synchronized void updateListView(){
+        setNewFrogList();
+        setSelectedViews();
+        notifyDataSetChanged();
+        //
+    }
+
+    void setNewFrogList(){
+        oneFrogSetList.clear();
+
+        database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
+        cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+        cursor_user.moveToNext();
+        int selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
+
+        database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
+        cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
+        if(cursor_frog!=null) {
+            while (cursor_frog.moveToNext()) {//[레코드:row]로 커서이동
+                int frog_key = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
+                int house_type = cursor_frog.getInt(cursor_frog.getColumnIndex("house_type"));
+                String creator_name = cursor_frog.getString(cursor_frog.getColumnIndex("creator_name"));
+                String frog_name = cursor_frog.getString(cursor_frog.getColumnIndex("frog_name"));
+                int frog_state = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_state"));
+                int frog_species = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_species"));
+                int frog_size = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_size"));
+                int frog_power = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_power"));
+
+                if(frog_key == selectedFrogKey) {
+                    oneFrogSetList.add(0, new OneFrogSet(
+                            frog_key,
+                            house_type,
+                            creator_name,
+                            frog_name,
+                            frog_state,
+                            frog_species,
+                            frog_size,
+                            frog_power));
+                    Log.i("hyunju", frog_key+"");
+                    continue;
+                }
+                oneFrogSetList.add(new OneFrogSet(
+                        frog_key,
+                        house_type,
+                        creator_name,
+                        frog_name,
+                        frog_state,
+                        frog_species,
+                        frog_size,
+                        frog_power));
+            }
+
+        }
+        //add buy new house event
+        oneFrogSetList.add(new OneFrogSet());
+    }
+
+    void setSelectedViews(){
+        tradeCenterFrog.setImageResource( oneFrogSetList.get(0).getFrogSrc());
+        Log.i("trade", oneFrogSetList.get(0).getHouseType()+"");
+        if(Frog.STATE_SOLD == oneFrogSetList.get(0).getFrogState()){
+            woodNoticeText.setText("근처에 개구리가 나타나면 터치해서 잡으세요.");
+        }else{
+            woodNoticeText.setText("개구리를 꾹 누르면 근처 사람에게 공유됩니다.");
+        }
+    }
+
 }

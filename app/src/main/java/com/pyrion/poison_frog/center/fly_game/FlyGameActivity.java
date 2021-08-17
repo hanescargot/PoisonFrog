@@ -2,27 +2,19 @@ package com.pyrion.poison_frog.center.fly_game;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
-import com.pyrion.poison_frog.MainActivity;
-import com.pyrion.poison_frog.MainAdapter;
 import com.pyrion.poison_frog.R;
-import com.pyrion.poison_frog.center.house.ActivityFrogHouse;
 
 import java.util.Random;
 import java.util.Timer;
@@ -217,9 +209,6 @@ public class FlyGameActivity extends AppCompatActivity {
 
     private void pointDataUpdate() {
         database_frog = this.openOrCreateDatabase("frogsDB.db", this.MODE_PRIVATE, null);
-        Log.i("point", pointSum+"");
-        Log.i("point", currentFrogKey+"");
-        Log.i("point", (currentFrogSize + pointSum)+"_sum");
         database_frog.execSQL("UPDATE frogs_data_set SET"
                 +" frog_size =" +(currentFrogSize + pointSum)
                 +" WHERE frog_key ="+currentFrogKey

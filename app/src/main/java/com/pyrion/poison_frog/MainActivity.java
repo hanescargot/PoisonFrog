@@ -36,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         intent = getIntent();
         fragmentNavigation = intent.getIntExtra("fragment_navigation", 1);
-        viewPager.setCurrentItem(fragmentNavigation, false); //default page
-
+        viewPager.setCurrentItem(fragmentNavigation, false);
+        getIntent().removeExtra("fragment_navigation");
     }
 
     //디바이스 뒤로가기 클릭 했을 때

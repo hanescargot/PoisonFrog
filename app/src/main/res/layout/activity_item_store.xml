@@ -7,7 +7,7 @@
     android:background="@color/white">
 
     <ListView
-        android:id="@+id/house_activity"
+        android:id="@+id/activity_item_store"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
