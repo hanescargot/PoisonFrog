@@ -7,7 +7,7 @@
     android:id="@+id/click_background">
 
     <ImageView
-        android:id="@+id/item_src"
+        android:id="@+id/iv_item"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/free_dice"
@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:id="@+id/title"
-        android:layout_toRightOf="@+id/item_src"
+        android:layout_toRightOf="@+id/iv_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -47,7 +47,7 @@
         android:text="먹이 먹이기에서 화면에 등장하는 먹이 수가 증가합니다."
         android:textSize="16sp"
         android:textColor="@color/white"
-        android:layout_toRightOf="@+id/item_src"
+        android:layout_toRightOf="@+id/iv_item"
         android:layout_below="@id/title"/>
 
         />
@@ -56,7 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/item_src"
+        android:layout_below="@+id/iv_item"
         android:layout_marginTop="16dp"
         android:weightSum="2"
         >

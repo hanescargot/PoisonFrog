@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <string-array name="red_box">-->
+<!--        <item>egg title</item>-->
+<!--        <item>resource</item>-->
+<!--        <item>egg price</item>-->
+<!--    </string-array>-->
+    <string-array name="egg_item_id_list">
+        <item>red_box</item>
+        <item>Free</item>
+    </string-array>
+
+    <string-array name="red_box">
+        <item>red_box</item>
+        <item>Free</item>
+    </string-array>
+    <string-array name="blue_box">
+        <item>blue_box</item>
+        <item>100000</item>
+    </string-array>
+    <string-array name="gold_box">
+        <item>gold_box</item>
+        <item>10000</item>
+    </string-array>
+
+
+</resources>

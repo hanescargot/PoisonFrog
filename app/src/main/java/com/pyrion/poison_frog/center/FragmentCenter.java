@@ -807,7 +807,7 @@ public class FragmentCenter extends Fragment {
             for(int i = 0; i< itemIDArrayListLength; i++){
                 int id = itemIDArrayList.getResourceId(i, R.array.food);
                 String[] stringOneItemSet = getResources().getStringArray(id);
-                OneItemSet currentItemSet = new OneItemSet();
+                OneItemSet currentItemSet = new OneItemSet(); //TODO  여기서 원래는 받은 OneItemSet을 바로 넣어줄 수 있도록해야함.
 
                 currentItemSet.setItemName(stringOneItemSet[Item.NAME]);
                 currentItemSet.setItemExplain(stringOneItemSet[Item.EXPLAIN]);

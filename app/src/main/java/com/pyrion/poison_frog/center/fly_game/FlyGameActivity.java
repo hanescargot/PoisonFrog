@@ -43,7 +43,7 @@ public class FlyGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.auto_moving);
+        setContentView(R.layout.fragment_fly_game);
         flyButton = findViewById(R.id.target_fly01);
         score = findViewById(R.id.score);
         progressBar=findViewById(R.id.progress);

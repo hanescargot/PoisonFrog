@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.pyrion.poison_frog.center.FragmentCenter;
-import com.pyrion.poison_frog.fight.FragmentFight;
+import com.pyrion.poison_frog.egg.FragmentEgg;
 import com.pyrion.poison_frog.trade.FragmentTrade;
 
 public class MainAdapter extends FragmentStateAdapter {
@@ -15,7 +15,7 @@ public class MainAdapter extends FragmentStateAdapter {
     public MainAdapter(FragmentActivity fragmentActivity){
         super(fragmentActivity);
 
-        fragments[0] = new FragmentFight();
+        fragments[0] = new FragmentEgg();
         fragments[1] = new FragmentCenter();
         fragments[2] = new FragmentTrade();
 

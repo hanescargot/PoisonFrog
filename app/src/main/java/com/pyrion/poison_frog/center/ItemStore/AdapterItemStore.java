@@ -62,7 +62,7 @@ public class AdapterItemStore extends BaseAdapter {
         //기존에 있던 convertView 쓰거나 위에서 새로 만든 프레임을 쓰게 됨
         //생성된 뷰객체에게 값을 설정하는 작업 - bind view
         //항목 뷰 (convertView) 안에 있는  뷰 들 참조하기
-        ImageView itemSrc= convertView.findViewById(R.id.item_src);
+        ImageView itemSrc= convertView.findViewById(R.id.iv_item);
         TextView itemName= convertView.findViewById(R.id.item_name);
         TextView explain= convertView.findViewById(R.id.explain);
         TextView itemLevel= convertView.findViewById(R.id.item_level);
