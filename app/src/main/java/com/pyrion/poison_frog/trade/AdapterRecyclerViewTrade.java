@@ -1,9 +1,13 @@
 package com.pyrion.poison_frog.trade;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
+import com.pyrion.poison_frog.data.OneItemSet;
 
 import java.util.ArrayList;
 
@@ -41,6 +46,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         tradeCenterFrog = view.findViewById(R.id.trade_frog_center_src);
         tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
         woodNoticeText = view.findViewById(R.id.notice_text);
+
+        updateListView();
     }
 
 
@@ -105,6 +112,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             return;
         }
 
+
+        String stringSpeciesName = Frog.getStringSpecies( selected_frog.getFrogSpecies() );
         //Normal Frog item
         ViewHolderFrog viewHolderFrog = (ViewHolderFrog) holder;
 
@@ -113,7 +122,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         Glide.with(context).load( selected_frog.getFrogSrc() ).into(viewHolderFrog.frogSrc);
         viewHolderFrog.frogName.setText( selected_frog.getFrogName() );
         viewHolderFrog.creatorName.setText("제작자: " + selected_frog.getCreatorName());
-        viewHolderFrog.frogProperty.setText( "품종: " +(selected_frog.getFrogSpecies() ));
+        viewHolderFrog.frogProperty.setText( "품종: " + stringSpeciesName);
         viewHolderFrog.frogSize.setText( "크기: "+(selected_frog.getFrogSize() ));
         viewHolderFrog.frogPower.setText( "힘: "+(selected_frog.getFrogPower() ));
 
@@ -145,16 +154,15 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             frogPower= itemView.findViewById(R.id.frog_power);
             sellHouseIcon = itemView.findViewById(R.id.sell_house_icon);
 
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //select frog
                     OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
                     int newFrogKey = selectedFrogSet.getFrogKey();
-                    updateNewFrogKeyDB(newFrogKey);
+                    upDateUserDB("selected_frog_key", newFrogKey);
 
-
-                    //TODO
                     updateListView();
 
                 }
@@ -163,8 +171,15 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             sellHouseIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //sell house 얼럿 다이어로그
-                    sellButtonClicked(getLayoutPosition());
+
+                    if(oneFrogSetList.size()<3){
+                        //Only one house left
+                        //can not sell the house
+                        //add 다이어로그 집을 팔수 없습니다.
+                        showRefuseDialogDialog();
+                    }else{
+                        showHouseSellAlertDialog( getLayoutPosition() );
+                    }
                 }
             });
 
@@ -208,11 +223,11 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
                     cursor_frog.moveToLast();
                     int newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
-                        updateNewFrogKeyDB(newFrogKey);
+                        upDateUserDB("selected_frog_key", newFrogKey);
                     }else{
                         //clicked empty house
                         int newFrogKey = selectedFrogSet.getFrogKey();
-                        updateNewFrogKeyDB(newFrogKey);
+                        upDateUserDB("selected_frog_key", newFrogKey);
 
                     }
                     updateListView();
@@ -222,41 +237,32 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             sellHouseIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sellButtonClicked(getLayoutPosition());
+                    if(oneFrogSetList.size()<3){
+                        //Only one house left
+                        //can not sell the house
+                        showRefuseDialogDialog();
+                    }else{
+                        showHouseSellAlertDialog( getLayoutPosition() );
+                    }
                 }
             });
         }
 
     }
 
-    void updateNewFrogKeyDB(int newFrogKey){
-        database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
-        database_user.execSQL("UPDATE user_data_set SET"
-                +" selected_frog_key = " + newFrogKey
-        );
-    }
 
-    void sellButtonClicked(int layoutPosition){
+
+    void houseSell(int layoutPosition){
         //add summit alert dialog
-
-        if(oneFrogSetList.size()<2){
-            //Only one house left
-            //can not sell the house
-            //add 다이어로그 집을 팔수 없습니다.
-            Toast.makeText(context, "팔수 없습니다.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         int currentFrogKey = oneFrogSetList.get(layoutPosition).getFrogKey();
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
         database_frog.execSQL("DELETE FROM frogs_data_set "+
                 "WHERE frog_key =" +"'"+currentFrogKey+"'");
 
-
-
         if(layoutPosition == 0){
             //oneFrogSetList 요소는 삭제할 필요없이 mainActivity에서 DB업데이트 할때 적용 됨
-            updateNewFrogKeyDB(oneFrogSetList.get(1).getFrogKey());
+            upDateUserDB("selected_frog_key" , (oneFrogSetList.get(1)).getFrogKey());
         }
 
         updateListView();
@@ -270,13 +276,42 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         //
     }
 
-    void setOneFrogSetList(){
-        oneFrogSetList.clear();
-
+    int getUserDB( String columnName){
         database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
         cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
         cursor_user.moveToNext();
-        int selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
+
+        if(columnName.equals("selected_frog_key")){
+            int selectedFrogKey = cursor_user.getInt(cursor_user.getColumnIndex("selected_frog_key"));
+            return  (selectedFrogKey);
+        }
+        if(columnName.equals("user_money")){
+            return cursor_user.getInt(cursor_user.getColumnIndex("user_money"));
+        }
+
+        return 0;
+    }
+    void upDateUserDB( String columnName, int newData){
+        database_user = context.openOrCreateDatabase("userDB.db", context.MODE_PRIVATE, null);
+        cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+        cursor_user.moveToNext();
+
+        if(columnName.equals("selected_frog_key")){
+            database_user.execSQL("UPDATE user_data_set SET"
+                    +" selected_frog_key = " + newData
+            );
+        }
+        if(columnName.equals("user_money")){
+            database_user.execSQL("UPDATE user_data_set SET"
+                    +" user_money = " + newData
+            );
+        }
+
+    }
+
+    void setOneFrogSetList(){
+        oneFrogSetList.clear();
+        int selectedFrogKey = getUserDB("selected_frog_key");
 
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
         cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
@@ -328,6 +363,102 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         }else{
             woodNoticeText.setText("개구리를 꾹 누르면 근처 사람에게 공유됩니다.");
         }
+    }
+
+    void showHouseSellAlertDialog( int layoutPosition){
+        //sell house 얼럿 다이어로그
+        AlertDialog isHouseSellAlertDialog;
+        LayoutInflater inflater = LayoutInflater.from(context);
+        AlertDialog.Builder eggSaveOrSellBuilder = new AlertDialog.Builder(context);
+        View alertSaveOrSellView = inflater.inflate(R.layout.alert_is_sell_house, null);
+        eggSaveOrSellBuilder.setView(alertSaveOrSellView);
+        isHouseSellAlertDialog = eggSaveOrSellBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
+        isHouseSellAlertDialog.setCanceledOnTouchOutside(false);
+
+        //button setting
+        ImageView bigFrogSrc = alertSaveOrSellView.findViewById(R.id.iv);
+        ImageView frogSrc = alertSaveOrSellView.findViewById(R.id.frog_src);
+        ImageView cancelBtn = alertSaveOrSellView.findViewById(R.id.cancel_button);
+        TextView sellBtn = alertSaveOrSellView.findViewById(R.id.tv_sell);
+        TextView tvFrogPrice= alertSaveOrSellView.findViewById(R.id.frog_price);
+        TextView tvSumPrice= alertSaveOrSellView.findViewById(R.id.sum);
+        TextView frogName = alertSaveOrSellView.findViewById(R.id.frog_name);
+
+        OneFrogSet selectedFrogSet = oneFrogSetList.get(layoutPosition);
+
+        bigFrogSrc.setImageResource(selectedFrogSet.getFrogSrc());
+        frogName.setText(selectedFrogSet.getFrogName());
+        int frogPrice=0;
+        if(selectedFrogSet.getFrogState() == Frog.STATE_ALIVE){
+            frogPrice = selectedFrogSet.getFrogSize();
+            tvFrogPrice.setText(frogPrice+"원");
+        }
+        if(selectedFrogSet.getFrogState() == Frog.STATE_DEATH){
+            frogPrice = selectedFrogSet.getFrogSize()/10;
+            tvFrogPrice.setText(frogPrice+"원");
+        }
+        if(selectedFrogSet.getFrogState() == Frog.STATE_SOLD){
+            sellBtn.setText("집 판매");
+            frogName.setVisibility(View.INVISIBLE);
+            frogPrice = 0;
+            tvFrogPrice.setVisibility(View.INVISIBLE);
+            frogSrc.setVisibility(View.INVISIBLE);
+        }
+
+        int sumPrice = frogPrice+20;
+        tvSumPrice.setText("합계: "+sumPrice+"원");
+
+        sellBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHouseSellAlertDialog.cancel();
+
+                int userMoney = getUserDB("user_money");
+                upDateUserDB("user_money", sumPrice + userMoney);
+                houseSell(layoutPosition);
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHouseSellAlertDialog.cancel();
+            }
+        });
+
+        //다이얼로그를 화면에 보이기
+        isHouseSellAlertDialog.show();
+    }
+
+
+    void showRefuseDialogDialog() {
+        AlertDialog.Builder refuseBuilder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View alertRefuseView = inflater.inflate(R.layout.alert_not_enough_money, null);
+        refuseBuilder.setView(alertRefuseView);
+        AlertDialog refuseDialog = refuseBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 도록
+        refuseDialog.setCanceledOnTouchOutside(true);
+        //배경 투명하게
+        refuseDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        ImageView cancelButton = alertRefuseView.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refuseDialog.cancel();
+            }
+        });
+
+        alertRefuseView.findViewById(R.id.free_btn).setVisibility(View.INVISIBLE);
+        TextView tv = alertRefuseView.findViewById(R.id.tv);
+        tv.setText("마지막 집 판매 불가능");
+
+        refuseDialog.show();
     }
 
 }

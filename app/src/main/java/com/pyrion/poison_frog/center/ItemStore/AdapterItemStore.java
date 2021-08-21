@@ -2,8 +2,12 @@ package com.pyrion.poison_frog.center.ItemStore;
 
 import com.bumptech.glide.Glide;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,16 +16,19 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.OneItemSet;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class AdapterItemStore extends BaseAdapter {
     Context context; //운영체제 대리 참조 변수
     ArrayList<OneItemSet> oneItemSetList;
     SQLiteDatabase database_item, database_user;
+    LayoutInflater inflater;
 
     int currentUserMoney;
 
@@ -79,25 +86,41 @@ public class AdapterItemStore extends BaseAdapter {
             public void onClick(View v) {
                 //cash
                 int itemPrice = currentOneItemSet.getItemPrice();
-                if(itemPrice>currentUserMoney){
-                    //TODO 아이템 구매 불가
+                if (currentOneItemSet.getMaxLevel()!=-1&&
+                        (currentOneItemSet.getCurrentLevel()+1)> currentOneItemSet.getMaxLevel()){
+                    showRefuseDialogDialog(position, currentOneItemSet,false);
+//                    Toast.makeText(context, "업그레이드 횟수 초과", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                else if(itemPrice>currentUserMoney){
+                    //TODO 아이템 구매 불가
+                    //돈 부족
+                    showRefuseDialogDialog(position, currentOneItemSet, true);
 
-                payment(itemPrice);
-                upgradeItem(
-                        position,
-                        currentOneItemSet.getItemName(),
-                        currentOneItemSet.getCurrentLevel(),
-                        currentOneItemSet.getItemPrice(),
-                        currentOneItemSet.getUpgradePriceTimes()
-                );
+                }
+                else{
+                    payment(itemPrice);
+                    upgradeItem(
+                            position,
+                            currentOneItemSet.getItemName(),
+                            currentOneItemSet.getCurrentLevel(),
+                            currentOneItemSet.getItemPrice(),
+                            currentOneItemSet.getUpgradePriceTimes()
+                    );
+                }
 
             }
         });
+
         adButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public synchronized void onClick(View v) {
+                if (currentOneItemSet.getMaxLevel()!=-1&&
+                        (currentOneItemSet.getCurrentLevel()+1)> currentOneItemSet.getMaxLevel()){
+                    showRefuseDialogDialog(position, currentOneItemSet, false);
+//                    Toast.makeText(context, "업그레이드 횟수 초과", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // TODO 리워드 광고 보여주기
                 upgradeItem(
                         position,
@@ -121,7 +144,10 @@ public class AdapterItemStore extends BaseAdapter {
     }
 
     synchronized void upgradeItem(int position, String itemName, int itemLevel, int itemPrice, double upgradeTimes){
-        int currentItemPrice = (int)(itemPrice * upgradeTimes);
+        int currentItemPrice= itemPrice;
+        if(itemPrice<1000000000) {
+            currentItemPrice = (int) (itemPrice * upgradeTimes);
+        }
         Log.i("price", currentItemPrice+"");
         database_item = context.openOrCreateDatabase("itemDB.db", context.MODE_PRIVATE, null);
         database_item.execSQL("UPDATE item_data_set SET"
@@ -138,5 +164,51 @@ public class AdapterItemStore extends BaseAdapter {
         //data list 초기화 하고 값 갱신하는것 잊지 말것
         notifyDataSetChanged();
 
+    }
+
+    void showRefuseDialogDialog(int position, OneItemSet currentOneItemSet, boolean isMoney) {
+        AlertDialog.Builder refuseBuilder = new AlertDialog.Builder(context);
+        inflater = LayoutInflater.from(context);
+        View alertRefuseView = inflater.inflate(R.layout.alert_not_enough_money, null);
+        if(!isMoney){
+            //횟수 초과
+            alertRefuseView.findViewById(R.id.free_btn).setVisibility(View.INVISIBLE);
+            TextView tv = alertRefuseView.findViewById(R.id.tv);
+            tv.setText("업그레이드 횟수 초과");
+        }
+        refuseBuilder.setView(alertRefuseView);
+        AlertDialog refuseDialog = refuseBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 도록
+        refuseDialog.setCanceledOnTouchOutside(true);
+        //배경 투명하게
+        refuseDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        ImageView cancelButton = alertRefuseView.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refuseDialog.cancel();
+            }
+        });
+
+        TextView freeBuyButton = alertRefuseView.findViewById(R.id.free_btn);
+        freeBuyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //buy free Frog
+                // TODO 리워드 광고 보여주기
+                upgradeItem(
+                        position,
+                        currentOneItemSet.getItemName(),
+                        currentOneItemSet.getCurrentLevel(),
+                        currentOneItemSet.getItemPrice(),
+                        currentOneItemSet.getUpgradePriceTimes()
+                );
+                refuseDialog.cancel();
+            }
+        });
+
+        refuseDialog.show();
     }
 }

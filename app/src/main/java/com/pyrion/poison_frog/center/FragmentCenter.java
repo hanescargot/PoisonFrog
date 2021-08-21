@@ -76,9 +76,9 @@ public class FragmentCenter extends Fragment {
     InputMethodManager imm;
 
     //current data
-    private int selectedFrogKey = 1;
     String userName = "Anonymous";
-    int currentUserMoney = 100;
+    int currentUserMoney = 10000000; //todo edit it to 100
+    private int selectedFrogKey = 1;
     int frogTouchedCount = 0;
 
     String[] deadFrogMsgs;
@@ -646,6 +646,7 @@ public class FragmentCenter extends Fragment {
     }
 
     void getCurrentFrogDB(){
+        database_frog = getActivity().openOrCreateDatabase("frogsDB.db", getActivity().MODE_PRIVATE, null);
         cursor_frog = database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
         int countFrogDB = cursor_frog.getCount();
         if(countFrogDB != 0) {
@@ -678,8 +679,7 @@ public class FragmentCenter extends Fragment {
                 getActivity().onBackPressed();
             }
         }
-
-        if(countFrogDB == 0) {
+        else {
             //TODO 만약 movetToNext()한후에도 데이터가 하나도 없었다면 UNBOXING MODE
             // 유저 이름 입력받고 개구리 이름 입력 받는 페이지로 넘어가는 전역변수 모드 순자 바꾸기
             int frog_key = selectedFrogKey;
@@ -741,10 +741,6 @@ public class FragmentCenter extends Fragment {
             }
         }
         if(countUserDB == 0){
-            userName = "Anonymous";
-            selectedFrogKey = 1;
-            currentUserMoney = 100;
-
             database_user.execSQL("INSERT INTO user_data_set(user_name, selected_frog_key, user_money) VALUES('"
                     + userName + "','"
                     + selectedFrogKey + "','"
@@ -840,11 +836,11 @@ public class FragmentCenter extends Fragment {
     public void onDestroy() {
         super.onDestroy();
 
-        database_user.close();
-        cursor_user.close();
-
-        database_frog.close();
-        cursor_frog.close();
+//        database_user.close();
+//        cursor_user.close();
+//
+//        database_frog.close();
+//        cursor_frog.close();
     }
 
     //TODO 개구리 롱프래스 하면 개구리 상태 보기

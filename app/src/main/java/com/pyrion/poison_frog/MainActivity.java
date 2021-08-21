@@ -6,16 +6,16 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 
 public class MainActivity extends AppCompatActivity {
-    private static int changeFrogSize=0;
+
     ViewPager2 viewPager;
 
     MainAdapter mainAdapter;
     Intent intent;
-
 
     int fragmentNavigation = 1;
 
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         fragmentNavigation = intent.getIntExtra("fragment_navigation", 1);
         viewPager.setCurrentItem(fragmentNavigation, false);
+
         getIntent().removeExtra("fragment_navigation");
     }
 
@@ -51,12 +52,7 @@ public class MainActivity extends AppCompatActivity {
         }).setNegativeButton("Cancel", null).create().show();
     }
 
-    public static int getChangeFrogSize() {
-        return changeFrogSize;
-    }
 
-    public static void setChangeFrogSize(int changeSize) {
-        changeFrogSize = changeSize;
-    }
+
 }
 

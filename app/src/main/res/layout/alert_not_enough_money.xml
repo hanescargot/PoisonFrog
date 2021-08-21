@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="336dp"
+    android:layout_height="320dp"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/fly_wood_notice"/>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/cancel_button"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/main_cancel_button"
+            android:layout_gravity="left"
+            android:layout_above="@id/layout"/>
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="32sp"
+            android:text="돈이 부족합니다."
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:gravity="center"/>
+
+
+        <Button
+            android:id="@+id/free_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tv"
+            android:layout_gravity="center_horizontal"
+            android:text="무료로 구매하기"/>
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

@@ -37,7 +37,6 @@ public class FragmentTrade extends Fragment {
         view = inflater.inflate(R.layout.fragment_trade_page, container, false);
 
         tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
-
         adapter = new AdapterRecyclerViewTrade(getActivity(), view);
         tradeFrogRecyclerView.setAdapter(adapter);
 
@@ -47,7 +46,8 @@ public class FragmentTrade extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        
+
+        tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
         adapter = new AdapterRecyclerViewTrade(getActivity(), view);
         tradeFrogRecyclerView.setAdapter(adapter);
     }
@@ -62,4 +62,5 @@ public class FragmentTrade extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
     }
+
 }

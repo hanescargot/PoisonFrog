@@ -16,16 +16,20 @@ public class Frog {
 
     //frog state
     public static final int SPECIES_BASIC = R.drawable.main_frog_jelly;
-    public static final int SPECIES_BLACK = 1;
-    public static final int SPECIES_A = 2;
-    public static final int SPECIES_B = 3;
-    public static final int SPECIES_C = 4;
-    public static final int SPECIES_D = 5;
-    public static final int SPECIES_E = 6;
-    public static final int SPECIES_F = 7;
-    public static final int SPECIES_G = 8;
-    public static final int SPECIES_H = 9;
-    public static final int SPECIES_I = 10;
+
+    public static final int SPECIES_BLACK = R.drawable.ic_egg;
+
+    public static final int SPECIES_A = R.drawable.red_egg;
+    public static final int SPECIES_B = R.drawable.red_egg;
+    public static final int SPECIES_C = R.drawable.red_egg;
+
+    public static final int SPECIES_D = R.drawable.blue_egg;
+    public static final int SPECIES_E = R.drawable.blue_egg;
+    public static final int SPECIES_F = R.drawable.blue_egg;
+
+    public static final int SPECIES_G = R.drawable.gold_egg;
+    public static final int SPECIES_H = R.drawable.gold_egg;
+    public static final int SPECIES_I = R.drawable.gold_egg;
 
     //house type
     public static final int HOUSE_TYPE_BUY_NEW = 0;
@@ -33,14 +37,64 @@ public class Frog {
     public static final int HOUSE_TYPE_BOUGHT = 2;
 
 
-    public String FrogSpeciesStirng(int frogSpecies) {
-        switch (frogSpecies){
-            case Frog.SPECIES_BASIC:
-                return "Normal Frog";
-
+    public static int getFrogSpecies(int number) {
+        switch (number){
+            case 0:
+                return Frog.SPECIES_BASIC;
+            case 1:
+                return Frog.SPECIES_BLACK;
+            case 2:
+                return Frog.SPECIES_A;
+            case 3:
+                return Frog.SPECIES_B;
+            case 4:
+                return Frog.SPECIES_C;
+            case 5:
+                return Frog.SPECIES_D;
+            case 6:
+                return Frog.SPECIES_E;
+            case 7:
+                return Frog.SPECIES_F;
+            case 8:
+                return Frog.SPECIES_G;
+            case 9:
+                return Frog.SPECIES_H;
+            case 10:
+                return Frog.SPECIES_I;
 
         }
-        return "null_species";
+        return Frog.SPECIES_BASIC;
     }
+
+
+    public static String getStringSpecies(int species) {
+        switch (species){
+            case Frog.SPECIES_BASIC:
+                return "기본";
+            case Frog.SPECIES_BLACK:
+                return "Frog.SPECIES_BLACK";
+            case Frog.SPECIES_A:
+                return "Frog.SPECIES_A";
+//            case Frog.SPECIES_B:
+//                return "Frog.SPECIES_B";
+//            case Frog.SPECIES_C:
+//                return "Frog.SPECIES_C";
+            case Frog.SPECIES_D:
+                return "Frog.SPECIES_D";
+//            case Frog.SPECIES_E:
+//                return "Frog.SPECIES_E";
+//            case Frog.SPECIES_F:
+//                return "Frog.SPECIES_F";
+            case Frog.SPECIES_G:
+                return "Frog.SPECIES_G";
+//            case Frog.SPECIES_H:
+//                return "Frog.SPECIES_H";
+//            case Frog.SPECIES_I:
+//                return "Frog.SPECIES_I";
+
+        }
+        return "Frog.SPECIES_BASIC";
+    }
+
 
 }
