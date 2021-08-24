@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,8 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.center.FragmentCenter;
 import com.pyrion.poison_frog.data.Egg;
 import com.pyrion.poison_frog.data.Frog;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,7 +41,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     TextView tvUserMoney;
 
     int selectedItemPrice;
-    int newFrogType=0;//1~10
+    int newFrogType = 0;
 
     AlertDialog frogNameAlertDialog;
     EditText newFrogNameEditText;
@@ -47,6 +51,9 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     AlertDialog eggSaveOrSellAlertDialog;
     Toast toast;
 
+    //result
+    TextView tv ;
+    ImageView iv ;
 
     public AdapterRecyclerViewEgg(Context context, ArrayList eggItemArrayList, int userMoney, TextView tvUserMoney){
         this.context = context;
@@ -177,6 +184,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     }
 
     void getNewRandomFrog(String eggType){
+        newFrogType = 0; // basic frog
         Random random = new Random();
         int randomInt = random.nextInt(100); //0~99
 
@@ -184,20 +192,20 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
         switch (eggType){
 //            default is 0
             case "red_box":
-                //확률 2%
-                if(0<randomInt && randomInt<3){
+                //확률 10%
+                if(0<randomInt && randomInt<11){
                     newFrogType = random.nextInt(3)+2; //개구리 타입 2,3,4
                 }
                 break;
             case "blue_box":
-                //확률 3%
-                if(0<randomInt && randomInt<4){
+                //확률 15%
+                if(0<randomInt && randomInt<16){
                     newFrogType = random.nextInt(3)+5; //5~7
                 }
                 break;
             case "gold_box":
-                //확률 1%
-                if(0<randomInt && randomInt<2){
+                //확률 5%
+                if(0<randomInt && randomInt<6){
                     newFrogType = random.nextInt(3)+8; //8~10
                 }
                 break;
@@ -221,7 +229,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
 
                     newFrogName = "아무개구리";
                     showToastString(newFrogName + "생성");
-                    addNewFrogDB(newFrogName);
+                    addNewFrogDB(newFrogName, newFrogType);
                 }
                 return true;
             }
@@ -232,6 +240,13 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
 
         saveButton.setOnClickListener(saveEggClickListener);
         sellButton.setOnClickListener(sellEggClickListener);
+
+        tv = alertSaveOrSellView.findViewById(R.id.frog_species);
+        iv = alertSaveOrSellView.findViewById(R.id.iv);
+
+        int frogSpecies = Frog.getFrogSpecies(newFrogType);
+        tv.setText( Frog.getStringSpecies(frogSpecies) );
+        iv.setImageResource( frogSpecies );
 
         //다이얼로그를 화면에 보이기
         eggSaveOrSellAlertDialog.show();
@@ -256,13 +271,26 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
             frogNameAlertDialog.setCanceledOnTouchOutside(true);
             frogNameAlertDialog.getWindow().setBackgroundDrawable(
                     new ColorDrawable(Color.parseColor("#00000000")));
+            frogNameAlertDialog.setCancelable(false);
             frogNameAlertDialog.show();
 
-            newFrogNameConfirmButton.setOnClickListener(newFrogNameConfirmButtonOnClickListener);
+            newFrogNameConfirmButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //buy
+                    newFrogName = newFrogNameEditText.getText().toString();
+                    showToastString(newFrogName + "생성");
+                    addNewFrogDB(newFrogName, newFrogType);
+
+                    frogNameAlertDialog.cancel();
+                }
+            });
 
 
         }
     };
+
+
 
     View.OnClickListener sellEggClickListener = new View.OnClickListener() {
         @Override
@@ -286,32 +314,12 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
         toast.show();
     }
 
-    View.OnClickListener newFrogNameConfirmButtonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            //buy
-            newFrogName = newFrogNameEditText.getText().toString();
-            showToastString(newFrogName + "생성");
-            addNewFrogDB(newFrogName);
-
-            frogNameAlertDialog.cancel();
-
-//            //update page
-//            MainActivity mainActivity = (MainActivity) context;
-//            Intent intent = new Intent(context, MainActivity.class);
-//            intent.putExtra("fragment_navigation", 0);
-//            context.startActivity(intent);
-//            mainActivity.finish();
-        }
-    };
-
-
-    void addNewFrogDB(String newFrogName){
+    void addNewFrogDB(String newFrogName, int newFrogType){
         SQLiteDatabase database_frog;
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
         database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
                 + Frog.HOUSE_TYPE_LENT + "','"
-                + Frog.USER_NAME_NULL + "','"
+                + FragmentCenter.getUserName() + "','"
                 + newFrogName + "','"
                 + Frog.STATE_ALIVE + "','"
                 + Frog.getFrogSpecies(newFrogType) + "','"

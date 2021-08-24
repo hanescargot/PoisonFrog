@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +40,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class FragmentCenter extends Fragment {
 
+    private static String userName = "null_userName";
     SQLiteDatabase database_user, database_frog, database_item;
     Cursor cursor_user, cursor_frog, cursor_item;
 
@@ -76,8 +76,7 @@ public class FragmentCenter extends Fragment {
     InputMethodManager imm;
 
     //current data
-    String userName = "Anonymous";
-    int currentUserMoney = 10000000; //todo edit it to 100
+    int currentUserMoney = 10000000; //todo edit it to 1100
     private int selectedFrogKey = 1;
     int frogTouchedCount = 0;
 
@@ -88,6 +87,7 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        inflater= getLayoutInflater();
 
         deadFrogMsgs = getResources().getStringArray(R.array.dead_frog_msg);
         soledFrogMsgs = getResources().getStringArray(R.array.soled_frog_msg);
@@ -153,11 +153,11 @@ public class FragmentCenter extends Fragment {
         imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE); //getActivity(). 해줘야함.
         foodInputEditText.setOnEditorActionListener(foodInputActionListener);
 
-        getCurrentUserDB(); // set current data from DB
-        getCurrentFrogDB();
-        getCurrentItemDB();
+//        getCurrentUserDB(); // set new user DB and first Frog
+//        getCurrentFrogDB();
+//        getCurrentItemDB();
 
-        updateSelectedFrogState(currentFrogSet.getFrogState());
+//        updateSelectedFrogState(currentFrogSet.getFrogState());
         return view;
 
     }
@@ -181,7 +181,6 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        inflater= getLayoutInflater();
 
         //click listener settings
         chefHatIconView.setOnClickListener(new View.OnClickListener() {
@@ -473,7 +472,7 @@ public class FragmentCenter extends Fragment {
     void showNewFoodLogSet(String newFoodName, int like){
         addLogString("[먹인 음식: "+newFoodName+"]");
         addLogString("[씹는 중...]");
-        if(like < 1){
+        if(like < 0){
             addLogString("또 먹고싶지 않아요.");
             addLogString("[맛없어서 개구리가 작아짐]");
         }else{
@@ -533,8 +532,13 @@ public class FragmentCenter extends Fragment {
         currentFrogSet.setFrogSize(currentFrogSet.getFrogSize() + diff);
         updateCurrentFrogDB();
         updateFrogLayout(mainFrogImageView,  currentFrogSet.getFrogSize(), false);
-
-        showToastString("크기+"+diff);
+        if(diff>0) {
+            showToastString("크기+" + diff);
+        }else if(diff == 0) {
+            showToastString("크기변화 없음");
+        }else if(diff<0){
+            showToastString("크기" + diff);
+        }
     }
 
     public void changeFrogPower(int diff){
@@ -572,20 +576,7 @@ public class FragmentCenter extends Fragment {
         public void onClick(View v) {
             isBuyAlertDialog.cancel();
 
-            AlertDialog.Builder frogNameBuilder = new AlertDialog.Builder(getActivity());
-            alertNewFrogName= inflater.inflate(R.layout.alert_set_new_frog_name, null);
-            frogNameBuilder.setView(alertNewFrogName);
-
-            ImageView newFrogNameConfirmButton = alertNewFrogName.findViewById(R.id.main_buy_button);
-            newFrogNameEditText = alertNewFrogName.findViewById(R.id.new_frog_name_edit_text);
-
-            frogNameAlertDialog = frogNameBuilder.create();
-            frogNameAlertDialog.setCanceledOnTouchOutside(true);
-            frogNameAlertDialog.getWindow().setBackgroundDrawable(
-                    new ColorDrawable(Color.parseColor("#00000000")));
-            frogNameAlertDialog.show();
-
-            newFrogNameConfirmButton.setOnClickListener(newFrogNameConfirmButtonOnClickListener);
+            showNewFrogNameAlert();
         }
     };
 
@@ -599,21 +590,21 @@ public class FragmentCenter extends Fragment {
     View.OnClickListener newFrogNameConfirmButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            frogNameAlertDialog.cancel();
+
             String newFrogName = newFrogNameEditText.getText().toString();
             showToastString(newFrogName + "생성");
             addLogString("[개구리를 새로 구매 하셨습니다.]");
             changeCurrentMoney(-100);
 
-            frogDataReset();
+            currentFrogDataReset();
             currentFrogSet.setFrogName(newFrogName);
+            updateCurrentFrogCreatorDB(); //new userName
             updateSelectedFrogState(Frog.STATE_ALIVE);
-
-            frogNameAlertDialog.cancel();
-
         }
     };
 
-    public void frogDataReset(){
+    public void currentFrogDataReset(){
         currentFrogSet.setHouseType(Frog.HOUSE_TYPE_LENT);
         currentFrogSet.setCreatorName(userName);
         currentFrogSet.setFrogName(Frog.FROG_NAME_NULL);
@@ -622,7 +613,6 @@ public class FragmentCenter extends Fragment {
         currentFrogSet.setFrogSize(Frog.SIZE_DEFAULT);
         currentFrogSet.setFrogPower(Frog.POWER_DEFAULT);
 
-        updateSelectedFrogState(Frog.STATE_ALIVE);
     }
 
     public void updateSelectedFrogState(int frogState){
@@ -716,6 +706,7 @@ public class FragmentCenter extends Fragment {
     }
 
     void updateCurrentFrogDB(){
+        //only current Frog data
         database_frog.execSQL("UPDATE frogs_data_set SET"
                 +" frog_name =" + "'"+ currentFrogSet.getFrogName() +"'"
                 +", frog_state =" + currentFrogSet.getFrogState()
@@ -727,7 +718,16 @@ public class FragmentCenter extends Fragment {
         );
     }
 
+    void updateCurrentFrogCreatorDB(){
+        ////new userName
+        database_frog.execSQL("UPDATE frogs_data_set SET"
+                +" creator_name =" + "'"+ currentFrogSet.getCreatorName() +"'"
+                +" WHERE frog_key =" + currentFrogSet.getFrogKey()
+        );
+    }
+
     void getCurrentUserDB(){
+        database_user = getActivity().openOrCreateDatabase("userDB.db", getActivity().MODE_PRIVATE, null);
         cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
         int countUserDB = cursor_user.getCount();
         if(countUserDB != 0) {
@@ -744,18 +744,69 @@ public class FragmentCenter extends Fragment {
             }
         }
         if(countUserDB == 0){
-            database_user.execSQL("INSERT INTO user_data_set(user_name, selected_frog_key, user_money) VALUES('"
-                    + userName + "','"
-                    + selectedFrogKey + "','"
-                    + currentUserMoney + "')"
-            );
+            showNewUserNameAlert();
         }
 
         //TODO Adapter가 닫힐 때 닫아주기
     }
+    void showNewFrogNameAlert(){
+        AlertDialog.Builder frogNameBuilder = new AlertDialog.Builder(getActivity());
+        alertNewFrogName= inflater.inflate(R.layout.alert_set_new_frog_name, null);
+        frogNameBuilder.setView(alertNewFrogName);
+
+        ImageView newFrogNameConfirmButton = alertNewFrogName.findViewById(R.id.main_buy_button);
+        newFrogNameEditText = alertNewFrogName.findViewById(R.id.new_frog_name_edit_text);
+
+        frogNameAlertDialog = frogNameBuilder.create();
+        frogNameAlertDialog.setCanceledOnTouchOutside(true);
+        frogNameAlertDialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(Color.parseColor("#00000000")));
+        frogNameAlertDialog.setCancelable(false);
+        frogNameAlertDialog.show();
+
+        newFrogNameConfirmButton.setOnClickListener(newFrogNameConfirmButtonOnClickListener);
+    }
+
+    void showNewUserNameAlert(){
+        AlertDialog.Builder userNameBuilder = new AlertDialog.Builder(getActivity());
+        View alertNewUserName= inflater.inflate(R.layout.alert_set_new_frog_name, null);
+        userNameBuilder.setView(alertNewUserName);
+
+        TextView tv = alertNewUserName.findViewById(R.id.tv);
+        tv.setText("사용자 이름을 설정해 주새요.");
+        ImageView newUserNameConfirmButton = alertNewUserName.findViewById(R.id.main_buy_button);
+        EditText newUserNameEditText = alertNewUserName.findViewById(R.id.new_frog_name_edit_text);
+        newUserNameEditText.setHint("사용자 이름");
+
+        AlertDialog newUserNameAlertDialog = userNameBuilder.create();
+        newUserNameAlertDialog.setCanceledOnTouchOutside(true);
+        newUserNameAlertDialog.getWindow().setBackgroundDrawable(
+                new ColorDrawable(Color.parseColor("#00000000")));
+
+        newUserNameConfirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userName = newUserNameEditText.getText().toString();
+                newUserNameAlertDialog.cancel();
+
+                //default user data
+                cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+                database_user.execSQL("INSERT INTO user_data_set(user_name, selected_frog_key, user_money) VALUES('"
+                        + userName + "','"
+                        + selectedFrogKey + "','"
+                        + currentUserMoney + "')"
+                );
+                showNewFrogNameAlert();
+            }
+        });
+
+        newUserNameAlertDialog.show();
+
+    }
 
 
     void updateUserDB(){
+        cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
         database_user.execSQL("UPDATE user_data_set SET"
                 +" user_name =" + "'"+userName+"'"
                 +", selected_frog_key = " + selectedFrogKey
@@ -853,6 +904,10 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+   public static String getUserName(){
+        return userName;
     }
 
     //TODO 개구리 롱프래스 하면 개구리 상태 보기

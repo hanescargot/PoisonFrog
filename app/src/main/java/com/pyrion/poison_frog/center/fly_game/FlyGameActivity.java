@@ -27,6 +27,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class FlyGameActivity extends AppCompatActivity {
+    boolean finish;
+
     SQLiteDatabase database_frog;
     int currentFrogKey;
     int currentFrogSize;
@@ -64,6 +66,8 @@ public class FlyGameActivity extends AppCompatActivity {
         score = findViewById(R.id.score);
         progressBar=findViewById(R.id.progress);
 
+
+        finish = false;
         specialPoint = 0;
         normalPoint = 0;
         pointSum = 0;
@@ -278,7 +282,8 @@ public class FlyGameActivity extends AppCompatActivity {
         return 0;
     }
 
-    void showPointAlert(){
+
+    void  showPointAlert(){
         //sell house 얼럿 다이어로그
         LayoutInflater inflater = LayoutInflater.from(this);
         View pointSumView = inflater.inflate(R.layout.alert_is_sell_house, null);
@@ -328,6 +333,7 @@ public class FlyGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        timerGage.cancel();
         super.onBackPressed();
     }
     

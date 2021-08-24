@@ -18,7 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.center.FragmentCenter;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 
@@ -475,7 +477,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                 database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
                 database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
                         + Frog.HOUSE_TYPE_LENT + "','"
-                        + Frog.USER_NAME_NULL + "','"
+                        + FragmentCenter.getUserName() + "','"
                         + Frog.FROG_NAME_NULL + "','"
                         + Frog.STATE_SOLD + "','"
                         + Frog.SPECIES_BASIC + "','"
