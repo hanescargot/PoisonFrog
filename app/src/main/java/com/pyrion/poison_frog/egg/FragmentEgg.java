@@ -51,7 +51,6 @@ public class FragmentEgg extends Fragment {
         eggItemArrayList.add(blueEgg);
         eggItemArrayList.add(goldEgg);
 
-        //TODO 여기서 부터
         adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney);
         eggRecyclerView.setAdapter(adapter);
 
@@ -61,8 +60,6 @@ public class FragmentEgg extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getUserDB();
-
 
     }
 
@@ -70,6 +67,19 @@ public class FragmentEgg extends Fragment {
     public void onResume() {
         super.onResume();
         getUserDB();
+        textViewMoney.setText(userMoney+"");
+
+        //egg item 기본 값 넣기 todo json 형식으로 저장해 두기 .
+        ArrayList<String[]> eggItemArrayList= new ArrayList<>();
+        String[] redEgg = getResources().getStringArray(R.array.red_box);
+        String[] blueEgg = getResources().getStringArray(R.array.blue_box);
+        String[] goldEgg = getResources().getStringArray(R.array.gold_box);
+        eggItemArrayList.add(redEgg);
+        eggItemArrayList.add(blueEgg);
+        eggItemArrayList.add(goldEgg);
+
+        adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney);
+        eggRecyclerView.setAdapter(adapter);
 
 
     }

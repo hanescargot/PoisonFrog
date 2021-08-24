@@ -11,17 +11,28 @@
 <!--    default item list data-->
     <array name="item_name_list">
         <item>@array/food</item>
+        <item>@array/food_effect</item>
         <item>@array/exercise_effect</item>
         <item>@array/exercise_time</item>
     </array>
 
     <string-array name="food">
-        <item>Food</item>
+        <item>Food Number</item>
         <item>Food so good</item>
         <item>1000</item>
         <item>1</item>
-        <item>15</item>
+        <item>10</item>
         <item>3</item>
+        <item>Upgrade</item>
+    </string-array>
+
+    <string-array name="food_effect">
+        <item>Food Effect</item>
+        <item>Food Effect so good</item>
+        <item>1000</item>
+        <item>1</item>
+        <item>15</item>
+        <item>2</item>
         <item>Upgrade</item>
     </string-array>
 
@@ -44,5 +55,7 @@
         <item>1.5</item>
         <item>Upgrade</item>
     </string-array>
+
+
 
 </resources>

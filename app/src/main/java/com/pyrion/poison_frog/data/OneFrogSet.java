@@ -1,5 +1,7 @@
 package com.pyrion.poison_frog.data;
 
+import android.widget.Switch;
+
 import com.pyrion.poison_frog.R;
 
 public class OneFrogSet {
@@ -89,7 +91,7 @@ public class OneFrogSet {
         int frogState = this.getFrogState;
         switch (frogState){
             case (Frog.STATE_ALIVE):
-                return R.drawable.main_frog_jelly;
+                return this.getFrogSpecies();
             case (Frog.STATE_DEATH):
                 return R.drawable.main_dead_frog;
             case (Frog.STATE_SOLD):

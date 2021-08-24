@@ -7,14 +7,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +21,6 @@ import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
-import com.pyrion.poison_frog.data.OneItemSet;
 
 import java.util.ArrayList;
 
@@ -88,22 +85,40 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        OneFrogSet selected_frog = oneFrogSetList.get(position);
+        OneFrogSet selectedFrogSet = oneFrogSetList.get(position);
 
-        if(selected_frog.getHouseType() == Frog.HOUSE_TYPE_BUY_NEW ){
+        if(selectedFrogSet.getHouseType() == Frog.HOUSE_TYPE_BUY_NEW ){
+            //buy new house
             ViewHolderEvent viewHolderEvent = (ViewHolderEvent) holder;
             viewHolderEvent.sellHouseIcon.setVisibility(View.GONE);
+            viewHolderEvent.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showIsBuyHouseAlert(selectedFrogSet);
+                }
+            });
+
             return;
         }
 
-        if(selected_frog.getFrogState()==Frog.STATE_SOLD) {
-            //Event item
+        if(selectedFrogSet.getFrogState()==Frog.STATE_SOLD) {
+            //sold
             ViewHolderEvent viewHolderEvent = (ViewHolderEvent) holder;
 
             viewHolderEvent.backGround.setBackgroundColor(R.color.black);
             viewHolderEvent.mainSrc.setImageResource(R.drawable.main_gift);
             viewHolderEvent.mainSrc.setPadding(40, 40, 40, 40);
             viewHolderEvent.subSrc.setVisibility(View.GONE);
+
+            viewHolderEvent.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int newFrogKey = selectedFrogSet.getFrogKey();
+                    upDateUserDB("selected_frog_key", newFrogKey);
+                    updateListView();
+                }
+            });
+
 
             if(position == 0){
                 //selected event box
@@ -113,18 +128,18 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         }
 
 
-        String stringSpeciesName = Frog.getStringSpecies( selected_frog.getFrogSpecies() );
+        String stringSpeciesName = Frog.getStringSpecies( selectedFrogSet.getFrogSpecies() );
         //Normal Frog item
         ViewHolderFrog viewHolderFrog = (ViewHolderFrog) holder;
 
         viewHolderFrog.backGround.setBackgroundColor(R.color.black);
-        viewHolderFrog.frogSrc.setImageResource( selected_frog.getFrogSrc());
-        Glide.with(context).load( selected_frog.getFrogSrc() ).into(viewHolderFrog.frogSrc);
-        viewHolderFrog.frogName.setText( selected_frog.getFrogName() );
-        viewHolderFrog.creatorName.setText("제작자: " + selected_frog.getCreatorName());
+        viewHolderFrog.frogSrc.setImageResource( selectedFrogSet.getFrogSrc());
+        Glide.with(context).load( selectedFrogSet.getFrogSrc() ).into(viewHolderFrog.frogSrc);
+        viewHolderFrog.frogName.setText( selectedFrogSet.getFrogName() );
+        viewHolderFrog.creatorName.setText("제작자: " + selectedFrogSet.getCreatorName());
         viewHolderFrog.frogProperty.setText( "품종: " + stringSpeciesName);
-        viewHolderFrog.frogSize.setText( "크기: "+(selected_frog.getFrogSize() ));
-        viewHolderFrog.frogPower.setText( "힘: "+(selected_frog.getFrogPower() ));
+        viewHolderFrog.frogSize.setText( "크기: "+(selectedFrogSet.getFrogSize() ));
+        viewHolderFrog.frogPower.setText( "힘: "+(selectedFrogSet.getFrogPower() ));
 
         if(position == 0){
             //selected frog background
@@ -196,43 +211,6 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             mainSrc = itemView.findViewById(R.id.main_house_icon);
             subSrc = itemView.findViewById(R.id.main_buy_icon);
             sellHouseIcon = itemView.findViewById(R.id.sell_house_icon);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //EVENT Layout
-
-                    OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
-
-                    // clicked buy new house
-                    //TODO 집을 산다는 얼럿 다이어로그 띄우기
-
-                    database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
-                    if(selectedFrogSet.getHouseType()== Frog.HOUSE_TYPE_BUY_NEW){
-                        database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
-                                + Frog.HOUSE_TYPE_LENT + "','"
-                                + Frog.USER_NAME_NULL + "','"
-                                + Frog.FROG_NAME_NULL + "','"
-                                + Frog.STATE_SOLD + "','"
-                                + Frog.SPECIES_BASIC + "','"
-                                + Frog.SIZE_DEFAULT + "','"
-                                + Frog.POWER_DEFAULT + "')"
-                        );
-
-
-                    cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
-                    cursor_frog.moveToLast();
-                    int newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
-                        upDateUserDB("selected_frog_key", newFrogKey);
-                    }else{
-                        //clicked empty house
-                        int newFrogKey = selectedFrogSet.getFrogKey();
-                        upDateUserDB("selected_frog_key", newFrogKey);
-
-                    }
-                    updateListView();
-                }
-            });
 
             sellHouseIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -459,6 +437,61 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         tv.setText("마지막 집 판매 불가능");
 
         refuseDialog.show();
+    }
+
+    void showIsBuyHouseAlert(OneFrogSet selectedFrogSet){
+        LayoutInflater inflater = LayoutInflater.from(context);
+        AlertDialog.Builder isBuyAlertDialogBuilder = new AlertDialog.Builder(context);
+        View viewBuyNewHouse = inflater.inflate(R.layout.alert_is_buy_new_frog,null);
+        isBuyAlertDialogBuilder.setView(viewBuyNewHouse);
+
+        AlertDialog isBuyAlertDialog= isBuyAlertDialogBuilder.create();
+        isBuyAlertDialog.setCanceledOnTouchOutside(false);
+        isBuyAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        isBuyAlertDialog.show();
+
+        ImageView iv = isBuyAlertDialog.findViewById(R.id.iv);
+        TextView tv = isBuyAlertDialog.findViewById(R.id.tv);
+        TextView price = isBuyAlertDialog.findViewById(R.id.price);
+
+        ImageView cancelBtn = isBuyAlertDialog.findViewById(R.id.cancel_button);
+        View payButton = isBuyAlertDialog.findViewById(R.id.pay_button);
+
+        iv.setImageResource(R.drawable.main_house);
+        tv.setText("새 집을 구매하시겠습니까?");
+        price.setText("-20");
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isBuyAlertDialog.cancel();
+            }
+        });
+
+        payButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
+                database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
+                        + Frog.HOUSE_TYPE_LENT + "','"
+                        + Frog.USER_NAME_NULL + "','"
+                        + Frog.FROG_NAME_NULL + "','"
+                        + Frog.STATE_SOLD + "','"
+                        + Frog.SPECIES_BASIC + "','"
+                        + Frog.SIZE_DEFAULT + "','"
+                        + Frog.POWER_DEFAULT + "')"
+                );
+
+                cursor_frog= database_frog.rawQuery("SELECT * FROM frogs_data_set", null);//WHERE절이 없기에 모든 레코드가 검색됨
+                cursor_frog.moveToLast();
+                int newFrogKey = cursor_frog.getInt(cursor_frog.getColumnIndex("frog_key"));
+                upDateUserDB("selected_frog_key", newFrogKey);
+
+                updateListView();
+                isBuyAlertDialog.cancel();
+            }
+        });
     }
 
 }

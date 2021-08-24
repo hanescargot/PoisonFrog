@@ -28,7 +28,8 @@
             android:text="Null Frog"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_above="@+id/iv"
+            android:layout_above="@id/iv"
+            android:layout_alignParentLeft="true"
             android:gravity="center"/>
         <ImageView
             android:id="@+id/iv"
@@ -47,11 +48,12 @@
             android:layout_toRightOf="@+id/iv">
 
             <ImageView
+                android:id="@+id/house_src"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/main_house"
-                android:layout_toLeftOf="@+id/house_price"
-                android:layout_marginRight="40dp"/>
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"/>
             <TextView
                 android:id="@+id/house_price"
                 android:layout_alignParentRight="true"
@@ -67,8 +69,8 @@
                 android:layout_height="40dp"
                 android:src="@drawable/main_frog_jelly"
                 android:layout_alignTop="@+id/frog_price"
-                android:layout_toLeftOf="@+id/frog_price"
-                android:layout_marginRight="40dp"/>
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"/>
             <TextView
                 android:id="@+id/frog_price"
                 android:layout_alignParentRight="true"

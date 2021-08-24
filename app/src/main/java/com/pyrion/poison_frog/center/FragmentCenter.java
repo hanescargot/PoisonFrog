@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,7 +125,6 @@ public class FragmentCenter extends Fragment {
                 + "selected_frog_key INTEGER,"
                 + "user_money INTEGER)"
         );
-
     }
 
     @Override
@@ -285,7 +284,15 @@ public class FragmentCenter extends Fragment {
                 }
                 Intent intent = new Intent(getActivity(), FlyGameActivity.class);
                 intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                intent.putExtra("currentFrogSrc", currentFrogSet.getFrogSrc());
                 intent.putExtra("currentFrogSize", currentFrogSet.getFrogSize());
+                intent.putExtra("currentFrogName", currentFrogSet.getFrogName());
+                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
+                int foodItem = itemDataArrayList.get(Item.Name.FOOD).getCurrentLevel();
+                int foodEffect = itemDataArrayList.get(Item.Name.FOOD_EFFECT).getCurrentLevel();
+
+                intent.putExtra("food_item", foodItem);
+                intent.putExtra("food_effect", foodEffect);
                 getActivity().startActivity(intent);
             }
         });
@@ -464,16 +471,18 @@ public class FragmentCenter extends Fragment {
 
 
     void showNewFoodLogSet(String newFoodName, int like){
-        if(like < 1){
-            addLogString("[맛없어서 개구리가 작아짐]");
-        }
         addLogString("[먹인 음식: "+newFoodName+"]");
-        addLogString("[_씹"+"는 중...]");
-        addLogString("옴뇸뇸뇸"+"_맛있는 "+ newFoodName+"입니다.");
-        addLogString("_건강해지는"+"맛이예요.");
-        addLogString("방금 먹은 음식과"+"_잘 안"+ "어울리네요.");
-        addLogString("또 먹고싶" +"_지 않아"+"요.");
-        addLogString("짜증나"+"요.");
+        addLogString("[씹는 중...]");
+        if(like < 1){
+            addLogString("또 먹고싶지 않아요.");
+            addLogString("[맛없어서 개구리가 작아짐]");
+        }else{
+            addLogString("옴뇸뇸뇸 맛있는 "+newFoodName+"입니다.");
+        }
+//        addLogString("_건강해지는"+"맛이예요.");
+//        addLogString("방금 먹은 음식과"+"_잘 안"+ "어울리네요.");
+//        addLogString("또 먹고싶" +"_지 않아"+"요.");
+//        addLogString("짜증나"+"요.");
     }
 
     public void showToastString(String text){
@@ -523,11 +532,8 @@ public class FragmentCenter extends Fragment {
     public void changeFrogSize(int diff) {
         currentFrogSet.setFrogSize(currentFrogSet.getFrogSize() + diff);
         updateCurrentFrogDB();
+        updateFrogLayout(mainFrogImageView,  currentFrogSet.getFrogSize(), false);
 
-        mainFrogImageView.getLayoutParams().height=currentFrogSet.getFrogSize();
-        mainFrogImageView.getLayoutParams().width=currentFrogSet.getFrogSize();
-        mainFrogImageView.requestLayout();
-        Log.i("size",diff+"");
         showToastString("크기+"+diff);
     }
 
@@ -624,20 +630,17 @@ public class FragmentCenter extends Fragment {
             case Frog.STATE_ALIVE:
                 currentFrogSet.setFrogState(Frog.STATE_ALIVE);
                 mainFrogImageView.setImageResource(R.drawable.main_frog_jelly);
-                mainFrogImageView.getLayoutParams().height=currentFrogSet.getFrogSize();
-                mainFrogImageView.getLayoutParams().width=currentFrogSet.getFrogSize();
+                updateFrogLayout(mainFrogImageView, currentFrogSet.getFrogSize(), false);
                 break;
             case Frog.STATE_SOLD:
                 currentFrogSet.setFrogState(Frog.STATE_SOLD);
                 mainFrogImageView.setImageResource(R.drawable.main_gift);
-                mainFrogImageView.getLayoutParams().height=160;
-                mainFrogImageView.getLayoutParams().width=160;
+                updateFrogLayout(mainFrogImageView, 160, true);
                 break;
             case Frog.STATE_DEATH:
                 currentFrogSet.setFrogState(Frog.STATE_DEATH);
                 mainFrogImageView.setImageResource(R.drawable.main_dead_frog);
-                mainFrogImageView.getLayoutParams().height=currentFrogSet.getFrogSize();
-                mainFrogImageView.getLayoutParams().width=currentFrogSet.getFrogSize();
+                updateFrogLayout(mainFrogImageView, currentFrogSet.getFrogSize(), false);
                 frogTouchedCount = 0;
                 break;
         }
@@ -830,17 +833,26 @@ public class FragmentCenter extends Fragment {
     }
 
 
-
+    void updateFrogLayout(View mainFrogImageView, int size, Boolean soldFrog){
+        final int maxLayoutSize = 12000;
+        final int minLayoutSize = 160;
+        int viewSize = size/10;
+        if(soldFrog || (size/10 < minLayoutSize)){
+            mainFrogImageView.getLayoutParams().height = minLayoutSize;
+            mainFrogImageView.getLayoutParams().width = minLayoutSize;
+        }else if(size < maxLayoutSize) {
+            mainFrogImageView.getLayoutParams().height = size/10;
+            mainFrogImageView.getLayoutParams().width = size/10;
+        }else{
+            mainFrogImageView.getLayoutParams().height = maxLayoutSize;
+            mainFrogImageView.getLayoutParams().width = maxLayoutSize;
+        }
+        mainFrogImageView.requestLayout();
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-//        database_user.close();
-//        cursor_user.close();
-//
-//        database_frog.close();
-//        cursor_frog.close();
     }
 
     //TODO 개구리 롱프래스 하면 개구리 상태 보기

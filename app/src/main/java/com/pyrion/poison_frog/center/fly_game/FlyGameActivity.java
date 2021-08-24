@@ -1,20 +1,26 @@
 package com.pyrion.poison_frog.center.fly_game;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.data.Frog;
 
 import java.util.Random;
 import java.util.Timer;
@@ -32,34 +38,64 @@ public class FlyGameActivity extends AppCompatActivity {
     Glide glide;
 
     TextView score;
-    ImageView flyButton;
-    ImageView[] flyButtonArray = new ImageView[5];
-    Timer[] flyTimerArray = new Timer[5];
+    ImageView[] flyButtonArray;
+    Timer[] flyTimerArray;
     ProgressBar progressBar;
     Timer timerGage = new Timer();
 
-    int pointSum = 0;
+
+    int specialPoint;
+    int normalPoint;
+    int pointSum;
+
+
+
+    int foodItem;
+    int foodEffect;
+    int currentFrogSpecies;
+    String currentFrogName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.fragment_fly_game);
-        flyButton = findViewById(R.id.target_fly01);
+        ConstraintLayout layout = findViewById(R.id.layout);
         score = findViewById(R.id.score);
         progressBar=findViewById(R.id.progress);
+
+        specialPoint = 0;
+        normalPoint = 0;
+        pointSum = 0;
 
 
         //getCurrentFrogKey
         Intent intent = getIntent();
         currentFrogKey = intent.getIntExtra("currentFrogKey", 0);
-        currentFrogSize = intent.getIntExtra("currentFrogSize", 40);
-        Log.i("point", currentFrogSize+"");
+        currentFrogName = intent.getStringExtra("currentFrogName");
+        currentFrogSpecies = intent.getIntExtra("currentFrogSpecies", Frog.SPECIES_BASIC);
+        currentFrogSize = intent.getIntExtra("currentFrogSize", 80);
+        foodItem = intent.getIntExtra("food_item", 1)+4;
+        foodEffect = intent.getIntExtra("food_effect", 1);
+
+        flyButtonArray = new ImageView[foodItem];
+        flyTimerArray = new Timer[foodItem];
 
         //add flyButton array
         for(int i = 0; i < flyButtonArray.length; i++) {
-            flyButtonArray[i] = findViewById(R.id.target_fly01+i);
+            flyButtonArray[i] = new ImageView(this);
+            flyButtonArray[i].setId(i);
+            ConstraintLayout.LayoutParams param = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
+            param.width = 160;
+            param.height = 160;
+
+            layout.addView(flyButtonArray[i], param);
+            setContentView(layout);
+
+
+
             setSrc(flyButtonArray[i]);
-            moveFly(flyButtonArray[i]);
+            changFlyPosition(flyButtonArray[i]);
             flyButtonArray[i].setOnClickListener(flyButtonClicked);
             flyTimerArray[i] = newFlyTimer(flyButtonArray[i]);
         }
@@ -78,17 +114,18 @@ public class FlyGameActivity extends AppCompatActivity {
             ImageView iv = (ImageView)v;
             //TODO 사운드랑 진동 추가
 
-            if (iv.getTag().equals(R.drawable.fly_fly01)) {
-                pointSum += 5;
+            if (iv.getTag().equals("special")) {
+                specialPoint += 3*foodEffect;
+                pointSum += 3*foodEffect;
             } else {
-                pointSum++;
+                normalPoint +=1*foodEffect;
+                pointSum += 1*foodEffect;
             }
 
             score.setText(pointSum + "");
-            iv.setImageResource(R.drawable.main_dollar);
-            iv.setClickable(false);
 
-            int key = getIdKey(v.getId());
+//            int key = getIdKey(v.getId());
+            int key = v.getId();
             flyTimerArray[key].cancel();
 
             setSrc(iv);
@@ -120,7 +157,8 @@ public class FlyGameActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         final float dx = random.nextFloat() * displaymetrics.widthPixels;
         final float dy = random.nextFloat() * displaymetrics.heightPixels;
-        final int randomDegree = random.nextInt(360);
+        final int randomDegree = random.nextInt(360)-180;
+
         targetFlyIV.animate()
                 .x(dx)
                 .y(dy)
@@ -144,13 +182,16 @@ public class FlyGameActivity extends AppCompatActivity {
                 .start();
     }
 
-
-
     void setSrc( ImageView targetFlyIV) {
         targetFlyIV.setClickable(true);
-        int i = random.nextInt(6);
-        glide.with(FlyGameActivity.this).load( R.drawable.fly_fly01+i).into(targetFlyIV);
-        targetFlyIV.setTag(R.drawable.fly_fly01+i);
+        int i = random.nextInt(5);
+        if(i==4){
+            glide.with(FlyGameActivity.this).load( R.drawable.special_bubble).into(targetFlyIV);
+            targetFlyIV.setTag("special");
+        }else{
+            glide.with(FlyGameActivity.this).load( R.drawable.normal_bubble).into(targetFlyIV);
+            targetFlyIV.setTag("");
+        }
     }
 
 
@@ -194,9 +235,9 @@ public class FlyGameActivity extends AppCompatActivity {
                                 }
 
                                 //end of the game
-
-
-                                onBackPressed();
+                                pointDataUpdate();
+                                timerGage.cancel();
+                                showPointAlert();
 
                             }
                             progressBar.setProgress(currprog);
@@ -216,12 +257,7 @@ public class FlyGameActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        pointDataUpdate();
-        timerGage.cancel();
-        super.onBackPressed();
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -230,22 +266,6 @@ public class FlyGameActivity extends AppCompatActivity {
 //       점수를 보여주고 게임이 완전 종료됩니다.
     }
 
-    int getIdKey(int id){
-        switch (id){
-            case R.id.target_fly01:
-                return 0;
-            case R.id.target_fly02:
-                return 1;
-            case R.id.target_fly03:
-                return 2;
-            case R.id.target_fly04:
-                return 3;
-            case R.id.target_fly05:
-                return 4;
-
-        }
-        return -1;
-    }
 
     int getSownPlaceX(int pixel,int randomNum ){
         Log.i("random", randomNum+"");
@@ -258,6 +278,58 @@ public class FlyGameActivity extends AppCompatActivity {
         return 0;
     }
 
+    void showPointAlert(){
+        //sell house 얼럿 다이어로그
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View pointSumView = inflater.inflate(R.layout.alert_is_sell_house, null);
 
+        AlertDialog.Builder sumPointBuilder = new AlertDialog.Builder(this);
+        sumPointBuilder.setView(pointSumView);
+        AlertDialog pointAlertDialog = sumPointBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
+        pointAlertDialog.setCanceledOnTouchOutside(false);
+
+        //button setting
+        ImageView bigFrogSrc = pointSumView.findViewById(R.id.iv);
+        ImageView cancelBtn = pointSumView.findViewById(R.id.cancel_button);
+        TextView btn = pointSumView.findViewById(R.id.tv_sell);
+
+        ImageView specialBubbleSrc = pointSumView.findViewById(R.id.frog_src);
+        ImageView normalBubbleSrc = pointSumView.findViewById(R.id.house_src);
+        TextView tvSpecialPoint = pointSumView.findViewById(R.id.frog_price);
+        TextView tvNormalPoint = pointSumView.findViewById(R.id.house_price);
+        TextView tvSumPrice= pointSumView.findViewById(R.id.sum);
+        TextView frogName = pointSumView.findViewById(R.id.frog_name);
+        cancelBtn.setVisibility(View.INVISIBLE);
+
+
+        bigFrogSrc.setImageResource(currentFrogSpecies);
+        frogName.setText(currentFrogName);
+        btn.setText("확인");
+
+        normalBubbleSrc.setImageResource(R.drawable.normal_bubble);
+        specialBubbleSrc.setImageResource(R.drawable.special_bubble);
+
+        tvSpecialPoint.setText(specialPoint+"");
+        tvNormalPoint.setText(normalPoint+"");
+        tvSumPrice.setText("합계: "+ pointSum);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pointAlertDialog.cancel();
+                onBackPressed();
+            }
+        });
+
+        pointAlertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+    
 }
 

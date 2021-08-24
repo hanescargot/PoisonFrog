@@ -10,4 +10,12 @@ public class Item {
     public static final int UPGRADE_PRICE = 5;
     public static final int TYPE = 6;
 
+    public class Name{
+        public static final int FOOD = 0;
+        public static final int FOOD_EFFECT = 1;
+        public static final int EXERCISE = 2;
+        public static final int EXERCISE_EFFECT = 3;
+
+    }
+
 }

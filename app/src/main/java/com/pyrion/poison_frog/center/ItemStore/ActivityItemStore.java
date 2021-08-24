@@ -43,6 +43,13 @@ public class ActivityItemStore extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_store);
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         intent = getIntent();
         currentUserMoney = intent.getIntExtra("user_money", 0);
 
@@ -65,13 +72,13 @@ public class ActivityItemStore extends AppCompatActivity {
                 String ItemCase = cursor_item.getString(cursor_item.getColumnIndex("item_case"));
 
                 itemDataArrayList.add(new OneItemSet(
-                        ItemName,
-                        ItemExplain,
-                        CurrentItemPrice,
-                        CurrentLevel,
-                        MaxLevel,
-                        UpgradePriceTimes,
-                        ItemCase
+                                ItemName,
+                                ItemExplain,
+                                CurrentItemPrice,
+                                CurrentLevel,
+                                MaxLevel,
+                                UpgradePriceTimes,
+                                ItemCase
                         )
                 );
             }
