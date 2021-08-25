@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#5555"
     android:layout_width="336dp"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:padding="8dp">
 
         <TextView
@@ -13,25 +15,20 @@
             android:layout_height="wrap_content"
             android:text="Normal Frog"
             android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
             android:textSize="32sp"
             android:textStyle="bold"/>
         <ImageView
             android:id="@+id/iv"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="16dp"
             android:src="@drawable/ic_egg"/>
 
         <LinearLayout
             android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:gravity="center_vertical"
-            android:layout_below="@+id/iv"
             android:padding="8dp"
             android:weightSum="2">
 
@@ -46,8 +43,6 @@
                 android:textSize="32sp"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
-
-
             <TextView
                 android:id="@+id/tv_save"
                 android:layout_marginLeft="16dp"
@@ -64,4 +59,4 @@
         </LinearLayout>
 
 
-</RelativeLayout>
+</LinearLayout>

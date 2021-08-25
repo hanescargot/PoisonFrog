@@ -9,7 +9,9 @@
         android:roundIcon="@drawable/main_frog_jelly"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity android:name=".IntroActivity"
+        <activity android:name=".egg.ActivityFrogBook"></activity>
+        <activity
+            android:name=".IntroActivity"
             android:theme="@style/Theme.Poison_frog_no_actionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,12 +21,10 @@
         </activity>
         <activity
             android:name=".center.ItemStore.ActivityItemStore"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
-        </activity>
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"></activity>
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustNothing">
-        </activity>
+            android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name=".center.fly_game.FlyGameActivity" />
     </application>
 

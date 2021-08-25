@@ -1,5 +1,7 @@
 package com.pyrion.poison_frog.egg;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.center.FragmentCenter;
@@ -39,6 +42,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     ArrayList eggItemArrayList;
     int userMoney;
     TextView tvUserMoney;
+    ImageView eggSrc;
 
     int selectedItemPrice;
     int newFrogType = 0;
@@ -55,11 +59,13 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     TextView tv ;
     ImageView iv ;
 
-    public AdapterRecyclerViewEgg(Context context, ArrayList eggItemArrayList, int userMoney, TextView tvUserMoney){
+
+    public AdapterRecyclerViewEgg(Context context, ArrayList eggItemArrayList, int userMoney, TextView tvUserMoney, ImageView eggSrc){
         this.context = context;
         this.eggItemArrayList = eggItemArrayList;
         this.userMoney = userMoney;
         this.tvUserMoney = tvUserMoney;
+        this.eggSrc = eggSrc;
         inflater = LayoutInflater.from(context);
     }
 
@@ -188,7 +194,6 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
         Random random = new Random();
         int randomInt = random.nextInt(100); //0~99
 
-        //TODO 애니메이션 알깨지는거 보여주기
         switch (eggType){
 //            default is 0
             case "red_box":
@@ -209,47 +214,56 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
                     newFrogType = random.nextInt(3)+8; //8~10
                 }
                 break;
-            
+
         }
 
-        //TODO 애니메이션 끝난 뒤에 얼럿띄우고 고 추가할지 팔지 물어보기
-        AlertDialog.Builder eggSaveOrSellBuilder = new AlertDialog.Builder(context);
-        View alertSaveOrSellView = inflater.inflate(R.layout.alert_sell_save_new_egg, null);
-        eggSaveOrSellBuilder.setView(alertSaveOrSellView);
-        eggSaveOrSellAlertDialog = eggSaveOrSellBuilder.create();
-
-        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
-        eggSaveOrSellAlertDialog.setCanceledOnTouchOutside(false);
-        eggSaveOrSellAlertDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+        //TODO 알 깨지는 애니메이션으로 바꾸기
+        Glide.with(context).load(R.drawable.dancing_pepe).into(eggSrc);
+        eggSrc.animate().alpha(1f).setDuration(2000).setListener(new AnimatorListenerAdapter() {
             @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if( keyCode == KeyEvent.KEYCODE_BACK){
-                    showToastString("개구리 창고로 옮겨짐");
-                    eggSaveOrSellAlertDialog.cancel();
+            public void onAnimationEnd(Animator animation) {
+                Glide.with(context).load(R.drawable.ic_egg).into(eggSrc);
+                //니메이션 끝난 뒤
 
-                    newFrogName = "아무개구리";
-                    showToastString(newFrogName + "생성");
-                    addNewFrogDB(newFrogName, newFrogType);
-                }
-                return true;
+                AlertDialog.Builder eggSaveOrSellBuilder = new AlertDialog.Builder(context);
+                View alertSaveOrSellView = inflater.inflate(R.layout.alert_sell_save_new_egg, null);
+                eggSaveOrSellBuilder.setView(alertSaveOrSellView);
+                eggSaveOrSellAlertDialog = eggSaveOrSellBuilder.create();
+
+                //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
+                eggSaveOrSellAlertDialog.setCanceledOnTouchOutside(false);
+                eggSaveOrSellAlertDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                    @Override
+                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                        if( keyCode == KeyEvent.KEYCODE_BACK){
+                            showToastString("개구리 창고로 옮겨짐");
+                            eggSaveOrSellAlertDialog.cancel();
+
+                            newFrogName = "아무개구리";
+                            showToastString(newFrogName + "생성");
+                            addNewFrogDB(newFrogName, newFrogType);
+                        }
+                        return true;
+                    }
+                });
+
+                TextView saveButton = alertSaveOrSellView.findViewById(R.id.tv_save);
+                TextView sellButton = alertSaveOrSellView.findViewById(R.id.tv_sell);
+
+                saveButton.setOnClickListener(saveEggClickListener);
+                sellButton.setOnClickListener(sellEggClickListener);
+
+                tv = alertSaveOrSellView.findViewById(R.id.frog_species);
+                iv = alertSaveOrSellView.findViewById(R.id.iv);
+
+                int frogSpecies = Frog.getFrogSpecies(newFrogType);
+                tv.setText( Frog.getStringSpecies(frogSpecies) );
+                iv.setImageResource( frogSpecies );
+
+                //다이얼로그를 화면에 보이기
+                eggSaveOrSellAlertDialog.show();
             }
         });
-
-        TextView saveButton = alertSaveOrSellView.findViewById(R.id.tv_save);
-        TextView sellButton = alertSaveOrSellView.findViewById(R.id.tv_sell);
-
-        saveButton.setOnClickListener(saveEggClickListener);
-        sellButton.setOnClickListener(sellEggClickListener);
-
-        tv = alertSaveOrSellView.findViewById(R.id.frog_species);
-        iv = alertSaveOrSellView.findViewById(R.id.iv);
-
-        int frogSpecies = Frog.getFrogSpecies(newFrogType);
-        tv.setText( Frog.getStringSpecies(frogSpecies) );
-        iv.setImageResource( frogSpecies );
-
-        //다이얼로그를 화면에 보이기
-        eggSaveOrSellAlertDialog.show();
 
     }
 

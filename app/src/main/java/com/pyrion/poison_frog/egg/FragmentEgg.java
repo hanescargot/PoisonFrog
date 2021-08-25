@@ -1,6 +1,7 @@
 package com.pyrion.poison_frog.egg;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -51,7 +52,7 @@ public class FragmentEgg extends Fragment {
         eggItemArrayList.add(blueEgg);
         eggItemArrayList.add(goldEgg);
 
-        adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney);
+        adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney, eggSrc);
         eggRecyclerView.setAdapter(adapter);
 
         return  view;
@@ -60,7 +61,13 @@ public class FragmentEgg extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        frogBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ActivityFrogBook.class);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -78,7 +85,7 @@ public class FragmentEgg extends Fragment {
         eggItemArrayList.add(blueEgg);
         eggItemArrayList.add(goldEgg);
 
-        adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney);
+        adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney, eggSrc);
         eggRecyclerView.setAdapter(adapter);
 
 

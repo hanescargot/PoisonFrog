@@ -26,10 +26,11 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:text="Null Frog"
-            android:textSize="16sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:layout_above="@id/iv"
             android:layout_alignParentLeft="true"
+            android:paddingVertical="8dp"
             android:gravity="center"/>
         <ImageView
             android:id="@+id/iv"

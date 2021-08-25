@@ -73,7 +73,8 @@
 
         <ImageView
             android:id="@+id/egg_src"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
+            android:layout_gravity="center_horizontal"
             android:layout_height="300dp"
             android:src="@drawable/ic_egg" />
 
