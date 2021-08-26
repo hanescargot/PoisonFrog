@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -307,7 +308,13 @@ public class FragmentCenter extends Fragment {
                 }
                 if(currentFrogSet.getFrogState() == Frog.STATE_DEATH){
                     showToastString("밥먹이기 불가능");
-                    addLogString("[죽은 개구리는 밥을 법지 못함.]");
+                    addLogString("[죽은 개구리는 밥을 먹지 못함.]");
+                    return;
+                }
+                if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                    showToastString("밥먹이기 불가능");
+                    addLogString("[운동중인 개구리는 밥을 먹지 못함.]");
+                    addLogString("헥...헥...힘들다...");
                     return;
                 }
                 Intent intent = new Intent(getActivity(), FlyGameActivity.class);
@@ -340,15 +347,12 @@ public class FragmentCenter extends Fragment {
                     return;
                 }
                 if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
-                    showToastString("운동 취소");
+                    cancelExercise();
+
                     return;
                 }
 
                 showTimerAlert();
-                //  TODO
-//                changeFrogPower(1);
-//                showToastString("힘+1");
-//                updateCurrentFrogDB();
             }
         });
 
@@ -363,6 +367,12 @@ public class FragmentCenter extends Fragment {
             if(currentFrogSet.getFrogState() == Frog.STATE_DEATH){
                 showToastString("돈벌기 불가능");
                 addLogString("[죽은 개구리는 일을 못함.]");
+                return;
+            }
+            if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                showToastString("돈벌기 불가능");
+                addLogString("[운동중인 개구리는 일을 못함.]");
+                addLogString("충분히...힘들다...");
                 return;
             }
             changeCurrentMoney(+1);
@@ -384,6 +394,10 @@ public class FragmentCenter extends Fragment {
                 }
                 if (currentFrogSet.getFrogState() == Frog.STATE_DEATH) {
                     addLogString(deadFrogMsgs[random.nextInt(8)]);
+                    return;
+                }
+                if (currentFrogSet.getFrogState() == Frog.STATE_EXERCISE) {
+                    cancelExercise();
                     return;
                 }
                 frogTouchedCount++;
@@ -408,8 +422,7 @@ public class FragmentCenter extends Fragment {
                         addLogString("죽을 것 같아요.");
                         break;
                     default: {
-
-                        if (random.nextInt(2) == 1) {
+                       if (random.nextInt(2) == 1) {
                             updateSelectedFrogState(Frog.STATE_DEATH);
                             addLogString("[개구리 죽음]");
                             showToastString("개구리 사망");
@@ -449,6 +462,44 @@ public class FragmentCenter extends Fragment {
 
     }//onCreated
 
+    private void cancelExercise() {
+        AlarmManager alarmManager;
+        alarmManager= (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+        showToastString("운동 취소");
+        updateSelectedFrogState(Frog.STATE_ALIVE);
+
+        Intent intent= new Intent(getActivity(), AlarmReceiver.class);
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(getActivity(), selectedFrogKey, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
+
+        //point
+        powerPointUpdate();
+
+    }
+
+    void powerPointUpdate(){
+        long currentTime = System.currentTimeMillis();
+
+        database_exercise = getActivity().openOrCreateDatabase("exerciseDB.db", getActivity().MODE_PRIVATE, null);
+        cursor_exercise = database_exercise.rawQuery("SELECT * FROM exercise_data_set WHERE frog_key = " + selectedFrogKey, null);
+        cursor_exercise.moveToNext();//[레코드:row]로 커서이동
+        long startTime = cursor_exercise.getLong(cursor_exercise.getColumnIndex("start_time"));
+        int currentFrogPower = cursor_exercise.getInt(cursor_exercise.getColumnIndex("current_frog_power"));
+        int itemEffect = cursor_exercise.getInt(cursor_exercise.getColumnIndex("item_effect"));
+
+        int exercisePoint = (int)( (currentTime - startTime)/60000 );
+        Log.i("time", currentTime+"");
+        Log.i("time", exercisePoint+"");
+        int newFrogPower = currentFrogPower + exercisePoint;
+
+        currentFrogSet.setFrogPower( newFrogPower);
+        updateCurrentFrogDB();
+
+        database_exercise.execSQL("DELETE FROM exercise_data_set " +
+                "WHERE frog_key =" + "'" + selectedFrogKey + "'");
+    }
+
 
     void showHouseSellAlertDialog(){
         //sell house 얼럿 다이어로그
@@ -477,7 +528,8 @@ public class FragmentCenter extends Fragment {
         frogName.setText(currentFrogSet.getFrogName());
 
         sumPrice = 0;
-        if(currentFrogSet.getFrogState() == Frog.STATE_ALIVE){
+        if(currentFrogSet.getFrogState() == Frog.STATE_ALIVE ||
+                currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
             tvSizePrice.setText(currentFrogSet.getFrogSize()+"원");
             tvPowerPrice.setText(currentFrogSet.getFrogPower()+"원");
 
@@ -546,8 +598,6 @@ public class FragmentCenter extends Fragment {
         frogDataAlertDialog.setCanceledOnTouchOutside(true);
         frogDataAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
 
-
-
         frogDataAlertDialog.show();
     }
 
@@ -612,10 +662,11 @@ public class FragmentCenter extends Fragment {
                 PendingIntent pendingIntent= PendingIntent.getBroadcast(getActivity(), selectedFrogKey, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (currentTime+exerciseTime), pendingIntent);
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
                 }else{
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, (currentTime+exerciseTime), pendingIntent);
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
                 }
+
             }
         });
     }
@@ -647,6 +698,13 @@ public class FragmentCenter extends Fragment {
                     if(currentFrogSet.getFrogState() == Frog.STATE_SOLD){
                         addLogString("[팔려간 개구리는 "+newFoodName+" 먹지 못함.]");
                         showToastString("개구리 없음");
+                        hideFoodInputEditText();
+                        return false;
+                    }
+                    if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                        addLogString("[운동중인 개구리는 "+newFoodName+" 먹지 못함.]");
+                        addLogString("나 죽이려고 그러니...?");
+                        showToastString("먹지 못함");
                         hideFoodInputEditText();
                         return false;
                     }

@@ -66,17 +66,15 @@ public class AlarmReceiver extends BroadcastReceiver {
         cursor_exercise = database_exercise.rawQuery("SELECT * FROM exercise_data_set WHERE frog_key = " + frogKey, null);
         cursor_exercise.moveToNext();//[레코드:row]로 커서이동
         int countFrogDB = cursor_exercise.getCount();
-        if (countFrogDB != 0) {
-            try {//when there is selected frog data
-                frogName = cursor_exercise.getString(cursor_exercise.getColumnIndex("frog_name"));
-                currentFrogPower = cursor_exercise.getInt(cursor_exercise.getColumnIndex("current_frog_power"));
-                itemEffect = cursor_exercise.getInt(cursor_exercise.getColumnIndex("item_effect"));
-                startTime = cursor_exercise.getLong(cursor_exercise.getColumnIndex("start_time"));
+        try {//when there is selected frog data
+            frogName = cursor_exercise.getString(cursor_exercise.getColumnIndex("frog_name"));
+            currentFrogPower = cursor_exercise.getInt(cursor_exercise.getColumnIndex("current_frog_power"));
+            itemEffect = cursor_exercise.getInt(cursor_exercise.getColumnIndex("item_effect"));
+            startTime = cursor_exercise.getLong(cursor_exercise.getColumnIndex("start_time"));
 
-            } catch (Exception e) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage("개구리 불러오기 오류").setPositiveButton("OK", null).show();
-            }
+        } catch (Exception e) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage("운동 데이터 오류").setPositiveButton("OK", null).show();
         }
     }
 
@@ -110,7 +108,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private int newFrogPower() {
         long currentTime = System.currentTimeMillis();
-        int exercisePoint = (int) ((currentTime - startTime) / 60000);
+        int exercisePoint =  (int)( (currentTime - startTime)/60000 );
         Log.i("time", exercisePoint+"");
 
         int newFrogPower = currentFrogPower + exercisePoint;
