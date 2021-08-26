@@ -236,8 +236,9 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
                     @Override
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         if( keyCode == KeyEvent.KEYCODE_BACK){
-                            showToastString("개구리 창고로 옮겨짐");
                             eggSaveOrSellAlertDialog.cancel();
+
+                            showToastString("개구리 창고로 옮겨짐");
 
                             newFrogName = "아무개구리";
                             showToastString(newFrogName + "생성");

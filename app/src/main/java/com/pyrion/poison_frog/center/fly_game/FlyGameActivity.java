@@ -8,13 +8,11 @@ import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -300,9 +298,9 @@ public class FlyGameActivity extends AppCompatActivity {
         ImageView cancelBtn = pointSumView.findViewById(R.id.cancel_button);
         TextView btn = pointSumView.findViewById(R.id.tv_sell);
 
-        ImageView specialBubbleSrc = pointSumView.findViewById(R.id.frog_src);
+        ImageView specialBubbleSrc = pointSumView.findViewById(R.id.iv_power);
         ImageView normalBubbleSrc = pointSumView.findViewById(R.id.house_src);
-        TextView tvSpecialPoint = pointSumView.findViewById(R.id.frog_price);
+        TextView tvSpecialPoint = pointSumView.findViewById(R.id.tv_power);
         TextView tvNormalPoint = pointSumView.findViewById(R.id.house_price);
         TextView tvSumPrice= pointSumView.findViewById(R.id.sum);
         TextView frogName = pointSumView.findViewById(R.id.frog_name);
@@ -316,9 +314,9 @@ public class FlyGameActivity extends AppCompatActivity {
         normalBubbleSrc.setImageResource(R.drawable.normal_bubble);
         specialBubbleSrc.setImageResource(R.drawable.special_bubble);
 
-        tvSpecialPoint.setText(specialPoint+"");
-        tvNormalPoint.setText(normalPoint+"");
-        tvSumPrice.setText("합계: "+ pointSum);
+        tvSpecialPoint.setText(specialPoint+" 점");
+        tvNormalPoint.setText(normalPoint+" 점");
+        tvSumPrice.setText("+"+ pointSum+"사이즈");
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

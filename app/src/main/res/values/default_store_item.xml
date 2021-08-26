@@ -10,13 +10,13 @@
 
 <!--    default item list data-->
     <array name="item_name_list">
-        <item>@array/food</item>
+        <item>@array/food_number</item>
         <item>@array/food_effect</item>
-        <item>@array/exercise_effect</item>
         <item>@array/exercise_time</item>
+        <item>@array/exercise_effect</item>
     </array>
 
-    <string-array name="food">
+    <string-array name="food_number">
         <item>Food Number</item>
         <item>Food so good</item>
         <item>1000</item>

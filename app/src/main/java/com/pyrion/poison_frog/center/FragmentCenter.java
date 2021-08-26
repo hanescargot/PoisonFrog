@@ -1,18 +1,20 @@
 package com.pyrion.poison_frog.center;
 
-import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 //from temp
@@ -28,12 +30,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
-import java.util.zip.Inflater;
 
-import androidx.fragment.app.DialogFragment;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.pyrion.poison_frog.MainActivity;
+import com.bumptech.glide.Glide;
+import com.pyrion.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.poison_frog.center.fly_game.FlyGameActivity;
 import com.pyrion.poison_frog.center.ItemStore.ActivityItemStore;
 import com.pyrion.poison_frog.data.Frog;
@@ -42,15 +47,13 @@ import com.pyrion.poison_frog.data.OneFrogSet;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.OneItemSet;
 
-import org.w3c.dom.Text;
-
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class FragmentCenter extends Fragment {
 
     private static String userName = "null_userName";
-    SQLiteDatabase database_user, database_frog, database_item;
-    Cursor cursor_user, cursor_frog, cursor_item;
+    SQLiteDatabase database_user, database_frog, database_item, database_exercise;
+    Cursor cursor_user, cursor_frog, cursor_item, cursor_exercise;
 
     ArrayList<OneItemSet> itemDataArrayList = new ArrayList<>();
 
@@ -87,6 +90,9 @@ public class FragmentCenter extends Fragment {
     int currentUserMoney = 10000000; //todo edit it to 1100
     private int selectedFrogKey = 1;
     int frogTouchedCount = 0;
+
+    int exerciseTime;
+    int sumPrice;
 
     String[] deadFrogMsgs;
     String[] soledFrogMsgs;
@@ -132,6 +138,15 @@ public class FragmentCenter extends Fragment {
                 + "user_name String,"
                 + "selected_frog_key INTEGER,"
                 + "user_money INTEGER)"
+        );
+
+        database_exercise = getActivity().openOrCreateDatabase("exerciseDB.db", getActivity().MODE_PRIVATE, null);
+        database_exercise.execSQL("CREATE TABLE IF NOT EXISTS exercise_data_set("
+                + "frog_key INTEGER,"
+                + "frog_name VARCHAR(40),"
+                + "current_frog_power INTEGER,"
+                + "item_effect INTEGER,"
+                + "start_time LONG)"
         );
     }
 
@@ -182,6 +197,21 @@ public class FragmentCenter extends Fragment {
         updateSelectedFrogState(currentFrogSet.getFrogState()); //set frog UI
     }
 
+    private void changeExerciseState( double currentTime) {
+        //Frog DB
+        updateSelectedFrogState(Frog.STATE_EXERCISE);
+
+        //Exercise DB
+        int exerciseEffect =  itemDataArrayList.get(Item.Name.EXERCISE_EFFECT).getCurrentLevel();//지난 시간 *  효과
+        database_exercise.execSQL("INSERT INTO exercise_data_set(frog_key, frog_name, current_frog_power, item_effect, start_time) VALUES('"
+                + currentFrogSet.getFrogKey() + "','"
+                + currentFrogSet.getFrogName() + "','"
+                + currentFrogSet.getFrogPower() + "','"
+                + exerciseEffect + "','"
+                + currentTime + "')"
+        );
+
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -248,21 +278,15 @@ public class FragmentCenter extends Fragment {
                     showToastString("판매 불가능");
                     return;
 
-                }else if(currentFrogSet.getFrogState() == Frog.STATE_DEATH) {
-                    addLogString("[개구리 시체는 쓸모가 없는데...]");
-                    showToastString("헐값에 판매 완료");
-                    changeCurrentMoney(    getCurrentFrogPrice()/10 );
-
                 }else{
-                    changeCurrentMoney(getCurrentFrogPrice());
-                    showToastString("판매 완료");
+                    //얼럿
+                    showHouseSellAlertDialog();
+
                 }
 
-                addLogString(soledFrogMsgs[random.nextInt(soledFrogMsgs.length)]);
-                addLogString("[개구리가 판매되었습니다.]");
-                updateSelectedFrogState(Frog.STATE_SOLD);
             }
         });
+
 
         mainHouseIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -292,7 +316,8 @@ public class FragmentCenter extends Fragment {
                 intent.putExtra("currentFrogSize", currentFrogSet.getFrogSize());
                 intent.putExtra("currentFrogName", currentFrogSet.getFrogName());
                 intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
-                int foodItem = itemDataArrayList.get(Item.Name.FOOD).getCurrentLevel();
+
+                int foodItem = itemDataArrayList.get(Item.Name.FOOD_NUMBER).getCurrentLevel();
                 int foodEffect = itemDataArrayList.get(Item.Name.FOOD_EFFECT).getCurrentLevel();
 
                 intent.putExtra("food_item", foodItem);
@@ -314,9 +339,16 @@ public class FragmentCenter extends Fragment {
                     addLogString("[죽은 개구리는 운동 못함.]");
                     return;
                 }
-                changeFrogPower(1);
-                showToastString("힘+1");
-                updateCurrentFrogDB();
+                if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                    showToastString("운동 취소");
+                    return;
+                }
+
+                showTimerAlert();
+                //  TODO
+//                changeFrogPower(1);
+//                showToastString("힘+1");
+//                updateCurrentFrogDB();
             }
         });
 
@@ -417,6 +449,84 @@ public class FragmentCenter extends Fragment {
 
     }//onCreated
 
+
+    void showHouseSellAlertDialog(){
+        //sell house 얼럿 다이어로그
+        AlertDialog isHouseSellAlertDialog;
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        AlertDialog.Builder eggSaveOrSellBuilder = new AlertDialog.Builder(getActivity());
+        View alertSaveOrSellView = inflater.inflate(R.layout.alert_is_sell_frog, null);
+        eggSaveOrSellBuilder.setView(alertSaveOrSellView);
+        isHouseSellAlertDialog = eggSaveOrSellBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
+        isHouseSellAlertDialog.setCanceledOnTouchOutside(false);
+
+        //button setting
+        TextView frogName = alertSaveOrSellView.findViewById(R.id.frog_name);
+        ImageView bigFrogSrc = alertSaveOrSellView.findViewById(R.id.iv);
+
+        TextView tvSizePrice = alertSaveOrSellView.findViewById(R.id.tv_size);
+        TextView tvPowerPrice= alertSaveOrSellView.findViewById(R.id.tv_power);
+
+        TextView sellBtn = alertSaveOrSellView.findViewById(R.id.tv_sell);
+        TextView tvSumPrice= alertSaveOrSellView.findViewById(R.id.sum);
+        ImageView cancelBtn = alertSaveOrSellView.findViewById(R.id.cancel_button);
+
+        bigFrogSrc.setImageResource(currentFrogSet.getFrogSrc());
+        frogName.setText(currentFrogSet.getFrogName());
+
+        sumPrice = 0;
+        if(currentFrogSet.getFrogState() == Frog.STATE_ALIVE){
+            tvSizePrice.setText(currentFrogSet.getFrogSize()+"원");
+            tvPowerPrice.setText(currentFrogSet.getFrogPower()+"원");
+
+            sumPrice = currentFrogSet.getFrogSize()+currentFrogSet.getFrogPower();
+        }
+        if(currentFrogSet.getFrogState() == Frog.STATE_DEATH){
+            int sizePrice = currentFrogSet.getFrogSize()/10;
+            tvSizePrice.setText(sizePrice+"원");
+
+            int powerPrice = currentFrogSet.getFrogPower()/10;
+            tvPowerPrice.setText(powerPrice+"원");
+
+            sumPrice = sizePrice+powerPrice;
+        }
+        tvSumPrice.setText(sumPrice+"원");
+
+        sellBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHouseSellAlertDialog.cancel();
+
+                changeCurrentMoney(sumPrice);
+
+                //Sell Message
+                if(currentFrogSet.getFrogState() == Frog.STATE_DEATH) {
+                    addLogString("[개구리 시체는 쓸모가 없는데...]");
+                    showToastString("헐값에 판매 완료");
+                }else{
+                    showToastString("판매 완료");
+                }
+                addLogString(soledFrogMsgs[random.nextInt(soledFrogMsgs.length)]);
+                addLogString("[개구리가 판매되었습니다.]");
+
+                //really sell
+                updateSelectedFrogState(Frog.STATE_SOLD);
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isHouseSellAlertDialog.cancel();
+            }
+        });
+
+        //다이얼로그를 화면에 보이기
+        isHouseSellAlertDialog.show();
+    }
+
     void showFrogDataAlert() {
         inflater = LayoutInflater.from( getActivity() );
         AlertDialog.Builder frogDataDialogBuilder = new AlertDialog.Builder(getContext());
@@ -441,12 +551,83 @@ public class FragmentCenter extends Fragment {
         frogDataAlertDialog.show();
     }
 
+    void showTimerAlert() {
+        int exerciseTimeMax = itemDataArrayList.get(Item.Name.EXERCISE_TIME).getCurrentLevel();
+        exerciseTime = exerciseTimeMax;
+
+        inflater = LayoutInflater.from( getActivity() );
+        AlertDialog.Builder timerAlertBuilder = new AlertDialog.Builder(getContext());
+        View viewTimerAlert = inflater.inflate(R.layout.alert_exercse_time_setting, null);
+
+        TextView setTime =viewTimerAlert.findViewById(R.id.tv_time);
+        setTime.setText(exerciseTime+"");
+
+        viewTimerAlert.findViewById(R.id.up_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                timerUpButton
+                if(exerciseTime != exerciseTimeMax){
+                    exerciseTime +=1;
+                    setTime.setText(exerciseTime+"");
+                }else{
+                    showToastString("최대"+exerciseTimeMax+"분 운동가능");
+                }
+            }
+        });
+        viewTimerAlert.findViewById(R.id.down_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                timerDownButton
+                if(exerciseTime >1){
+                    exerciseTime -=1;
+                    setTime.setText(exerciseTime+"");
+                }else{
+                    showToastString("최소 1분 운동 가능");
+                }
+            }
+        });
+        timerAlertBuilder.setView(viewTimerAlert);
+        AlertDialog frogDataAlertDialog = timerAlertBuilder.create();
+
+        frogDataAlertDialog.setCanceledOnTouchOutside(true);
+        frogDataAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        frogDataAlertDialog.show();
+
+
+        viewTimerAlert.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                frogDataAlertDialog.cancel();
+
+                long currentTime = System.currentTimeMillis();
+                showToastString("운동 시작");
+                changeExerciseState(currentTime);
+
+                AlarmManager alarmManager;
+                alarmManager= (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
+                Intent intent= new Intent(getActivity(), AlarmReceiver.class);
+                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                PendingIntent pendingIntent= PendingIntent.getBroadcast(getActivity(), selectedFrogKey, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (currentTime+exerciseTime), pendingIntent);
+                }else{
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, (currentTime+exerciseTime), pendingIntent);
+                }
+            }
+        });
+    }
+
+
     EditText.OnEditorActionListener foodInputActionListener = new EditText.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             //들어오는 글자 하나하나 알수있음
             //event.keypad현재 키패드에서 누른 글자 알수있음 한글인지 알아보기// actionID==EditorInfo.IME_ACTION_SEARCH
             //actionID 는 무조건 오른쪽 아래에
+            //현재 시간 디비에 넣기
             if(event == null){
                 //엔터 눌렀을 때
                 String newFoodName = v.getText().toString();
@@ -686,9 +867,22 @@ public class FragmentCenter extends Fragment {
                 updateFrogLayout(mainFrogImageView, currentFrogSet.getFrogSize(), false);
                 frogTouchedCount = 0;
                 break;
+
+            case Frog.STATE_EXERCISE:
+                currentFrogSet.setFrogState(Frog.STATE_EXERCISE);
+                Glide.with(getActivity()).load( R.drawable.dancing_pepe ).into(mainFrogImageView);
+                updateFrogLayout(mainFrogImageView, currentFrogSet.getFrogSize(), false);
+                frogTouchedCount = 0;
+                break;
         }
         updateCurrentFrogDB();
         mainFrogImageView.requestLayout();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     void getCurrentFrogDB(){
@@ -780,7 +974,6 @@ public class FragmentCenter extends Fragment {
     }
 
     void getCurrentUserDB(){
-        database_user = getActivity().openOrCreateDatabase("userDB.db", getActivity().MODE_PRIVATE, null);
         cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
         int countUserDB = cursor_user.getCount();
         if(countUserDB != 0) {
@@ -908,7 +1101,7 @@ public class FragmentCenter extends Fragment {
             TypedArray itemIDArrayList = getResources().obtainTypedArray(R.array.item_name_list);
             int itemIDArrayListLength = itemIDArrayList.length();
             for(int i = 0; i< itemIDArrayListLength; i++){
-                int id = itemIDArrayList.getResourceId(i, R.array.food);
+                int id = itemIDArrayList.getResourceId(i, R.array.food_number);
                 String[] stringOneItemSet = getResources().getStringArray(id);
                 OneItemSet currentItemSet = new OneItemSet(); //TODO  여기서 원래는 받은 OneItemSet을 바로 넣어줄 수 있도록해야함.
 
@@ -941,12 +1134,12 @@ public class FragmentCenter extends Fragment {
         final int maxLayoutSize = 12000;
         final int minLayoutSize = 160;
         int viewSize = size/10;
-        if(soldFrog || (size/10 < minLayoutSize)){
+        if(soldFrog || (viewSize < minLayoutSize)){
             mainFrogImageView.getLayoutParams().height = minLayoutSize;
             mainFrogImageView.getLayoutParams().width = minLayoutSize;
-        }else if(size < maxLayoutSize) {
-            mainFrogImageView.getLayoutParams().height = size/10;
-            mainFrogImageView.getLayoutParams().width = size/10;
+        }else if(viewSize < maxLayoutSize) {
+            mainFrogImageView.getLayoutParams().height = viewSize;
+            mainFrogImageView.getLayoutParams().width = viewSize;
         }else{
             mainFrogImageView.getLayoutParams().height = maxLayoutSize;
             mainFrogImageView.getLayoutParams().width = maxLayoutSize;
@@ -962,6 +1155,5 @@ public class FragmentCenter extends Fragment {
    public static String getUserName(){
         return userName;
     }
-
     //TODO 개구리 롱프래스 하면 개구리 상태 보기
 }

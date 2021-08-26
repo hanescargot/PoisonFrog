@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_timer"
+            android:layout_width="240dp"
+            android:layout_height="160dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_clock"/>
+
+        <LinearLayout
+            android:layout_width="176dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:weightSum="2">
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#1d2f3c"
+                android:text="6분"
+                android:textStyle="bold"
+                android:textSize="40sp"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_marginLeft="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_toRightOf="@+id/iv_timer"
+            android:layout_marginTop="40dp"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/up_button"
+                android:layout_marginTop="16dp"
+                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#223845"
+                android:src="@drawable/ic_baseline_arrow_drop_up_24" />
+            <ImageButton
+                android:id="@+id/down_button"
+                android:layout_alignParentBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#223845"
+                android:src="@drawable/ic_baseline_arrow_drop_down_24" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#223845"
+            android:text="OK"
+            android:textSize="40sp"
+            android:layout_below="@id/iv_timer"
+            android:layout_marginTop="120dp"
+            android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

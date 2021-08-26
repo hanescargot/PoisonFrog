@@ -19,7 +19,7 @@
         android:textColor="@color/white"/>
 
     <ImageView
-        android:id="@+id/frog_src"
+        android:id="@+id/iv_power"
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:src="@drawable/main_frog_jelly"

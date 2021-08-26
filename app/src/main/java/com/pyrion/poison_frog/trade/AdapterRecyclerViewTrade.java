@@ -8,17 +8,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.center.FragmentCenter;
 import com.pyrion.poison_frog.data.Frog;
@@ -33,10 +34,12 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     ArrayList<OneFrogSet> oneFrogSetList = new ArrayList<>();
     Cursor cursor_frog, cursor_user;
     SQLiteDatabase database_frog, database_user;
+    Toast toast;
 
     ImageView tradeCenterFrog;
     TextView woodNoticeText;
     RecyclerView tradeFrogRecyclerView;
+
 
     public AdapterRecyclerViewTrade(Context context, View view){
         this.context = context;
@@ -163,7 +166,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         public ViewHolderFrog(@NonNull View itemView) {
             super(itemView);
             backGround = itemView.findViewById(R.id.click_background);
-            frogSrc= itemView.findViewById(R.id.frog_src);
+            frogSrc= itemView.findViewById(R.id.iv_power);
             creatorName= itemView.findViewById(R.id.creator_name);
             frogName= itemView.findViewById(R.id.frog_name);
             frogProperty= itemView.findViewById(R.id.frog_property);
@@ -244,7 +247,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             //oneFrogSetList 요소는 삭제할 필요없이 mainActivity에서 DB업데이트 할때 적용 됨
             upDateUserDB("selected_frog_key" , (oneFrogSetList.get(1)).getFrogKey());
         }
-
+        showToastString("판매 완료");
         updateListView();
     }
 
@@ -359,10 +362,10 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
         //button setting
         ImageView bigFrogSrc = alertSaveOrSellView.findViewById(R.id.iv);
-        ImageView frogSrc = alertSaveOrSellView.findViewById(R.id.frog_src);
+        ImageView frogSrc = alertSaveOrSellView.findViewById(R.id.iv_power);
         ImageView cancelBtn = alertSaveOrSellView.findViewById(R.id.cancel_button);
         TextView sellBtn = alertSaveOrSellView.findViewById(R.id.tv_sell);
-        TextView tvFrogPrice= alertSaveOrSellView.findViewById(R.id.frog_price);
+        TextView tvFrogPrice= alertSaveOrSellView.findViewById(R.id.tv_power);
         TextView tvSumPrice= alertSaveOrSellView.findViewById(R.id.sum);
         TextView frogName = alertSaveOrSellView.findViewById(R.id.frog_name);
 
@@ -376,7 +379,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             tvFrogPrice.setText(frogPrice+"원");
         }
         if(selectedFrogSet.getFrogState() == Frog.STATE_DEATH){
-            frogPrice = selectedFrogSet.getFrogSize()/10;
+            frogPrice = (selectedFrogSet.getFrogSize()+selectedFrogSet.getFrogPower())/10;
             tvFrogPrice.setText(frogPrice+"원");
         }
         if(selectedFrogSet.getFrogState() == Frog.STATE_SOLD){
@@ -494,6 +497,19 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                 isBuyAlertDialog.cancel();
             }
         });
+    }
+
+    public void showToastString(String text){
+        if(toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(
+                context,
+                text,
+                Toast.LENGTH_SHORT
+        );
+        toast.setGravity(Gravity.CENTER_VERTICAL, 0 , 200);
+        toast.show();
     }
 
 }

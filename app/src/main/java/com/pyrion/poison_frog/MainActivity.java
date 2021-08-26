@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    public void updateView() {
+        viewPager.setCurrentItem(fragmentNavigation, false);
+    }
 }
 

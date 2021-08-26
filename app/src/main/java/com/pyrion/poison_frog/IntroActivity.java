@@ -9,8 +9,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class IntroActivity extends AppCompatActivity {
 
     TextView title;
@@ -22,7 +20,7 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
 
         title = findViewById(R.id.title);
-        imageView = findViewById(R.id.frog_src);
+        imageView = findViewById(R.id.iv_power);
         //트윈 애니메이션
 
         Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.intro_logo);

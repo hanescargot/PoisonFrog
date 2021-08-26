@@ -13,6 +13,7 @@ public class Frog {
     public static final int STATE_ALIVE = 1;
     public static final int STATE_SOLD = 2;
     public static final int STATE_DEATH = 3;
+    public static final int STATE_EXERCISE = 4;
 
     //frog state
     public static final int SPECIES_BASIC = R.drawable.main_frog_jelly;

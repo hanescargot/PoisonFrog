@@ -26,6 +26,9 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing"></activity>
         <activity android:name=".center.fly_game.FlyGameActivity" />
+
+<!--리시버-->
+        <receiver android:name=".center.Exercise.AlarmReceiver"></receiver>
     </application>
 
 </manifest>

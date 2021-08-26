@@ -49,14 +49,14 @@
             android:layout_toRightOf="@+id/iv">
 
             <ImageView
-                android:id="@+id/house_src"
+                android:id="@+id/iv_size"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/main_house"
+                android:src="@drawable/ic_size"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"/>
             <TextView
-                android:id="@+id/house_price"
+                android:id="@+id/tv_size"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,14 +68,14 @@
                 android:id="@+id/iv_power"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/main_frog_jelly"
+                android:src="@drawable/ic_power"
                 android:layout_alignTop="@+id/tv_power"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"/>
             <TextView
                 android:id="@+id/tv_power"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/house_price"
+                android:layout_below="@+id/tv_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="32sp"
@@ -111,7 +111,7 @@
             android:layout_centerHorizontal="true"
             android:background="@color/purple_200"
             android:gravity="center"
-            android:text="집과 함께 판매"
+            android:text="개구리 판매"
             android:textSize="32sp"
             android:textColor="@color/black"
             android:layout_marginTop="8dp"
