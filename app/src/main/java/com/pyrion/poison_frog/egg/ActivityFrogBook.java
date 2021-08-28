@@ -29,7 +29,7 @@ import java.lang.reflect.Array;
 public class ActivityFrogBook extends AppCompatActivity {
     AdapterFrogBook adapter;
     RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
+    CustomGridLayoutManager layoutManager;
     SnapHelper snapHelper;
 
     ImageButton leftBtn, rightBtn;
@@ -46,12 +46,14 @@ public class ActivityFrogBook extends AppCompatActivity {
         String[] speciesList = getResources().getStringArray(R.array.species_explain);
         adapter = new AdapterFrogBook( this, speciesList, leftBtn, rightBtn);
 
+        layoutManager = new CustomGridLayoutManager(this);
         recyclerView= findViewById(R.id.recyclerview_book);
-        layoutManager = recyclerView.getLayoutManager();
+        recyclerView.setLayoutManager(layoutManager);
 
         //넘어가는 효과
-        snapHelper = new PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerView);
+        layoutManager.setScrollEnabled(false);
+//        snapHelper = new PagerSnapHelper();
+//        snapHelper.attachToRecyclerView(recyclerView);
 
 
         //리스트뷰에게 아답터 설정
@@ -98,5 +100,23 @@ public class ActivityFrogBook extends AppCompatActivity {
             rightBtn.setVisibility(View.INVISIBLE);
         }
 
+    }
+}
+
+class CustomGridLayoutManager extends LinearLayoutManager {
+    private boolean isScrollEnabled = true;
+
+    public CustomGridLayoutManager(Context context) {
+        super(context);
+    }
+
+    public void setScrollEnabled(boolean flag) {
+        this.isScrollEnabled = flag;
+    }
+
+    @Override
+    public boolean canScrollVertically() {
+        //Similarly you can customize "canScrollHorizontally()" for managing horizontal scroll
+        return isScrollEnabled && super.canScrollVertically();
     }
 }
