@@ -10,9 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BitmapFactory;
+import android.media.AudioAttributes;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -111,35 +113,43 @@ public class AlarmReceiver extends BroadcastReceiver {
 
 
     public void showNotification() {
-        NotificationManager manager;
-        NotificationCompat.Builder builder;
+        //반영 안되면 앱 지웠다가 다시하기
 
-        builder = null;
-        manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder builder =  null;
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            manager.createNotificationChannel(
-                    new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
-            );
+            NotificationChannel channel =  new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
+
+            //사운드 설정 (검색하기 힘듬)
+            Uri uri = Uri.parse("android.resource://"+context.getPackageName()+"/"+R.raw.frog_sound_short);
+            channel.setSound(uri, new AudioAttributes.Builder().build());
+
+            notificationManager.createNotificationChannel(channel);
+
             builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-             }else{
+
+        } else{
             builder = new NotificationCompat.Builder(context);
         }
+
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 context, 199708, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-         builder
-                 .setContentTitle("Poison Frog")
-                 .setContentText(frogName+" : 운동 끝났다 개굴")
-                 .setContentIntent(pendingIntent)
-                 .setAutoCancel(true);
+        builder
+                .setContentTitle("Poison Frog")
+                .setContentText(frogName+" : 운동 끝났다 개굴")
+                .setContentIntent(pendingIntent)
+                .setSound(Uri.parse("android.resource://"+context.getPackageName()+"/"+R.raw.frog_sound_short))
+                .setAutoCancel(true);
 
         // 알림창 아이콘
          builder.setSmallIcon(R.drawable.main_frog_jelly);
-         Notification notification = builder.build();
+         builder.setLargeIcon(BitmapFactory.decodeResource( context.getResources(), R.drawable.main_frog_jelly));
 
         // 알림창 실행
-         manager.notify(9708,notification);
+        Notification notification = builder.build();
+        notificationManager.notify(9708,notification);
     }
 }

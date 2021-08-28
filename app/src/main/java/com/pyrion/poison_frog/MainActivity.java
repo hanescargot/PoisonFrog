@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mainAdapter);
 
         viewPager.setCurrentItem(fragmentNavigation, false); //default page
+        Toast.makeText(this, getPackageName()+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override

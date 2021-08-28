@@ -32,8 +32,8 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
-        <receiver android:name=".center.Exercise.AlarmReceiver" /> <!-- NFC -->
-
+        <receiver android:name=".center.Exercise.AlarmReceiver" />
+        <!-- NFC -->
         <activity
             android:name=".Beam"
             android:theme="@style/Theme.ActivityTransparentBackground" />

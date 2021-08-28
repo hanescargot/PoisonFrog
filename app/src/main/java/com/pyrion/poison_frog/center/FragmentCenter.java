@@ -526,6 +526,8 @@ public class FragmentCenter extends Fragment {
 
         database_exercise.execSQL("DELETE FROM exercise_data_set " +
                 "WHERE frog_key =" + "'" + selectedFrogKey + "'");
+
+        addLogString("[+"+exercisePoint+" 힘 상승]");
     }
 
 
