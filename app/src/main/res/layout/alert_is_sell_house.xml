@@ -52,15 +52,15 @@
                 android:id="@+id/house_src"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/main_house"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/main_house" />
             <TextView
                 android:id="@+id/house_price"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:text="20원"/>
 
@@ -69,16 +69,18 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/main_frog_jelly"
-                android:layout_alignTop="@+id/tv_power"
+                android:layout_below="@+id/house_src"
                 android:layout_alignParentLeft="true"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="16dp"/>
             <TextView
                 android:id="@+id/tv_power"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/house_price"
+                android:layout_below="@+id/house_src"
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:text="80원"/>
 
@@ -92,7 +94,7 @@
                 android:id="@+id/sum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"

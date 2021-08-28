@@ -66,6 +66,8 @@ public class FragmentEgg extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ActivityFrogBook.class);
                 getActivity().startActivity(intent);
+                getActivity().finish();
+
             }
         });
     }

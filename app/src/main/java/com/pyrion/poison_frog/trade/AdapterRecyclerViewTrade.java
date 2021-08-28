@@ -1,12 +1,22 @@
 package com.pyrion.poison_frog.trade;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,14 +27,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.pyrion.poison_frog.Beam;
+import com.pyrion.poison_frog.MainActivity;
+import com.pyrion.poison_frog.NfcSend;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.center.FragmentCenter;
+import com.pyrion.poison_frog.center.ItemStore.ActivityItemStore;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
@@ -40,14 +57,30 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     TextView woodNoticeText;
     RecyclerView tradeFrogRecyclerView;
 
-
     public AdapterRecyclerViewTrade(Context context, View view){
         this.context = context;
-//        this.oneFrogSetList = oneFrogSetList;
         setOneFrogSetList();
         tradeCenterFrog = view.findViewById(R.id.trade_frog_center_src);
         tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
         woodNoticeText = view.findViewById(R.id.notice_text);
+
+        tradeCenterFrog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((Activity)context).getIntent().putExtra("fragment_navigation", 2);
+                Intent nfcIntent;
+                OneFrogSet currentFrogSet = oneFrogSetList.get(0);
+                if(currentFrogSet.getFrogState() == Frog.STATE_SOLD){
+                    //read
+                    nfcIntent = new Intent(context, Beam.class);
+                }else{
+                    //write
+                    nfcIntent = new Intent(context, NfcSend.class);
+                }
+                nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc()+"");
+                context.startActivity(nfcIntent);
+            }
+        });
 
         updateListView();
     }
@@ -375,7 +408,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         frogName.setText(selectedFrogSet.getFrogName());
         int frogPrice=0;
         if(selectedFrogSet.getFrogState() == Frog.STATE_ALIVE){
-            frogPrice = selectedFrogSet.getFrogSize();
+            frogPrice = selectedFrogSet.getFrogSize()+selectedFrogSet.getFrogPower();
             tvFrogPrice.setText(frogPrice+"원");
         }
         if(selectedFrogSet.getFrogState() == Frog.STATE_DEATH){

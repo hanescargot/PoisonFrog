@@ -1,7 +1,5 @@
 package com.pyrion.poison_frog.center.Exercise;
 
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,10 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.Image;
 import android.os.Build;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -23,10 +19,6 @@ import androidx.core.app.NotificationCompat;
 import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Frog;
-import com.pyrion.poison_frog.data.Item;
-import com.pyrion.poison_frog.data.OneFrogSet;
-
-import java.util.Date;
 
 //리시버는 4대컴포넌트 - 매니페스트에 등록
 public class AlarmReceiver extends BroadcastReceiver {
@@ -40,6 +32,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     int currentFrogPower;
     int itemEffect;
     Long startTime;
+
+    private static String CHANNEL_ID = "frog9708";
+    private static String CHANNEL_NAME = "PoisonFrog";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -58,7 +53,6 @@ public class AlarmReceiver extends BroadcastReceiver {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
         }
-        Toast.makeText(context, "운동 완료", Toast.LENGTH_SHORT).show();
     }
 
     void getExerciseDB() {
@@ -108,12 +102,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private int newFrogPower() {
         long currentTime = System.currentTimeMillis();
-        int exercisePoint =  (int)( (currentTime - startTime)/60000 );
+        int exercisePoint =  (int)( (currentTime - startTime)/60000 )*itemEffect;
         Log.i("time", exercisePoint+"");
 
         int newFrogPower = currentFrogPower + exercisePoint;
         return newFrogPower;
     }
+
 
     public void showNotification() {
         NotificationManager manager;
@@ -124,17 +119,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             manager.createNotificationChannel(
-                    new NotificationChannel("9708", "Poison Frog", NotificationManager.IMPORTANCE_DEFAULT)
+                    new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
             );
-            builder = new NotificationCompat.Builder(context, "9708");
+            builder = new NotificationCompat.Builder(context, CHANNEL_ID);
              }else{
             builder = new NotificationCompat.Builder(context);
         }
-        //알림창 제목
-         builder.setContentTitle("Poison Frog");
+        Intent notificationIntent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context, 199708, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        // 알림창 메시지
-         builder.setContentText(frogName+" 운동을 끝내었습니다.");
+         builder
+                 .setContentTitle("Poison Frog")
+                 .setContentText(frogName+" : 운동 끝났다 개굴")
+                 .setContentIntent(pendingIntent)
+                 .setAutoCancel(true);
 
         // 알림창 아이콘
          builder.setSmallIcon(R.drawable.main_frog_jelly);

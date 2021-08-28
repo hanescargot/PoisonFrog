@@ -60,7 +60,6 @@ public class FragmentCenter extends Fragment {
 
     OneFrogSet currentFrogSet;
 
-
     //Main FragMents
     AlertDialog isBuyAlertDialog;
     LayoutInflater inflater;
@@ -263,6 +262,7 @@ public class FragmentCenter extends Fragment {
             @Override
             public void onClick(View view) {
                 //game play
+                showRefuseAlert();
             }
         });
 
@@ -462,6 +462,34 @@ public class FragmentCenter extends Fragment {
 
     }//onCreated
 
+    private void showRefuseAlert() {
+        AlertDialog.Builder refuseBuilder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View alertRefuseView = inflater.inflate(R.layout.alert_not_enough_money, null);
+        refuseBuilder.setView(alertRefuseView);
+        AlertDialog refuseDialog = refuseBuilder.create();
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 도록
+        refuseDialog.setCanceledOnTouchOutside(true);
+        //배경 투명하게
+        refuseDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        ImageView cancelButton = alertRefuseView.findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refuseDialog.cancel();
+            }
+        });
+
+        alertRefuseView.findViewById(R.id.free_btn).setVisibility(View.INVISIBLE);
+        TextView tv = alertRefuseView.findViewById(R.id.tv);
+        tv.setTextSize(24);
+        tv.setText("대결 페이지는 \n업데이트 준비중입니다.");
+
+        refuseDialog.show();
+    }
+
     private void cancelExercise() {
         AlarmManager alarmManager;
         alarmManager= (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -488,7 +516,7 @@ public class FragmentCenter extends Fragment {
         int currentFrogPower = cursor_exercise.getInt(cursor_exercise.getColumnIndex("current_frog_power"));
         int itemEffect = cursor_exercise.getInt(cursor_exercise.getColumnIndex("item_effect"));
 
-        int exercisePoint = (int)( (currentTime - startTime)/60000 );
+        int exercisePoint = (int)( (currentTime - startTime)/60000 )*itemEffect;
         Log.i("time", currentTime+"");
         Log.i("time", exercisePoint+"");
         int newFrogPower = currentFrogPower + exercisePoint;

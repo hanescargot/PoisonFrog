@@ -6,13 +6,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.ImageView;
 
 
 public class MainActivity extends AppCompatActivity {
-
     ViewPager2 viewPager;
 
     MainAdapter mainAdapter;

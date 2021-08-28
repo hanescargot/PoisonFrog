@@ -12,7 +12,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/traid_center_bg"/>
+            android:src="@drawable/trade_center_bg"/>
         <ImageView
             android:id="@+id/trade_frog_center_src"
             android:layout_width="80dp"

@@ -60,7 +60,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:text="20원"/>
 
@@ -69,16 +69,18 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:src="@drawable/ic_power"
-                android:layout_alignTop="@+id/tv_power"
+                android:layout_marginTop="8dp"
+                android:layout_below="@+id/iv_size"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"/>
             <TextView
                 android:id="@+id/tv_power"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/tv_size"
+                android:layout_below="@+id/iv_size"
+                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:text="80원"/>
 
@@ -92,7 +94,7 @@
                 android:id="@+id/sum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="32sp"
+                android:textSize="24sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_alignParentRight="true"
