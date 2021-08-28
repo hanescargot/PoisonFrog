@@ -64,10 +64,9 @@ public class FragmentEgg extends Fragment {
         frogBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().getIntent().putExtra("fragment_navigation", 0);
                 Intent intent = new Intent(getActivity(), ActivityFrogBook.class);
                 getActivity().startActivity(intent);
-                getActivity().finish();
-
             }
         });
     }

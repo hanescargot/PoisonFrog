@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(mainAdapter);
 
         viewPager.setCurrentItem(fragmentNavigation, false); //default page
-        Toast.makeText(this, getPackageName()+"", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    species는 Frog데이터 안에 순서대로 있음으로 여기도 순서대로 , Explain -->
+    <string-array name="species_explain">
+        <item>아주 평범한 개구리입니다.</item>
+        <item>검은 개구리 입니다.</item>
+        <item>젤리 개구리 입니다.</item>
+        <item>etc</item>
+        <item>5번째</item>
+        <item>몰러~~</item>
+    </string-array>
+
+</resources>
