@@ -10,6 +10,7 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcAdapter.CreateNdefMessageCallback;
 import android.nfc.NfcEvent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.DisplayMetrics;
@@ -20,12 +21,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.nio.charset.Charset;
 
 import static android.nfc.NdefRecord.createMime;
 
+@RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class Beam extends AppCompatActivity implements CreateNdefMessageCallback {
     NfcAdapter nfcAdapter;
     TextView textView;
@@ -57,6 +60,7 @@ public class Beam extends AppCompatActivity implements CreateNdefMessageCallback
         super.onDestroy();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
         String text = ("Beam me up, Android!\n\n" +

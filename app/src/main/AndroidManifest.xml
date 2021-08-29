@@ -7,6 +7,10 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.NFC" />
+    <uses-sdk android:minSdkVersion="10"/>
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+
+
 
     <application
         android:allowBackup="true"
@@ -33,6 +37,7 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
         <receiver android:name=".center.Exercise.AlarmReceiver" />
+
         <!-- NFC -->
         <activity
             android:name=".Beam"

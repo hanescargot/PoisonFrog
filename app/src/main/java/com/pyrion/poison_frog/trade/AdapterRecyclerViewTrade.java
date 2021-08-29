@@ -2,6 +2,7 @@ package com.pyrion.poison_frog.trade;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,13 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -35,13 +28,11 @@ import com.pyrion.poison_frog.Beam;
 import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.NfcSend;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.poison_frog.center.FragmentCenter;
-import com.pyrion.poison_frog.center.ItemStore.ActivityItemStore;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
@@ -74,6 +65,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     //read
                     nfcIntent = new Intent(context, Beam.class);
                 }else{
+                    //todo 운동중인 개구리 운동 멈추기
                     //write
                     nfcIntent = new Intent(context, NfcSend.class);
                 }
@@ -195,7 +187,6 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         View backGround;
         ImageView frogSrc, sellHouseIcon;
         TextView creatorName, frogName, frogProperty, frogSize, frogPower;
-
         public ViewHolderFrog(@NonNull View itemView) {
             super(itemView);
             backGround = itemView.findViewById(R.id.click_background);
@@ -224,12 +215,13 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             sellHouseIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
 
                     if(oneFrogSetList.size()<3){
                         //Only one house left
                         //can not sell the house
                         //add 다이어로그 집을 팔수 없습니다.
-                        showRefuseDialogDialog();
+                        showRefuseDialogDialog("마지막 집 판매 불가능");
                     }else{
                         showHouseSellAlertDialog( getLayoutPosition() );
                     }
@@ -237,6 +229,14 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             });
 
         }
+    }
+    private void updateSelectedFrogState( int frogState, int frogKey) {
+        database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
+        database_frog.execSQL("UPDATE frogs_data_set SET"
+                + " frog_state =" + frogState
+                +" WHERE frog_key ="+frogKey
+        );
+
     }
 
     class ViewHolderEvent extends RecyclerView.ViewHolder{
@@ -256,7 +256,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     if(oneFrogSetList.size()<3){
                         //Only one house left
                         //can not sell the house
-                        showRefuseDialogDialog();
+                        showRefuseDialogDialog("마지막 집 판매 불가능");
                     }else{
                         showHouseSellAlertDialog( getLayoutPosition() );
                     }
@@ -431,6 +431,17 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             public void onClick(View v) {
                 isHouseSellAlertDialog.cancel();
 
+                if(selectedFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                    //운동중이던 개구리 그냥 운동 캔슬해버리기
+                    AlarmManager alarmManager;
+                    alarmManager= (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+                    updateSelectedFrogState(Frog.STATE_ALIVE, selectedFrogSet.getFrogKey());
+                    Intent intent= new Intent(context, AlarmReceiver.class);
+                    PendingIntent pendingIntent= PendingIntent.getBroadcast(context, selectedFrogSet.getFrogKey(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    alarmManager.cancel(pendingIntent);
+                }
+
                 int userMoney = getUserDB("user_money");
                 upDateUserDB("user_money", sumPrice + userMoney);
                 houseSell(layoutPosition);
@@ -450,7 +461,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     }
 
 
-    void showRefuseDialogDialog() {
+    void showRefuseDialogDialog( String msg) {
         AlertDialog.Builder refuseBuilder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
         View alertRefuseView = inflater.inflate(R.layout.alert_not_enough_money, null);
@@ -472,7 +483,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
         alertRefuseView.findViewById(R.id.free_btn).setVisibility(View.INVISIBLE);
         TextView tv = alertRefuseView.findViewById(R.id.tv);
-        tv.setText("마지막 집 판매 불가능");
+        tv.setText(msg);
 
         refuseDialog.show();
     }
