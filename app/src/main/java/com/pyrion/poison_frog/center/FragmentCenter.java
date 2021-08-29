@@ -689,6 +689,7 @@ public class FragmentCenter extends Fragment {
 
                 Intent intent= new Intent(getActivity(), AlarmReceiver.class);
                 intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                intent.putExtra("currentFrogSrc", currentFrogSet.getFrogSpecies());
                 PendingIntent pendingIntent= PendingIntent.getBroadcast(getActivity(), selectedFrogKey, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){

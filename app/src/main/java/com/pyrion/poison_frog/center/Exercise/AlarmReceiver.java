@@ -33,6 +33,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     int frogKey;
     String frogName;
     int currentFrogPower;
+    int frogSpecies;
     int itemEffect;
     Long startTime;
 
@@ -43,6 +44,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         this.frogKey = intent.getIntExtra("currentFrogKey", 1);
+        this.frogSpecies = intent.getIntExtra("currentFrogSrc", Frog.SPECIES_BASIC);
 
         getExerciseDB();
         delExerciseDB();
@@ -148,7 +150,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // 알림창 아이콘
          builder.setSmallIcon(R.drawable.main_frog_jelly);
-         builder.setLargeIcon(BitmapFactory.decodeResource( context.getResources(), R.drawable.main_frog_jelly));
+         builder.setLargeIcon(BitmapFactory.decodeResource( context.getResources(), frogSpecies));
 
         // 알림창 실행
         Notification notification = builder.build();
