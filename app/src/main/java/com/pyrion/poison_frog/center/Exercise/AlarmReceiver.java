@@ -1,5 +1,6 @@
 package com.pyrion.poison_frog.center.Exercise;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -50,11 +51,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         updateFrogDB();
 
         if(getSelectedFrogKey() == frogKey) {
-         //화면에 보여지고 있는 상태임으로 화면 업데이트
             Intent i = new Intent(context, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             context.startActivity(i);
         }
+
     }
 
     void getExerciseDB() {
@@ -135,7 +137,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 199708, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                context, frogKey, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder
                 .setContentTitle("Poison Frog")

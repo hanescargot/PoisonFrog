@@ -91,6 +91,7 @@ public class OneFrogSet {
         int frogState = this.getFrogState;
         switch (frogState){
             case (Frog.STATE_ALIVE):
+            case (Frog.STATE_EXERCISE):
                 return this.getFrogSpecies();
             case (Frog.STATE_DEATH):
                 return R.drawable.main_dead_frog;

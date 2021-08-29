@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -58,7 +59,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
     //result
     TextView tv ;
     ImageView iv ;
-
+    long mLastClickTime = 0;
 
     public AdapterRecyclerViewEgg(Context context, ArrayList eggItemArrayList, int userMoney, TextView tvUserMoney, ImageView eggSrc){
         this.context = context;
@@ -90,6 +91,11 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
         viewHolder.btnPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(SystemClock.elapsedRealtime() - mLastClickTime < 3000){
+                    return;
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
                 //TODO 돈 빼고 랜덤 개구리 추가하기 / 구매하시겠습니가 yes 취소 간단 얼럿 띄우기 없음 바로 광고 ㄱㄱ
                 //TODO 돈 빼고 랜덤 개구리 추가하기 / 구매하시겠습니가 yes 취소 간단 얼럿 띄우기
 

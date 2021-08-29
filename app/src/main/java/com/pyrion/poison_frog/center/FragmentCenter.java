@@ -694,8 +694,13 @@ public class FragmentCenter extends Fragment {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ){
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
                 }else{
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+                        alarmManager.setExact( AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
+                    }else{
+                        alarmManager.set( AlarmManager.RTC_WAKEUP, (currentTime+(exerciseTime*60000)), pendingIntent);
+                    }
                 }
+
 
             }
         });
