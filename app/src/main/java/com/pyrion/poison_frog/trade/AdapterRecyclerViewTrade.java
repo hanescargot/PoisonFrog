@@ -65,8 +65,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     //read
                     nfcIntent = new Intent(context, Beam.class);
                 }else{
-                    //todo 운동중인 개구리 운동 멈추기
-                    //write
+                    //운동중인 개구리 운동 멈추기
+                    cancelExercise(currentFrogSet);
                     nfcIntent = new Intent(context, NfcSend.class);
                 }
                 nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc()+"");
@@ -75,6 +75,18 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         });
 
         updateListView();
+    }
+
+    private void cancelExercise(OneFrogSet selectedFrogSet) {
+        AlarmManager alarmManager;
+        alarmManager= (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        showToastString("운동 취소");
+        updateSelectedFrogDB("frog_state", Frog.STATE_ALIVE, selectedFrogSet.getFrogKey());
+
+        Intent intent= new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(context, selectedFrogSet.getFrogKey(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager.cancel(pendingIntent);
     }
 
 
@@ -230,12 +242,13 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
         }
     }
-    private void updateSelectedFrogState( int frogState, int frogKey) {
+    private void updateSelectedFrogDB(String dataName ,int data, int frogKey) {
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
-        database_frog.execSQL("UPDATE frogs_data_set SET"
-                + " frog_state =" + frogState
-                +" WHERE frog_key ="+frogKey
+        database_frog.execSQL("UPDATE frogs_data_set SET "
+                +dataName+"=" + data
+                + " WHERE frog_key =" + frogKey
         );
+
 
     }
 
@@ -433,13 +446,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
                 if(selectedFrogSet.getFrogState() == Frog.STATE_EXERCISE){
                     //운동중이던 개구리 그냥 운동 캔슬해버리기
-                    AlarmManager alarmManager;
-                    alarmManager= (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-                    updateSelectedFrogState(Frog.STATE_ALIVE, selectedFrogSet.getFrogKey());
-                    Intent intent= new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingIntent= PendingIntent.getBroadcast(context, selectedFrogSet.getFrogKey(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    alarmManager.cancel(pendingIntent);
+                    cancelExercise(selectedFrogSet);
                 }
 
                 int userMoney = getUserDB("user_money");

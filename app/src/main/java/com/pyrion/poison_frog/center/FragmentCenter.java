@@ -39,6 +39,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.pyrion.poison_frog.Fight.ActivityMatch;
 import com.pyrion.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.poison_frog.center.fly_game.FlyGameActivity;
 import com.pyrion.poison_frog.center.ItemStore.ActivityItemStore;
@@ -262,7 +263,11 @@ public class FragmentCenter extends Fragment {
             @Override
             public void onClick(View view) {
                 //game play
-                showRefuseAlert();
+//                showRefuseAlert();
+                Intent intent = new Intent(getActivity(), ActivityMatch.class);
+                intent.putExtra("user_money", currentUserMoney);
+                getActivity().startActivity(intent);
+
             }
         });
 

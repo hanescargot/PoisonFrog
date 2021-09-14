@@ -2,15 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyrion.poison_frog">
 
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
 
     <uses-permission android:name="android.permission.NFC" />
-    <uses-sdk android:minSdkVersion="10"/>
-    <uses-feature android:name="android.hardware.nfc" android:required="false" />
 
-
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,8 @@
         android:roundIcon="@drawable/main_frog_jelly"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
+        <activity android:name=".Fight.ActivityFight"></activity>
+        <activity android:name=".Fight.ActivityMatch" />
         <activity android:name=".egg.ActivityFrogBook" />
         <activity
             android:name=".IntroActivity"
@@ -36,13 +39,12 @@
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
-        <receiver android:name=".center.Exercise.AlarmReceiver" />
-
-        <!-- NFC -->
+        <receiver android:name=".center.Exercise.AlarmReceiver" /> <!-- NFC -->
         <activity
             android:name=".Beam"
             android:theme="@style/Theme.ActivityTransparentBackground" />
-        <activity android:name=".NfcSend"
+        <activity
+            android:name=".NfcSend"
             android:theme="@style/Theme.ActivityTransparentBackground" />
     </application>
 
