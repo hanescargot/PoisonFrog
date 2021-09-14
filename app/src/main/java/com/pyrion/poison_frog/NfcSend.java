@@ -13,6 +13,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+
+import android.nfc.Tag;
+import android.nfc.tech.MifareUltralight;
+import android.util.Log;
+import java.io.IOException;
+import java.nio.charset.Charset;
 public class NfcSend extends AppCompatActivity {
 
     private NfcAdapter nfcAdapter;
@@ -59,7 +65,7 @@ public class NfcSend extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        //read
+
         setIntent(intent);
 
         //write
@@ -69,7 +75,9 @@ public class NfcSend extends AppCompatActivity {
             Toast.makeText(this, "TagID: " + toHexString(tagId), Toast.LENGTH_SHORT).show();
             Log.i("NFC","TagID: " + toHexString(tagId) );
         }
-        getIntent().putExtra("fragment_navigation", 2);
+
+        //끝
+//        getIntent().putExtra("fragment_navigation", 2);
 
     }
     public static final String CHARS = "0123456789ABCDEF";//메시지 내용
@@ -85,8 +93,6 @@ public class NfcSend extends AppCompatActivity {
                     .append(CHARS.charAt(data[i] & 0x0F));
 
         }
-
         return sb.toString();
-
     }
 }

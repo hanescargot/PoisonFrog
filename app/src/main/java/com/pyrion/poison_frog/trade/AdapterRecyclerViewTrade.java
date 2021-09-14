@@ -65,8 +65,10 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     //read
                     nfcIntent = new Intent(context, Beam.class);
                 }else{
-                    //운동중인 개구리 운동 멈추기
-                    cancelExercise(currentFrogSet);
+                    if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                        //운동중이던 개구리 그냥 운동 캔슬해버리기
+                        cancelExercise(currentFrogSet);
+                    }
                     nfcIntent = new Intent(context, NfcSend.class);
                 }
                 nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc()+"");
