@@ -265,7 +265,7 @@ public class FragmentCenter extends Fragment {
                 //game play
 //                showRefuseAlert();
                 Intent intent = new Intent(getActivity(), ActivityMatch.class);
-                intent.putExtra("user_money", currentUserMoney);
+                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
                 getActivity().startActivity(intent);
 
             }

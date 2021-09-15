@@ -32,6 +32,8 @@ import com.pyrion.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.poison_frog.center.FragmentCenter;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
+import com.pyrion.poison_frog.kotlin_nfc_read;
+import com.pyrion.poison_frog.kotlin_nfc_write;
 
 import java.util.ArrayList;
 
@@ -63,13 +65,15 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                 OneFrogSet currentFrogSet = oneFrogSetList.get(0);
                 if(currentFrogSet.getFrogState() == Frog.STATE_SOLD){
                     //read
-                    nfcIntent = new Intent(context, Beam.class);
+                    //NFC 어디냐
+                    nfcIntent = new Intent(context, kotlin_nfc_read.class);
                 }else{
                     if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
                         //운동중이던 개구리 그냥 운동 캔슬해버리기
                         cancelExercise(currentFrogSet);
                     }
-                    nfcIntent = new Intent(context, NfcSend.class);
+                    //write
+                    nfcIntent = new Intent(context, kotlin_nfc_write.class);
                 }
                 nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc()+"");
                 context.startActivity(nfcIntent);

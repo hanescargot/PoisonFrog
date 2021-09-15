@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -14,18 +15,19 @@ import android.widget.TextView;
 import com.pyrion.poison_frog.IntroActivity;
 import com.pyrion.poison_frog.MainActivity;
 import com.pyrion.poison_frog.R;
+import com.pyrion.poison_frog.data.Frog;
 
 import java.util.Random;
 
 public class ActivityMatch extends AppCompatActivity {
     int extraTime = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_matching);
 
-        TextView title = findViewById(R.id.title);
         ImageView imageView = findViewById(R.id.iv_power);
         //트윈 애니메이션
 
@@ -43,11 +45,15 @@ public class ActivityMatch extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                Intent previousIntent = getIntent();
                 Intent intent = new Intent(ActivityMatch.this, ActivityFight.class);
+                intent.putExtra("currentFrogKey", previousIntent.getIntExtra("currentFrogKey", 0));
                 startActivity(intent);
                 finish();
+
             }
         }, 2500+extraTime);
     }
+
 
 }

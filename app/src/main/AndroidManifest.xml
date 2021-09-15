@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyrion.poison_frog">
 
-
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -20,7 +19,9 @@
         android:roundIcon="@drawable/main_frog_jelly"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity android:name=".Fight.ActivityFight"></activity>
+        <activity android:name=".kotlin_nfc_write"></activity>
+        <activity android:name=".kotlin_nfc_read" />
+        <activity android:name=".Fight.ActivityFight" />
         <activity android:name=".Fight.ActivityMatch" />
         <activity android:name=".egg.ActivityFrogBook" />
         <activity

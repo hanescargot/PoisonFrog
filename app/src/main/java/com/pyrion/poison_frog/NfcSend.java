@@ -75,12 +75,13 @@ public class NfcSend extends AppCompatActivity {
             Toast.makeText(this, "TagID: " + toHexString(tagId), Toast.LENGTH_SHORT).show();
             Log.i("NFC","TagID: " + toHexString(tagId) );
         }
+        Log.i("NFC","끝");
 
         //끝
 //        getIntent().putExtra("fragment_navigation", 2);
 
     }
-    public static final String CHARS = "0123456789ABCDEF";//메시지 내용
+    public static final String CHARS = "5927";//메시지 내용
 
     public static String toHexString(byte[] data) {
 

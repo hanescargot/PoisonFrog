@@ -1,9 +1,253 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fight.ActivityMatch">
+    android:background="@color/black"
+    tools:context=".Fight.ActivityFight"
+    android:padding="16dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/enemy_name"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Enemy Frog"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_alignRight="@id/enemy_iv"/>
+
+    <ImageView
+        android:id="@+id/enemy_iv"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_below="@id/enemy_name"
+        android:src="@drawable/main_frog_jelly"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/enemy_iv"
+        android:layout_alignTop="@id/enemy_name"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HP"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+        <ProgressBar
+            android:id="@+id/enemy_progress_size"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5000"
+            android:progress="5000"
+            />
+        <TextView
+            android:id="@+id/enemy_size"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50/50"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:paddingBottom="16dp"
+            />
+
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MP"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+        <ProgressBar
+            android:id="@+id/enemy_progress_power"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5000"
+            android:progress="5000"/>
+        <TextView
+            android:id="@+id/enemy_power"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50/50"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+<!--        My Frog-->
+    <TextView
+        android:id="@+id/my_frog_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="My Frog"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:layout_above="@+id/my_frog_iv"
+        android:layout_alignRight="@id/my_frog_iv"/>
+
+    <ImageView
+        android:id="@+id/my_frog_iv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/main_frog_jelly"
+        android:layout_above="@+id/log_scroll"
+        android:layout_marginBottom="48dp"
+        android:layout_alignParentRight="true"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_toLeftOf="@+id/my_frog_iv"
+        android:layout_alignTop="@id/my_frog_name">
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HP"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+        <ProgressBar
+            android:id="@+id/my_progress_size"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5000"
+            android:progress="5000"/>
+        <TextView
+            android:id="@+id/my_size"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50/50"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:layout_gravity="left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MP"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+        <ProgressBar
+            android:id="@+id/my_progress_power"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5000"
+            android:progress="5000"/>
+        <TextView
+            android:id="@+id/my_power"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50/50"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+
+
+<!--    ect-->
+<!--    <ImageView-->
+<!--        android:id="@+id/skill_special"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:src="@drawable/ic_arrow_left"-->
+<!--        android:layout_toLeftOf="@+id/my_frog_iv"-->
+<!--        android:layout_above="@+id/my_frog_iv"/>-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/sill_normal"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:src="@drawable/ic_arrow_left"-->
+<!--        android:layout_toRightOf="@+id/skill_special"-->
+<!--        android:layout_above="@+id/skill_special"/>-->
+<!--    <ImageView-->
+<!--        android:id="@+id/skill_run"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:src="@drawable/ic_arrow_left"-->
+<!--        android:layout_toLeftOf="@+id/skill_special"-->
+<!--        android:layout_below="@+id/skill_special"/>-->
+
+    <LinearLayout
+        android:id="@+id/skills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/log_scroll"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/skill_special"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="32dp"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_toLeftOf="@+id/my_frog_iv"
+            android:layout_above="@+id/my_frog_iv"
+            android:onClick="onSpecialSkill"/>
+
+        <ImageView
+            android:id="@+id/sill_normal"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_toRightOf="@+id/skill_special"
+            android:layout_above="@+id/skill_special"
+            android:onClick="onNormalSkill"/>
+        <ImageView
+            android:id="@+id/skill_run"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_arrow_left"
+            android:layout_marginLeft="32dp"
+            android:layout_toLeftOf="@+id/skill_special"
+            android:layout_below="@+id/skill_special"
+            android:onClick="onRunSkill"/>
+
+    </LinearLayout>
+    <ScrollView
+        android:id="@+id/log_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/main_gold_notice"
+        android:padding="32dp">
+        <TextView
+            android:id="@+id/fight_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ready..."
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+    </ScrollView>
+\
+
+</RelativeLayout>

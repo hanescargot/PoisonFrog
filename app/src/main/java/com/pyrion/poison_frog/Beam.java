@@ -67,7 +67,7 @@ public class Beam extends AppCompatActivity implements CreateNdefMessageCallback
                 "Beam Time: " + System.currentTimeMillis());
         NdefMessage msg = new NdefMessage(
                 new NdefRecord[] { createMime(
-                        "application/vnd.com.example.android.beam", text.getBytes())
+                        "hyunju", text.getBytes())
                         /**
                          * The Android Application Record (AAR) is commented out. When a device
                          * receives a push with an AAR in it, the application specified in the AAR
@@ -101,7 +101,6 @@ public class Beam extends AppCompatActivity implements CreateNdefMessageCallback
      * Parses the NDEF Message from the intent and prints to the TextView
      */
     void processIntent(Intent intent) {
-
         Parcelable[] rawMsgs = intent.getParcelableArrayExtra(
                 NfcAdapter.EXTRA_NDEF_MESSAGES);
         // only one message sent during the beam
