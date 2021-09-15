@@ -3,10 +3,15 @@ package com.pyrion.poison_frog.Fight;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -45,6 +50,7 @@ public class ActivityFight extends AppCompatActivity {
 
     ProgressBar userProgressSize, userProgressPower,  enemyProgressSize, enemyProgressPower;
     TextView userSize, userPower,  enemySize, enemyPower;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +258,7 @@ public class ActivityFight extends AppCompatActivity {
             addLog("일반 공격에 실패하였다.");
         }
         else{
-            Toast.makeText(this, userFrogSet.getFrogSize()+"", Toast.LENGTH_SHORT).show();
+
             int damage = (userFrogSet.getFrogSize() / 50) * (random.nextInt(10)+1);
             damage = Math.max(damage,1);
             enemyFrogHP -= damage;
@@ -326,6 +332,7 @@ public class ActivityFight extends AppCompatActivity {
         
         //상대가 도망간 경우
         if(isRun && isWin){
+            enemyFrogHP = 0;
             int diffMoney = (enemyMaxHP + enemyMaxMP)/50 * (random.nextInt(10)+1);
             changeUserMoney(diffMoney);
             showFightNoticeAlert(ENEMY_RUN, diffMoney);
@@ -333,6 +340,7 @@ public class ActivityFight extends AppCompatActivity {
 
         //내가 도망간 경우
         if(isRun && !isWin){
+            enemyFrogHP = 0;
             showFightNoticeAlert(USER_RUN, 0);
         }
         //상대가 이긴 경우
@@ -350,7 +358,7 @@ public class ActivityFight extends AppCompatActivity {
 
             showResultAlertDialog(diffSize, diffPower);
         }
-        Toast.makeText(this, "끝", Toast.LENGTH_SHORT).show();
+
     }
 
     public void addLog(String msg){
@@ -361,16 +369,29 @@ public class ActivityFight extends AppCompatActivity {
 
     void showResultAlertDialog(int diffSize, int diffPower) {
 
-        AlertDialog frogSellAlertDialog;
+        AlertDialog fightResultAlertDialog;
         LayoutInflater inflater = LayoutInflater.from(this);
         AlertDialog.Builder frogSellBuilder = new AlertDialog.Builder(this);
         View fightResultView = inflater.inflate(R.layout.alert_firg_result, null);
         frogSellBuilder.setView(fightResultView);
-        frogSellAlertDialog = frogSellBuilder.create();
+        fightResultAlertDialog = frogSellBuilder.create();
 
 
-        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
-        frogSellAlertDialog.setCanceledOnTouchOutside(false);
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지않음
+        fightResultAlertDialog.setCanceledOnTouchOutside(false);
+        //뒤로가기 버튼 이후
+        fightResultAlertDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode,
+                                 KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    fightResultAlertDialog.dismiss();
+                    finish();
+                }
+                return true;
+            }
+        });
 
         //button setting
         TextView frogName = fightResultView.findViewById(R.id.frog_name);
@@ -384,7 +405,7 @@ public class ActivityFight extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //게임 실제로 끝나는 부분
-                frogSellAlertDialog.dismiss();
+                fightResultAlertDialog.dismiss();
                 finish();
             }
         });
@@ -396,23 +417,44 @@ public class ActivityFight extends AppCompatActivity {
         tvSizePrice.setText("+"+diffSize + "Size");
         tvPowerPrice.setText("+"+diffPower + "Power");
 
-        frogSellAlertDialog.show();
+        fightResultAlertDialog.show();
     }
 
     final int USER_DEATH = 0;
     final int USER_RUN = 1;
     final int ENEMY_RUN = 2;
     void showFightNoticeAlert(int result, int diffMoney){
-        Toast.makeText(this, "show alert!!!", Toast.LENGTH_SHORT).show();
-        AlertDialog frogSellAlertDialog;
+
+        AlertDialog fightNoticeAlertDialog;
         LayoutInflater inflater = LayoutInflater.from(this);
         AlertDialog.Builder frogSellBuilder = new AlertDialog.Builder(this);
-        View fightNoticeView = inflater.inflate(R.layout.alert_is_buy_new_frog, null);
+        View fightNoticeView = inflater.inflate(R.layout.alert_fight_notice, null);
         frogSellBuilder.setView(fightNoticeView);
-        frogSellAlertDialog = frogSellBuilder.create();
+        fightNoticeAlertDialog = frogSellBuilder.create();
 
-        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라지지 않도록
-        frogSellAlertDialog.setCanceledOnTouchOutside(false);
+        //배경 투명하게
+        fightNoticeAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+
+        //다이얼로그의 바깥쪽 영역을 터치했을때 다이얼로그가 사라짐
+//        fightNoticeAlertDialog.setCanceledOnTouchOutside(true);
+        fightNoticeAlertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                fightNoticeAlertDialog.dismiss();
+                finish();
+            }
+        });
+        fightNoticeAlertDialog.setOnKeyListener(new Dialog.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode,
+                                 KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    fightNoticeAlertDialog.dismiss();
+                    finish();
+                }
+                return true;
+            }
+        });
 
         //button setting
         TextView tv = fightNoticeView.findViewById(R.id.tv);
@@ -432,6 +474,6 @@ public class ActivityFight extends AppCompatActivity {
             tv.setText(userFrogSet.getFrogName()+"가 죽었습니다.");
             payButton.setVisibility(View.INVISIBLE);
         }
-        frogSellAlertDialog.show();
+        fightNoticeAlertDialog.show();
     }
 }

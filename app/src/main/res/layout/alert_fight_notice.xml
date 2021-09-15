@@ -5,60 +5,82 @@
     android:orientation="vertical"
     android:layout_width="320dp"
     android:layout_height="240dp"
-    android:background="@drawable/fly_wood_notice"
+
     android:layout_gravity="center"
     android:gravity="center"
     >
 
-
     <ImageView
-        android:id="@+id/iv"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignTop="@id/tv"
-        android:layout_marginTop="-1dp"
-        android:src="@drawable/main_frog_jelly"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_width="320dp"
+        android:layout_height="240dp"
+        android:background="@drawable/fly_wood_notice"
+        android:layout_centerInParent="true"/>
 
-    <TextView
-        android:id="@+id/tv"
-        android:clickable="true"
-        android:maxLines="3"
-        android:text="상대 개구리가 도망쳤습니다."
-        android:textColor="@color/white"
-        android:layout_width="160dp"
-        android:layout_height="80dp"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:padding="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_toRightOf="@id/iv"/>
 
-    <LinearLayout
-        android:id="@+id/pay_button"
-        android:clickable="true"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/iv"
-        android:layout_alignRight="@id/tv">
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:paddingTop="24dp"
+        android:layout_marginStart="0dp">
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv"
+                android:layout_width="80dp"
+                android:layout_height="72dp"
+                android:layout_alignTop="@id/tv"
+                android:layout_toLeftOf="@id/tv"
+                android:src="@drawable/main_frog_jelly" />
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="160dp"
+                android:layout_height="80dp"
+                android:clickable="true"
+                android:maxLines="3"
+                android:padding="8dp"
+                android:text="상대 개구리가 도망쳤습니다."
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/price"
+
+        <LinearLayout
+            android:id="@+id/pay_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+100"
+            android:layout_below="@+id/layout"
             android:layout_marginRight="16dp"
-            android:textSize="16sp"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/main_dollar" />
+            android:layout_alignRight="@id/layout"
+            android:clickable="true">
 
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="+100"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/main_dollar" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
 
 
 

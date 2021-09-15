@@ -242,6 +242,7 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
                     @Override
                     public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                         if( keyCode == KeyEvent.KEYCODE_BACK){
+                            // 뒤로가기 버튼 눌렀을 때
                             eggSaveOrSellAlertDialog.cancel();
 
                             showToastString("개구리 창고로 옮겨짐");
