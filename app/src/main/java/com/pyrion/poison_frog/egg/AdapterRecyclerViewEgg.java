@@ -204,20 +204,20 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
 //            default is 0
             case "red_box":
                 //확률 10%
-                if(0<randomInt && randomInt<11){
-                    newFrogType = random.nextInt(3)+2; //개구리 타입 2,3,4
+                if(randomInt<10){
+                    newFrogType = random.nextInt(2)+1; //개구리 타입 1,2
                 }
                 break;
             case "blue_box":
                 //확률 15%
-                if(0<randomInt && randomInt<16){
-                    newFrogType = random.nextInt(3)+5; //5~7
+                if(randomInt<16){
+                    newFrogType = random.nextInt(2)+3; //3,4
                 }
                 break;
             case "gold_box":
                 //확률 5%
-                if(0<randomInt && randomInt<6){
-                    newFrogType = random.nextInt(3)+8; //8~10
+                if(randomInt<6){
+                    newFrogType = random.nextInt(2)+5; //5,6
                 }
                 break;
 

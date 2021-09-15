@@ -487,7 +487,7 @@ public class ActivityFight extends AppCompatActivity {
             payButton.setVisibility(View.INVISIBLE);
         }
         if(result == USER_DEATH){
-            iv.setImageResource(userFrogSet.getFrogSrc());
+            iv.setImageResource(R.drawable.main_dead_frog);
             tv.setText(userFrogSet.getFrogName()+"가 죽었습니다.");
             payButton.setVisibility(View.INVISIBLE);
         }

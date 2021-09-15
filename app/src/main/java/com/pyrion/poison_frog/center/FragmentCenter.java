@@ -263,12 +263,24 @@ public class FragmentCenter extends Fragment {
             @Override
             public void onClick(View view) {
                 //game play
-//                showRefuseAlert();
-                Intent intent = new Intent(getActivity(), ActivityMatch.class);
-                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
-                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
-                getActivity().startActivity(intent);
-
+                if(currentFrogSet.getFrogState() == Frog.STATE_SOLD){
+                    showToastString("싸움 불가능");
+                    addLogString("싸움에 참가할 개구리가 없습니다.");
+                }
+                else if(currentFrogSet.getFrogState() == Frog.STATE_DEATH){
+                    showToastString("싸움 불가능");
+                    addLogString("죽은 개구리는 싸울수가 없다.");
+                }
+                else if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                    showToastString("싸움 불가능");
+                    addLogString("개구리를 터치해서 운동을 멈춰주세요. ");
+                }
+                else{
+                    Intent intent = new Intent(getActivity(), ActivityMatch.class);
+                    intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                    intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
+                    getActivity().startActivity(intent);
+                }
             }
         });
 
@@ -758,18 +770,23 @@ public class FragmentCenter extends Fragment {
                         if(newFoodName.equals(poisonFood)){
                             addLogString("커어어억... 이 맛은!!!");
                             if(random.nextBoolean()){
-                                changeFrogSize(currentFrogSet.getFrogSize()/8+randomFoodPoint);
-                                addLogString("[개구리가 급격히 성장 함]");
                                 if(random.nextInt(10)==1){
                                     changeFrogSpecies(Frog.STATE_ALIVE);
+                                }else{
+                                    changeFrogSize(currentFrogSet.getFrogSize()/8+randomFoodPoint);
+                                    addLogString("[개구리가 급격히 성장 함]");
                                 }
 
                             }else{
-                                updateSelectedFrogState(Frog.STATE_DEATH);
-                                addLogString("[개구리 죽음]");
-                                showToastString("개구리 사망");
+
                                 if(random.nextInt(10)==1){
                                     changeFrogSpecies(Frog.STATE_DEATH);
+                                    addLogString("[개구리 죽음]");
+                                    addLogString("바뀐 속성을 견디지 못하고 개구리가 죽어버렸다...");
+                                }else{
+                                    updateSelectedFrogState(Frog.STATE_DEATH);
+                                    addLogString("[개구리 죽음]");
+                                    showToastString("개구리 사망");
                                 }
                             }
 
@@ -791,9 +808,9 @@ public class FragmentCenter extends Fragment {
 
     void changeFrogSpecies(int frogState){
         addLogString("[개구리 속성 바뀜]");
-        int newFrogSpecies = Frog.getFrogSpecies( random.nextInt(11) );
+        int newFrogSpecies = Frog.getFrogSpecies( random.nextInt(Frog.FROG_SPECIES_COUNT) );
         while(newFrogSpecies == currentFrogSet.getFrogSpecies()){
-            newFrogSpecies = Frog.getFrogSpecies( random.nextInt(11) );
+            newFrogSpecies = Frog.getFrogSpecies( random.nextInt(Frog.FROG_SPECIES_COUNT) );
         }
         currentFrogSet.setFrogSpecies( newFrogSpecies );
         updateSelectedFrogState( frogState );
