@@ -15,7 +15,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/main_frog_jelly"/>
+            android:src="@drawable/normal"/>
 
         <LinearLayout
             android:id="@+id/linear_layout"

@@ -9,10 +9,17 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.pyrion.poison_frog.data.Frog;
+
+import java.util.Random;
+
 public class IntroActivity extends AppCompatActivity {
 
     TextView title;
     ImageView imageView;
+
+    Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +28,7 @@ public class IntroActivity extends AppCompatActivity {
 
         title = findViewById(R.id.title);
         imageView = findViewById(R.id.iv_power);
-        //트윈 애니메이션
-
+        Glide.with(this).load(Frog.getFrogSpecies(random.nextInt(Frog.FROG_SPECIES_COUNT))).into(imageView);
         Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.intro_logo);
         imageView.startAnimation(animation_logo);
 

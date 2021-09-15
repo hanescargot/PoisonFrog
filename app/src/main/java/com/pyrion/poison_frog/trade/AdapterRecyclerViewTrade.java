@@ -391,7 +391,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
     }
 
     void setSelectedViews(){
-        tradeCenterFrog.setImageResource( oneFrogSetList.get(0).getFrogSrc());
+//        tradeCenterFrog.setImageResource( oneFrogSetList.get(0).getFrogSrc());
+        Glide.with(context).load( oneFrogSetList.get(0).getFrogSrc() ).into(tradeCenterFrog);
         Log.i("trade", oneFrogSetList.get(0).getHouseType()+"");
         if(Frog.STATE_SOLD == oneFrogSetList.get(0).getFrogState()){
             woodNoticeText.setText("근처에 개구리가 나타나면 터치해서 잡으세요.");

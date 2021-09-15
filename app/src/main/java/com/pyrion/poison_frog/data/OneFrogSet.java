@@ -99,7 +99,7 @@ public class OneFrogSet {
                 return R.drawable.main_gift;
         }
         // Null Image
-        return (R.drawable.main_frog_jelly);
+        return (R.drawable.normal);
     }
 
 

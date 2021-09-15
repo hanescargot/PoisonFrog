@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Egg;
 import com.pyrion.poison_frog.data.Frog;
@@ -49,8 +50,7 @@ public class AdapterFrogBook extends RecyclerView.Adapter {
 
         int species = Frog.getFrogSpecies(position);
         String explain = pageList[position];
-
-        viewHolder.iv.setImageResource(species);
+        Glide.with(context).load( species ).into(viewHolder.iv);
 
         viewHolder.tvTitle.setText(Frog.getStringSpecies(species));
         viewHolder.tvExplain.setText(explain);

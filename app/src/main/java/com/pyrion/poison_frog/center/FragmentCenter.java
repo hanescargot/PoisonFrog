@@ -266,6 +266,7 @@ public class FragmentCenter extends Fragment {
 //                showRefuseAlert();
                 Intent intent = new Intent(getActivity(), ActivityMatch.class);
                 intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
                 getActivity().startActivity(intent);
 
             }
@@ -594,8 +595,8 @@ public class FragmentCenter extends Fragment {
                     showToastString("헐값에 판매 완료");
                 }else{
                     showToastString("판매 완료");
+                    addLogString(soledFrogMsgs[random.nextInt(soledFrogMsgs.length)]);
                 }
-                addLogString(soledFrogMsgs[random.nextInt(soledFrogMsgs.length)]);
                 addLogString("[개구리가 판매되었습니다.]");
 
                 //really sell
@@ -952,7 +953,7 @@ public class FragmentCenter extends Fragment {
         switch (frogState){
             case Frog.STATE_ALIVE:
                 currentFrogSet.setFrogState(Frog.STATE_ALIVE);
-                mainFrogImageView.setImageResource(currentFrogSet.getFrogSpecies());
+                Glide.with(this).load( currentFrogSet.getFrogSpecies() ).into(mainFrogImageView);
                 updateFrogLayout(mainFrogImageView, currentFrogSet.getFrogSize(), false);
                 break;
             case Frog.STATE_SOLD:

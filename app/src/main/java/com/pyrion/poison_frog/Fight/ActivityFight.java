@@ -23,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.pyrion.poison_frog.R;
 import com.pyrion.poison_frog.data.Frog;
 import com.pyrion.poison_frog.data.OneFrogSet;
@@ -42,7 +43,7 @@ public class ActivityFight extends AppCompatActivity {
     int enemyMaxMP = 0; //power
     int enemyFrogHP = 0; //size
     int enemyFrogMP = 0; //power
-    String enemyFrogSpecies = "random";
+    int enemyFrogSpecies = Frog.SPECIES_BASIC;
 
     TextView fightLog;
     ScrollView logScrollView;
@@ -58,7 +59,8 @@ public class ActivityFight extends AppCompatActivity {
         setContentView(R.layout.activity_fight);
 
 
-        ImageView iv = findViewById(R.id.my_frog_iv);
+        ImageView myFrogIv = findViewById(R.id.my_frog_iv);
+        ImageView enemyFrogIv = findViewById(R.id.enemy_iv);
         fightLog = findViewById(R.id.fight_log);
         logScrollView = findViewById(R.id.log_scroll);
 
@@ -72,25 +74,34 @@ public class ActivityFight extends AppCompatActivity {
         enemySize= findViewById(R.id.enemy_size);
         enemyPower= findViewById(R.id.enemy_power);
 
-        Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.frog_finder);
-        iv.startAnimation(animation_logo);
+//        Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.frog_finder);
+//        myFrogIv.startAnimation(animation_logo);
+
 
         int userFrogKey = getIntent().getIntExtra("currentFrogKey", 1);
         userFrogSet = getUserFrogData(userFrogKey);
         userFrogHP = userFrogSet.getFrogSize();
         userFrogMP = userFrogSet.getFrogPower();
 
-        int extraHP= random.nextInt(50);
-        int extraMP= random.nextInt(50);
 
         //기존 개구리와 비례하는 랜덤 개구리 생성
-        enemyFrogSpecies = "random"; //Todo
-        enemyFrogHP = userFrogHP + userFrogHP/50*extraHP;
-        enemyFrogMP = userFrogMP + userFrogMP/50*extraMP;
-        if(random.nextBoolean()){
-            enemyFrogHP = userFrogHP - userFrogHP/50*extraHP;
-            enemyFrogMP = userFrogMP - userFrogMP/50*extraMP;
+        int userSumMpHp = userFrogHP + userFrogMP;
+        int extraHP= random.nextInt(10)+1;
+        int extraMP= random.nextInt(10)+1;
+        int rateHP= random.nextInt(100)+1;
+        int rateMP= 100 - rateHP;
+        enemyFrogSpecies = Frog.getFrogSpecies(random.nextInt(Frog.FROG_SPECIES_COUNT)); //0~6(7)
+        enemyFrogHP = (int)(  ((userSumMpHp/100.0) *rateHP ) + (userFrogHP/100.0*extraHP)  );
+        enemyFrogMP = (int)(  ((userSumMpHp/100.0) *rateMP ) + (userFrogMP/100.0*extraMP)  );
+        if(random.nextInt(30)==0){
+            enemyFrogHP = (int)(  (userSumMpHp/100.0 *rateHP ) - userFrogHP/100.0*extraHP  );
+            enemyFrogMP = (int)(  (userSumMpHp/100.0 *rateMP ) - userFrogMP/100.0*extraMP  );
         }
+
+        //Minimum HP MP
+        enemyFrogHP = Math.max(enemyFrogHP,1);
+        enemyFrogMP = Math.max(enemyFrogMP,1);
+        //set Max HP MP
         enemyMaxHP = enemyFrogHP;
         enemyMaxMP = enemyFrogMP;
 
@@ -102,7 +113,11 @@ public class ActivityFight extends AppCompatActivity {
         TextView userFrogName = findViewById(R.id.my_frog_name);
         TextView enemyFrogName = findViewById(R.id.enemy_name);
         userFrogName.setText(userFrogSet.getFrogName());
-        enemyFrogName.setText(enemyFrogSpecies);
+        enemyFrogName.setText(Frog.getStringSpecies(enemyFrogSpecies));
+
+        Glide.with(this).load(userFrogSet.getFrogSrc()).into(myFrogIv);
+        Glide.with(this).load(enemyFrogSpecies).into(enemyFrogIv);
+
 
         setStatuses();
     }
@@ -193,7 +208,7 @@ public class ActivityFight extends AppCompatActivity {
             addLog("특수 공격에 실패하였다.");
         }
         else{
-            int damage = (userFrogSet.getFrogSize() / 50) * (random.nextInt(10)+10);
+            int damage = (enemyMaxHP / 50) * (random.nextInt(17)+1);
             damage = Math.max(damage,1);
             enemyFrogHP -= damage;
             userFrogMP -= damage;
@@ -259,7 +274,7 @@ public class ActivityFight extends AppCompatActivity {
         }
         else{
 
-            int damage = (userFrogSet.getFrogSize() / 50) * (random.nextInt(10)+1);
+            int damage = (enemyMaxHP / 50) * (random.nextInt(10)+1);
             damage = Math.max(damage,1);
             enemyFrogHP -= damage;
             addLog("[데미지 -" + damage + "]");
@@ -287,14 +302,14 @@ public class ActivityFight extends AppCompatActivity {
     }
 
     public void startEnemySkill() {
-        if (random.nextInt(10)==0){
+        if (random.nextInt(15)==0){
             addLog("상대의 공격이 실패하였다.");
             userTurn = true;
             return;
         }
-        Boolean specialSkill = enemyFrogMP>0 ? (random.nextInt(3)==0) : false;
+        Boolean specialSkill = enemyFrogMP>0 ? !(random.nextInt(20)==0) : false;
         if(specialSkill){
-            int damage = enemyMaxHP / 100 * (random.nextInt(10)+10);
+            int damage =  userFrogSet.getFrogSize() / 50 * (random.nextInt(20)+1);
             damage = Math.max(damage,1);
             userFrogHP -= damage;
             enemyFrogMP -= damage;
@@ -303,14 +318,14 @@ public class ActivityFight extends AppCompatActivity {
             addLog("상대의 특수 공격에 상처입었습니다.");
         }else{
 
-            if(random.nextInt(10)==0){
+            if(random.nextInt(30)==0){
                 //도망가기
                 addLog("상대가 도망쳤습니다.");
                 fightFinish(true, true);
                 return;
             }else{
                 //일반공격
-                int damage = enemyMaxHP / 100 * (random.nextInt(10)+1);
+                int damage = userFrogSet.getFrogSize() / 50 * (random.nextInt(10)+1);
                 damage = Math.max(damage,1);
                 userFrogHP -= damage;
 
@@ -352,6 +367,8 @@ public class ActivityFight extends AppCompatActivity {
         if(!isRun && isWin){
             int diffSize = (enemyMaxHP/50) * (random.nextInt(20)+10);
             int diffPower = (enemyMaxMP/50) * (random.nextInt(20)+10);
+            diffSize = Math.max(diffSize, 1);
+            diffPower = Math.max(diffPower, 1);
 
             changeFrogDB("frog_size", (userFrogSet.getFrogSize() + diffSize) );
             changeFrogDB("frog_power", (userFrogSet.getFrogPower() + diffPower) );
