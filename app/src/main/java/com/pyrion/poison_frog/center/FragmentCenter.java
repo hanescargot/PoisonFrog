@@ -1248,7 +1248,7 @@ public class FragmentCenter extends Fragment {
 
 
     void updateFrogLayout(View mainFrogImageView, int size, Boolean soldFrog){
-        final int maxLayoutSize = 12000;
+        final int maxLayoutSize = 1200;
         final int minLayoutSize = 160;
         int viewSize = size/10;
         if(soldFrog || (viewSize < minLayoutSize)){

@@ -17,8 +17,8 @@
     </array>
 
     <string-array name="food_number">
-        <item>Food Number</item>
-        <item>Food so good</item>
+        <item>음식 증가</item>
+        <item>밥 먹이기 에서 떠다니는 밥의 갯수가 증가한다.</item>
         <item>1000</item>
         <item>1</item>
         <item>10</item>
@@ -27,8 +27,8 @@
     </string-array>
 
     <string-array name="food_effect">
-        <item>Food Effect</item>
-        <item>Food Effect so good</item>
+        <item>음식 효과</item>
+        <item>밥 먹이기 에서 밥을 먹은 개구리의 사이즈가 더욱 크게 성장한다.</item>
         <item>1000</item>
         <item>1</item>
         <item>15</item>
@@ -36,19 +36,9 @@
         <item>Upgrade</item>
     </string-array>
 
-    <string-array name="exercise_effect">
-        <item>Exercise Effect</item>
-        <item>Exercise Effect so good</item>
-        <item>1000</item>
-        <item>1</item>
-        <item>15</item>
-        <item>3</item>
-        <item>Upgrade</item>
-    </string-array>
-
     <string-array name="exercise_time">
-        <item>Exercise Time</item>
-        <item>Exercise Time so good</item>
+        <item>운동 시간</item>
+        <item>최대 운동 가능한 시간이 늘어난다.</item>
         <item>1000</item>
         <item>1</item>
         <item>-1</item>
@@ -56,6 +46,13 @@
         <item>Upgrade</item>
     </string-array>
 
-
-
+    <string-array name="exercise_effect">
+        <item>운동 효과</item>
+        <item>운동한 개구리의 힘이 더욱 크게 증가한다.</item>
+        <item>1000</item>
+        <item>1</item>
+        <item>60</item>
+        <item>3</item>
+        <item>Upgrade</item>
+    </string-array>
 </resources>
