@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Fight.ActivityFight"
+    tools:context="com.pyrion.game.poison_frog.Fight.ActivityFight"
     android:padding="16dp">
 
 

@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.pyrion.poison_frog"
+        applicationId "com.pyrion.game.poison_frog"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

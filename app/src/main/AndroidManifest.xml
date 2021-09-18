@@ -19,13 +19,13 @@
         android:roundIcon="@drawable/normal"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity android:name=".kotlin_nfc_write"></activity>
-        <activity android:name=".kotlin_nfc_read" />
-        <activity android:name=".Fight.ActivityFight" />
-        <activity android:name=".Fight.ActivityMatch" />
-        <activity android:name=".egg.ActivityFrogBook" />
+        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_write"></activity>
+        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_read" />
+        <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityFight" />
+        <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityMatch" />
+        <activity android:name="com.pyrion.game.poison_frog.egg.ActivityFrogBook" />
         <activity
-            android:name=".IntroActivity"
+            android:name="com.pyrion.game.poison_frog.IntroActivity"
             android:theme="@style/Theme.Poison_frog_no_actionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,18 +34,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".center.ItemStore.ActivityItemStore"
+            android:name="com.pyrion.game.poison_frog.center.ItemStore.ActivityItemStore"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.pyrion.game.poison_frog.MainActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
-        <receiver android:name=".center.Exercise.AlarmReceiver" /> <!-- NFC -->
+        <activity android:name="com.pyrion.game.poison_frog.center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
+        <receiver android:name="com.pyrion.game.poison_frog.center.Exercise.AlarmReceiver" /> <!-- NFC -->
         <activity
-            android:name=".Beam"
+            android:name="com.pyrion.game.poison_frog.Beam"
             android:theme="@style/Theme.ActivityTransparentBackground" />
         <activity
-            android:name=".NfcSend"
+            android:name="com.pyrion.game.poison_frog.NfcSend"
             android:theme="@style/Theme.ActivityTransparentBackground" />
     </application>
 

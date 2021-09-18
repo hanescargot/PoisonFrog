@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".kotlin_nfc_write"
+    tools:context="com.pyrion.game.poison_frog.kotlin_nfc_write"
     android:backgroundTint="@color/white">
 
     <TextView
