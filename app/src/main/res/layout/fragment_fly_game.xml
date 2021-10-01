@@ -3,20 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/game_bg"
+            />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="8dp">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="180dp"
-                android:src="@drawable/fly_wood_notice"/>
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wood_mid"/>
             <TextView
                 android:id="@+id/score"
                 android:layout_width="wrap_content"
@@ -28,16 +36,33 @@
                 android:textSize="80sp"/>
         </FrameLayout>
 
-        <ProgressBar
-            android:id="@+id/progress"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="24dp"
-            android:layout_marginHorizontal="16dp"
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="5000"
-            android:progress="5000"/>
+            android:layout_alignParentBottom="true"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center"
+                android:src="@drawable/wood_progress"/>
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progress"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:max="5000"
+                android:progress="5000"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="8dp"
+                />
+
+        </FrameLayout>
+
+
 
     </RelativeLayout>
 
