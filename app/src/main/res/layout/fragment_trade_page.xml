@@ -36,7 +36,7 @@
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
             <ImageView
-                android:id="@+id/camera"
+                android:id="@+id/map"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
@@ -47,6 +47,7 @@
                 />
 
             <ImageView
+                android:id="@+id/camera"
                 android:layout_gravity="center_vertical"
                 android:layout_width="56dp"
                 android:layout_height="56dp"

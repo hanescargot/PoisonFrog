@@ -114,6 +114,10 @@ public class FlyGameActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
+
+            if(finish){
+                return;
+            }
             ImageView iv = (ImageView)v;
             //TODO 사운드랑 진동 추가
 
@@ -336,6 +340,7 @@ public class FlyGameActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        timerGage.cancel();
         super.onBackPressed();
     }
     
