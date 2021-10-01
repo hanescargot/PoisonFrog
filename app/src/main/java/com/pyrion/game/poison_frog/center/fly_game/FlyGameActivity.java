@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -326,6 +327,7 @@ public class FlyGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pointAlertDialog.cancel();
+                Toast.makeText(FlyGameActivity.this, "+"+pointSum+"Size", Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });
