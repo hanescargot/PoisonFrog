@@ -28,7 +28,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     SQLiteDatabase database_frog, database_exercise;
     Cursor cursor_exercise;
-
     int frogKey;
     String frogName;
     int currentFrogPower;

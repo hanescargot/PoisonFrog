@@ -392,9 +392,9 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         Glide.with(context).load( oneFrogSetList.get(0).getFrogSrc() ).into(tradeCenterFrog);
         Log.i("trade", oneFrogSetList.get(0).getHouseType()+"");
         if(Frog.STATE_SOLD == oneFrogSetList.get(0).getFrogState()){
-            woodNoticeText.setText("근처에 개구리가 나타나면 터치해서 잡으세요.");
+            woodNoticeText.setText("지도를 눌러 근처를 탐색하세요.");
         }else{
-            woodNoticeText.setText("개구리를 꾹 누르면 근처 사람에게 공유됩니다.");
+            woodNoticeText.setText("개구리를 누르면 공유됩니다.");
         }
     }
 

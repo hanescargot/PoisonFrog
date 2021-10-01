@@ -163,7 +163,6 @@ public class AdapterRecyclerViewEgg extends RecyclerView.Adapter {
         return eggItemArrayList.size();
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView tvTitle;
         ImageView ivItem;
