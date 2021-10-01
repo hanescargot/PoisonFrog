@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,9 +8,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="320dp"
+        android:layout_gravity="top"
         >
-
-
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -18,7 +17,7 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/trade_center_bg" />
 
-
+<!--top wood-->
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,18 +26,10 @@
             android:paddingBottom="80dp"
             />
 
-        <ImageView
-            android:id="@+id/trade_frog_center_src"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/normal"/>
 
         <LinearLayout
             android:id="@+id/icon"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:padding="4dp"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
@@ -46,8 +37,8 @@
             android:orientation="horizontal">
             <ImageView
                 android:id="@+id/camera"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_map"
                 android:background="@drawable/icon_bg"
@@ -57,54 +48,59 @@
 
             <ImageView
                 android:layout_gravity="center_vertical"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
                 android:src="@drawable/ic_camera"
                 android:background="@drawable/icon_bg"
                 android:padding="8dp"
                 />
-
-
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/notice"
-            android:layout_width="match_parent"
-            android:layout_toLeftOf="@id/icon"
-            android:layout_height="80dp"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="4dp"
-            >
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/wood_mid"/>
-            <TextView
-                android:id="@+id/notice_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:layout_gravity="center"
-                android:textStyle="bold"
-                android:text="개구리를 누르면 공유됩니다."
-                android:textColor="@color/white"
-                />
 
-        </FrameLayout>
+<!--        main frog -->
+        <ImageView
+            android:id="@+id/trade_frog_center_src"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/normal"/>
+
+        <TextView
+
+            android:id="@+id/notice_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_below="@id/trade_frog_center_src"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="16dp"
+            android:textStyle="bold"
+            android:text="개구리를 누르면 공유됩니다."
+            android:textColor="@color/white"
+            />
     </RelativeLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="24dp">
+<!---->
+
+
+    <RelativeLayout
+        android:padding="24dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/wood_bg_big"
+        android:layout_width="wrap_content"
+        android:layout_height="480dp">
+
+
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_alignParentBottom="true"
             android:id="@+id/trade_frog_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"/>
-    </FrameLayout>
+    </RelativeLayout>
 
 
-</LinearLayout>
+</FrameLayout>

@@ -26,6 +26,7 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:text="Free"
+        android:backgroundTint="@color/purple_200"
         android:layout_below="@+id/iv_item"
         android:layout_centerHorizontal="true"/>
 

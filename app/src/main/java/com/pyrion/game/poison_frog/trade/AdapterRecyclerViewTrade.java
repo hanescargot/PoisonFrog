@@ -150,7 +150,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             //sold
             ViewHolderEvent viewHolderEvent = (ViewHolderEvent) holder;
 
-            viewHolderEvent.backGround.setBackgroundColor(R.color.black);
+            //Todo
+            viewHolderEvent.backGround.setBackgroundResource(R.drawable.wood_mid);
             viewHolderEvent.mainSrc.setImageResource(R.drawable.main_gift);
             viewHolderEvent.mainSrc.setPadding(40, 40, 40, 40);
             viewHolderEvent.subSrc.setVisibility(View.GONE);
@@ -167,7 +168,8 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
             if(position == 0){
                 //selected event box
-                viewHolderEvent.backGround.setBackgroundColor(R.color.purple_200);
+                //Todo selected
+                viewHolderEvent.backGround.setBackgroundResource(R.drawable.ic_svg_wood_mid);
             }
             return;
         }
@@ -177,7 +179,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         //Normal Frog item
         ViewHolderFrog viewHolderFrog = (ViewHolderFrog) holder;
 
-        viewHolderFrog.backGround.setBackgroundColor(R.color.black);
+        viewHolderFrog.backGround.setBackgroundResource(R.drawable.wood_mid);
         viewHolderFrog.frogSrc.setImageResource( selectedFrogSet.getFrogSrc());
         Glide.with(context).load( selectedFrogSet.getFrogSrc() ).into(viewHolderFrog.frogSrc);
         viewHolderFrog.frogName.setText( selectedFrogSet.getFrogName() );
@@ -188,7 +190,7 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
         if(position == 0){
             //selected frog background
-            viewHolderFrog.backGround.setBackgroundColor(R.color.purple_200);
+            viewHolderFrog.backGround.setBackgroundResource(R.drawable.ic_svg_wood_mid);
         }
         return;
     }
