@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.pyrion.game.poison_frog.data.Frog;
@@ -227,6 +228,7 @@ public class FlyGameActivity extends AppCompatActivity {
 
                             if (currprog > 0) {
                                 currprog = currprog - 1;
+                                progressBar.setProgress(currprog);
                             } else if (currprog == 0) {
                                 //end of Game
 
@@ -235,13 +237,17 @@ public class FlyGameActivity extends AppCompatActivity {
                                     flyTimerArray[i].cancel();
                                 }
 
-                                //end of the game
-                                pointDataUpdate();
-                                timerGage.cancel();
-                                showPointAlert();
+                                if(finish==false){
+                                    //end of the game
+                                    finish = true;
+
+                                    pointDataUpdate();
+                                    timerGage.cancel();
+                                    showPointAlert();
+                                }
 
                             }
-                            progressBar.setProgress(currprog);
+
                     }
                 }
 
@@ -316,7 +322,6 @@ public class FlyGameActivity extends AppCompatActivity {
         tvSpecialPoint.setText(specialPoint+" 점");
         tvNormalPoint.setText(normalPoint+" 점");
         tvSumPrice.setText("+"+ pointSum+"사이즈");
-
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -324,13 +329,11 @@ public class FlyGameActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
         pointAlertDialog.show();
     }
 
     @Override
     public void onBackPressed() {
-        timerGage.cancel();
         super.onBackPressed();
     }
     
