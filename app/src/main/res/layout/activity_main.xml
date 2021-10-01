@@ -5,6 +5,8 @@
     android:id="@+id/main_view_paper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/black"
+    >
 
 </androidx.viewpager2.widget.ViewPager2>

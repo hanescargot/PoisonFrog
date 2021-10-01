@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.pyrion.game.poison_frog.kotlin_nfc_write"
-    android:backgroundTint="@color/white">
+    android:backgroundTint="@color/black">
 
     <TextView
         android:layout_width="wrap_content"
