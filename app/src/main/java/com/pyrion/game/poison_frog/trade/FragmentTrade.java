@@ -1,5 +1,9 @@
 package com.pyrion.game.poison_frog.trade;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -11,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.pyrion.game.poison_frog.Fight.ActivityMatch;
 import com.pyrion.poison_frog.R;
 
 public class FragmentTrade extends Fragment {
@@ -35,6 +40,13 @@ public class FragmentTrade extends Fragment {
             public void onClick(View v) {
                 //Map
                 //지도 배경에 근처 개구리 랜덤으로 보여주기
+
+                Intent intent = new Intent(getActivity(), ActivityMap.class);
+
+//                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+//                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
+                getActivity().startActivity(intent);
+
             }
         });
         camera.setOnClickListener(new View.OnClickListener() {

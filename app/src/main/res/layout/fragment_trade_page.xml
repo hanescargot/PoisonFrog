@@ -17,46 +17,6 @@
             android:layout_marginTop="10dp"
             android:src="@drawable/trade_center_bg" />
 
-<!--top wood-->
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/top_wood"
-            android:layout_alignParentTop="true"
-            android:paddingBottom="80dp"
-            />
-
-
-        <LinearLayout
-            android:id="@+id/icon"
-            android:layout_alignParentTop="true"
-            android:padding="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="80dp"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal">
-            <ImageView
-                android:id="@+id/map"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_map"
-                android:background="@drawable/icon_bg"
-                android:padding="8dp"
-                android:layout_marginRight="8dp"
-                />
-
-            <ImageView
-                android:id="@+id/camera"
-                android:layout_gravity="center_vertical"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:src="@drawable/ic_camera"
-                android:background="@drawable/icon_bg"
-                android:padding="8dp"
-                />
-        </LinearLayout>
-
 
 <!--        main frog -->
         <ImageView
@@ -103,5 +63,46 @@
             android:orientation="vertical"/>
     </RelativeLayout>
 
+
+    <!--top wood-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_wood"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="80dp"
+        />
+
+
+
+
+    <LinearLayout
+        android:id="@+id/icon"
+        android:layout_gravity="top|right"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/map"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_map"
+            android:background="@drawable/icon_bg"
+            android:padding="8dp"
+            android:layout_marginRight="8dp"
+            />
+
+        <ImageView
+            android:id="@+id/camera"
+            android:layout_gravity="center_vertical"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_camera"
+            android:background="@drawable/icon_bg"
+            android:padding="8dp"
+            />
+    </LinearLayout>
 
 </FrameLayout>

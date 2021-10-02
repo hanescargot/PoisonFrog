@@ -19,7 +19,9 @@
         android:roundIcon="@drawable/normal"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_write"></activity>
+        <activity android:name="com.pyrion.game.poison_frog.trade.ActivityMap"
+            android:theme="@style/Theme.ActivityTransparentBackground"></activity>
+        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_write" />
         <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_read" />
         <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityFight" />
         <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityMatch" />
