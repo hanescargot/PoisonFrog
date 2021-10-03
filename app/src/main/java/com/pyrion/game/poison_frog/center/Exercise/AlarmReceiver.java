@@ -20,7 +20,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.pyrion.game.poison_frog.MainActivity;
 import com.pyrion.game.poison_frog.data.Frog;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 //리시버는 4대컴포넌트 - 매니페스트에 등록
 public class AlarmReceiver extends BroadcastReceiver {

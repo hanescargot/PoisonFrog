@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 
 public class MainActivity extends AppCompatActivity {

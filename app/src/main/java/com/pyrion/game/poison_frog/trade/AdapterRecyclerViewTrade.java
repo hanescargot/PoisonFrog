@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 import com.pyrion.game.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.game.poison_frog.center.FragmentCenter;
 import com.pyrion.game.poison_frog.data.Frog;

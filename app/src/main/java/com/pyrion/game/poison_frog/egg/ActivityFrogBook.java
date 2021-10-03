@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 public class ActivityFrogBook extends AppCompatActivity {
     AdapterFrogBook adapter;

@@ -12,4 +12,24 @@
         android:background="@drawable/map_vertical_bg"
         />
 
+    <FrameLayout
+        android:layout_width="240dp"
+        android:layout_height="376dp"
+        android:layout_centerInParent="true"
+        >
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            map:uiZoomControls="true"
+            map:uiRotateGestures="true"
+            map:cameraZoom="20"
+            map:mapType="hybrid"
+            />
+    </FrameLayout>
+
+
+
 </RelativeLayout>

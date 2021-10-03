@@ -24,7 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.nio.charset.Charset;
 

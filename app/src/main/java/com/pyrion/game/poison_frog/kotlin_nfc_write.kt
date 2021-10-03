@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.pyrion.poison_frog.R
+import com.pyrion.game.poison_frog.R
 import java.io.IOException
 
 class kotlin_nfc_write : AppCompatActivity() {

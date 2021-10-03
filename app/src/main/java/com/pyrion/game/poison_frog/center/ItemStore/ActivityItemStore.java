@@ -14,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.pyrion.game.poison_frog.data.OneItemSet;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.util.ArrayList;
 

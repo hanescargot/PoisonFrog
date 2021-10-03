@@ -1,6 +1,6 @@
 package com.pyrion.game.poison_frog.data;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 public class OneFrogSet {
     private int frogKey = 1;

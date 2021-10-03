@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.pyrion.game.poison_frog.data.Frog;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.util.Random;
 

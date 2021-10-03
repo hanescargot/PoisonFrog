@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pyrion.game.poison_frog.data.OneItemSet;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.util.ArrayList;
 

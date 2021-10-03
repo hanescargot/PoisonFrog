@@ -1,4 +1,4 @@
-package com.pyrion.poison_frog;
+package com.pyrion.game.poison_frog;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.pyrion.poison_frog", appContext.getPackageName());
+        assertEquals("com.pyrion.game.poison_frog", appContext.getPackageName());
     }
 }

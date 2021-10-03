@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.util.ArrayList;
 

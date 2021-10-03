@@ -1,4 +1,4 @@
-package com.pyrion.poison_frog;
+package com.pyrion.game.poison_frog;
 
 import org.junit.Test;
 

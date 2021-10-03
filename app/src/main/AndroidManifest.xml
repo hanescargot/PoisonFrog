@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.pyrion.poison_frog">
+    package="com.pyrion.game.poison_frog">
 
-    <uses-feature
-        android:name="android.hardware.nfc"
-        android:required="false" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.NFC" />
-
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -19,6 +16,7 @@
         android:roundIcon="@drawable/normal"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
+
         <activity android:name="com.pyrion.game.poison_frog.trade.ActivityMap"
             android:theme="@style/Theme.ActivityTransparentBackground"></activity>
         <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_write" />
@@ -49,6 +47,21 @@
         <activity
             android:name="com.pyrion.game.poison_frog.NfcSend"
             android:theme="@style/Theme.ActivityTransparentBackground" />
+
+<!--        Google Map-->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+<!--        google dmap api key 등록 -->
+<!--        TODO 출시 하기전에 출시용 인증서로 바꾸기 꼭 .-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCgLQYLDDD9jdZyOXVJnrzqg7TReQ0ubuU"
+            />
+
     </application>
 
 </manifest>

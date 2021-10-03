@@ -18,7 +18,7 @@ import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
 import android.util.Log;
 
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

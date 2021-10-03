@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.pyrion.game.poison_frog.Fight.ActivityMatch;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 public class FragmentTrade extends Fragment {
     AdapterRecyclerViewTrade adapter;

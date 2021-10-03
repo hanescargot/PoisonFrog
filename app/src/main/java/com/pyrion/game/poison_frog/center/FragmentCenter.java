@@ -42,7 +42,7 @@ import com.pyrion.game.poison_frog.center.fly_game.FlyGameActivity;
 import com.pyrion.game.poison_frog.data.Frog;
 import com.pyrion.game.poison_frog.data.Item;
 import com.pyrion.game.poison_frog.data.OneFrogSet;
-import com.pyrion.poison_frog.R;
+import com.pyrion.game.poison_frog.R;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
