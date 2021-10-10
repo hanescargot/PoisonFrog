@@ -40,7 +40,7 @@ public class FragmentTrade extends Fragment {
             public void onClick(View v) {
                 //Map
                 //지도 배경에 근처 개구리 랜덤으로 보여주기
-
+                getActivity().getIntent().putExtra("fragment_navigation", 2);
                 Intent intent = new Intent(getActivity(), ActivityMap.class);
 
 //                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
