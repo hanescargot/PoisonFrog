@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -69,6 +70,21 @@ public class FragmentTrade extends Fragment {
             public void onClick(View v) {
                 //Camera
                 //1미터 이내면 개구리 보여주고 터치하면 잡을 수 있기
+                //동적퍼미션 작업
+                Log.i("camera", "clicked");
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                    int permissionResult= getActivity().checkSelfPermission(Manifest.permission.CAMERA);
+                    if(permissionResult == PackageManager.PERMISSION_DENIED){
+                        String[] permissions= new String[]{Manifest.permission.CAMERA};
+                        Toast.makeText(getActivity(), "ask", Toast.LENGTH_SHORT).show();
+                        requestPermissions(permissions,10);
+                    }else{
+                        getActivity().getIntent().putExtra("fragment_navigation", 2);
+                        Intent intent = new Intent(getActivity(), ActivityCamera.class);
+                        getActivity().startActivity(intent);
+                    }
+                }
+
             }
         });
 
@@ -80,20 +96,32 @@ public class FragmentTrade extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //         허용안하면 샤용할 수 없도록 하기 앱 설치할 때 부터
+        Log.i("camera", "start");
+        Toast.makeText(getActivity(), "start", Toast.LENGTH_SHORT).show();
         switch (requestCode){
+
             case 0:
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     // 위치 정보 제공에 동의한 경우
                     getActivity().getIntent().putExtra("fragment_navigation", 2);
                     Intent intent = new Intent(getActivity(), ActivityMap.class);
-
-//                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
-//                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
                     getActivity().startActivity(intent);
                 }else{
-                    getActivity().getIntent().putExtra("fragment_navigation", 2);
                     Toast.makeText(getActivity(), "위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
                 }
+                break;
+
+            case 10:
+                Toast.makeText(getActivity(), "10", Toast.LENGTH_SHORT).show();
+                if(grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    getActivity().getIntent().putExtra("fragment_navigation", 2);
+                    Intent intent = new Intent(getActivity(), ActivityCamera.class);
+                    getActivity().startActivity(intent);
+                }else{
+                    Toast.makeText(getActivity(), "카메라 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
                 break;
         }
     }

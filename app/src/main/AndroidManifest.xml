@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.pyrion.game.poison_frog">
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
     <uses-feature
         android:name="android.hardware.nfc"
         android:required="false" />
@@ -16,16 +18,17 @@
         android:roundIcon="@drawable/normal"
         android:supportsRtl="true"
         android:theme="@style/Theme.Poison_frog_no_actionbar">
-
-        <activity android:name="com.pyrion.game.poison_frog.trade.ActivityMap"
-            android:theme="@style/Theme.ActivityTransparentBackground"></activity>
-        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_write" />
-        <activity android:name="com.pyrion.game.poison_frog.kotlin_nfc_read" />
-        <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityFight" />
-        <activity android:name="com.pyrion.game.poison_frog.Fight.ActivityMatch" />
-        <activity android:name="com.pyrion.game.poison_frog.egg.ActivityFrogBook" />
+        <activity android:name=".trade.ActivityCamera"></activity>
         <activity
-            android:name="com.pyrion.game.poison_frog.IntroActivity"
+            android:name=".trade.ActivityMap"
+            android:theme="@style/Theme.ActivityTransparentBackground" />
+        <activity android:name=".kotlin_nfc_write" />
+        <activity android:name=".kotlin_nfc_read" />
+        <activity android:name=".Fight.ActivityFight" />
+        <activity android:name=".Fight.ActivityMatch" />
+        <activity android:name=".egg.ActivityFrogBook" />
+        <activity
+            android:name=".IntroActivity"
             android:theme="@style/Theme.Poison_frog_no_actionbar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,31 +40,27 @@
             android:name="com.pyrion.game.poison_frog.center.ItemStore.ActivityItemStore"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
         <activity
-            android:name="com.pyrion.game.poison_frog.MainActivity"
+            android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" />
-        <activity android:name="com.pyrion.game.poison_frog.center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
-        <receiver android:name="com.pyrion.game.poison_frog.center.Exercise.AlarmReceiver" /> <!-- NFC -->
+        <activity android:name=".center.fly_game.FlyGameActivity" /> <!-- 리시버 -->
+        <receiver android:name=".center.Exercise.AlarmReceiver" /> <!-- NFC -->
         <activity
-            android:name="com.pyrion.game.poison_frog.Beam"
+            android:name=".Beam"
             android:theme="@style/Theme.ActivityTransparentBackground" />
         <activity
-            android:name="com.pyrion.game.poison_frog.NfcSend"
-            android:theme="@style/Theme.ActivityTransparentBackground" />
-
-<!--        Google Map-->
+            android:name=".NfcSend"
+            android:theme="@style/Theme.ActivityTransparentBackground" /> <!-- Google Map -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <uses-library
             android:name="org.apache.http.legacy"
-            android:required="false" />
-<!--        google dmap api key 등록 -->
-<!--        TODO 출시 하기전에 출시용 인증서로 바꾸기 꼭 .-->
+            android:required="false" /> <!-- google dmap api key 등록 -->
+        <!-- TODO 출시 하기전에 출시용 인증서로 바꾸기 꼭 . -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCgLQYLDDD9jdZyOXVJnrzqg7TReQ0ubuU"
-            />
-
+            android:value="AIzaSyCgLQYLDDD9jdZyOXVJnrzqg7TReQ0ubuU" />
     </application>
 
 </manifest>

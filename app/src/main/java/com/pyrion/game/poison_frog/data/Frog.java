@@ -34,6 +34,7 @@ public class Frog {
     public static final int HOUSE_TYPE_BOUGHT = 2;
 
     public static int getFrogSpecies(int number) {
+        //0~6
         switch (number){
             case 0:
                 return Frog.SPECIES_BASIC;
