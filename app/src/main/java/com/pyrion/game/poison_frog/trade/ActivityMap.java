@@ -60,7 +60,7 @@ public class ActivityMap extends AppCompatActivity
     Criteria criteria;
     Location userLocation;
     LatLng userLatLng;
-    List<Location> roadFrogs = new ArrayList<>();
+    ArrayList<Location> roadFrogs = new ArrayList<>();
     String bestProvider;
     Gson gson;
 
@@ -125,9 +125,12 @@ public class ActivityMap extends AppCompatActivity
             for (int index = 0; index < 5; index++) {
                 roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
                 Location location = new Location("");
-                location.setLatitude(roadFrogLatLng[0]);
-                location.setLongitude(roadFrogLatLng[1]);
-                roadFrogs.add(location);
+
+                if(roadFrogLatLng[0]!=-1) {
+                    location.setLatitude(roadFrogLatLng[0]);
+                    location.setLongitude(roadFrogLatLng[1]);
+                    roadFrogs.add(location);
+                }
             }
         }
 
