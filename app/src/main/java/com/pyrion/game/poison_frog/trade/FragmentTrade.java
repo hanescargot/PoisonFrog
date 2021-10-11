@@ -1,15 +1,19 @@
 package com.pyrion.game.poison_frog.trade;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.pyrion.game.poison_frog.Fight.ActivityMatch;
 import com.pyrion.game.poison_frog.R;
+
+import org.jetbrains.annotations.NotNull;
 
 public class FragmentTrade extends Fragment {
     AdapterRecyclerViewTrade adapter;
@@ -40,12 +46,21 @@ public class FragmentTrade extends Fragment {
             public void onClick(View v) {
                 //Map
                 //지도 배경에 근처 개구리 랜덤으로 보여주기
-                getActivity().getIntent().putExtra("fragment_navigation", 2);
-                Intent intent = new Intent(getActivity(), ActivityMap.class);
 
-//                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
-//                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
-                getActivity().startActivity(intent);
+                //        내 위치 사용에 대한 동적 퍼미션 todo 밖으로 빼기
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int checkResult = getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+                    if (checkResult == PackageManager.PERMISSION_DENIED) {
+                        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+                        requestPermissions(permissions, 0);
+                    }else{
+                        // 위치 정보 제공에 동의한 경우
+                        getActivity().getIntent().putExtra("fragment_navigation", 2);
+                        Intent intent = new Intent(getActivity(), ActivityMap.class);
+                        getActivity().startActivity(intent);
+                    }
+                }
+
 
             }
         });
@@ -59,6 +74,28 @@ public class FragmentTrade extends Fragment {
 
 
         return view;
+    }
+    //다이얼로그 선택하면 발동하는 메소드
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//         허용안하면 샤용할 수 없도록 하기 앱 설치할 때 부터
+        switch (requestCode){
+            case 0:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    // 위치 정보 제공에 동의한 경우
+                    getActivity().getIntent().putExtra("fragment_navigation", 2);
+                    Intent intent = new Intent(getActivity(), ActivityMap.class);
+
+//                intent.putExtra("currentFrogKey", currentFrogSet.getFrogKey());
+//                intent.putExtra("currentFrogSpecies", currentFrogSet.getFrogSpecies());
+                    getActivity().startActivity(intent);
+                }else{
+                    getActivity().getIntent().putExtra("fragment_navigation", 2);
+                    Toast.makeText(getActivity(), "위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     @Override

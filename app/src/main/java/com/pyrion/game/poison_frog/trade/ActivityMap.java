@@ -69,16 +69,6 @@ public class ActivityMap extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        //        내 위치 사용에 대한 동적 퍼미션 todo 밖으로 빼기
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int checkResult = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-            if (checkResult == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
-                requestPermissions(permissions, 0);
-            }
-        }
-
-
 // Get a handle to the fragment and register the callback.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -97,31 +87,41 @@ public class ActivityMap extends AppCompatActivity
 
         gson = new GsonBuilder().setPrettyPrinting().create();
 
-        userLocation = getCurrentUserLocation();
+////        실시간 위치 업데이트
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            return;
+//        }
+//        if (locationManager.isProviderEnabled("gps")) {
+//            locationManager.requestLocationUpdates("gps", 1000, 1, locationListener);
+//        }else if(locationManager.isProviderEnabled("network")){
+//            locationManager.requestLocationUpdates("network", 1000, 1, locationListener);
+//        }
+
+
         setRoadFrogList();
 
     }//create
 
     double[] roadFrogLatLng = new double[2];
+
     private void setRoadFrogList() {
 //    todo 시간 보고 시간 지났으면 개구리 위치 전부 바꾸기
 
-        
         //만들기 및 체크
         long currentTime = System.currentTimeMillis();
         if (getPref("time").equals("null")) {
             //새로 DB에 추가
             pref();
-        }
-        else {
+        } else {
             //데이터는 있지만 시간은 초과한 경우
-            long diffHours = ( currentTime - Long.parseLong(getPref("time")) )/(1000 * 60);
-            if(diffHours>24){
+            long diffHours = (currentTime - Long.parseLong(getPref("time"))) / (1000 * 60);
+            if (diffHours > 24) {
                 pref();
             }
 
             //todo 기존 DB의 개구리 사용
-            Type doubleType = new TypeToken<double[]>(){}.getType();
+            Type doubleType = new TypeToken<double[]>() {
+            }.getType();
             for (int index = 0; index < 5; index++) {
                 roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
                 Location location = new Location("");
@@ -129,21 +129,22 @@ public class ActivityMap extends AppCompatActivity
                 location.setLongitude(roadFrogLatLng[1]);
                 roadFrogs.add(location);
             }
-
-            Log.i("tag", roadFrogs.get(0).getLatitude()+"");
         }
 
     }
 
-    public void pref(){
+    public void pref() {
         //새 개구리 DB 만들기
+        userLocation = getCurrentUserLocation();
+        Log.i("hhh", "값 가져옴");
         for (int index = 0; index < 5; index++) {
             Location randomLocation = getRandomLatLng(userLocation, 100);
-            roadFrogs.add( randomLocation );
+            roadFrogs.add(randomLocation);
             roadFrogLatLng[0] = randomLocation.getLatitude();
             roadFrogLatLng[1] = randomLocation.getLongitude();
-            setPref("locations"+index, gson.toJson(roadFrogLatLng));
-        };
+            setPref("locations" + index, gson.toJson(roadFrogLatLng));
+        }
+        ;
         long currentTime = System.currentTimeMillis();
         setPref("time", currentTime + "");
     }
@@ -156,7 +157,6 @@ public class ActivityMap extends AppCompatActivity
     }
 
     public String getPref(String key) {
-        // context = getApplicationContext();
         SharedPreferences sharedPreferences = getSharedPreferences("test", MODE_PRIVATE);    // test 이름의 기본모드 설정, 만약 test key값이 있다면 해당 값을 불러옴.
         String value = sharedPreferences.getString(key, "null");
         return value;
@@ -196,6 +196,8 @@ public class ActivityMap extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        userLocation = getCurrentUserLocation();
+        Log.i("hhh", "값 가져옴");
         //todo 서버에서 사용자들의 개구리 가져오기
 //        37.560797, 127.034571
         //랜덤 생성된 개구리 표시
@@ -224,43 +226,29 @@ public class ActivityMap extends AppCompatActivity
 
     public Location getCurrentUserLocation() {
         Location currentLocation = null;
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "위치 기능을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
         if (locationManager.isProviderEnabled("gps")) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "GPS 기능을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            currentLocation = locationManager.getLastKnownLocation("gps");
-        }else if(locationManager.isProviderEnabled("network")){
-            currentLocation = locationManager.getLastKnownLocation("network");
+            Log.i("hhh", "지피에스 시도");
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
+        if(currentLocation == null && locationManager.isProviderEnabled("network")){
+            Log.i("hhh", "인터넷 시도");
+            currentLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
         if (currentLocation == null){
-            Toast.makeText(this, "위치정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "위치 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Log.i("hhh", "위치정보 못찾음");
+            finish();
         }else{
-
-            Log.i("loda_user", currentLocation.getLatitude() + "\n" + currentLocation.getLongitude());
+            Log.i("hhh", "위치정보 찾음");
             return currentLocation;
         }
     return null;
     }
 
-
-    //다이얼로그 선택하면 발동하는 메소드
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//         허용안하면 샤용할 수 없도록 하기 앱 설치할 때 부터
-        switch (requestCode){
-            case 0:
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    // 위치 정보 제공에 동의한 경우
-                }else{
-                    Toast.makeText(this, "위치정보 사용 불가", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-        }
-    }
 
     @Override
     public boolean onMyLocationButtonClick() {
