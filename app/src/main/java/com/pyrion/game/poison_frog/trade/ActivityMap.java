@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.LocationListener;
@@ -17,6 +18,9 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.pyrion.game.poison_frog.R;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -33,9 +37,13 @@ import androidx.core.app.ActivityCompat;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.zip.Inflater;
 
 public class ActivityMap extends AppCompatActivity
         implements
@@ -52,15 +60,16 @@ public class ActivityMap extends AppCompatActivity
     Criteria criteria;
     Location userLocation;
     LatLng userLatLng;
-    Location[] roadFrogs = new Location[5];
+    List<Location> roadFrogs = new ArrayList<>();
     String bestProvider;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        //        내 위치 사용에 대한 동적 퍼미션
+        //        내 위치 사용에 대한 동적 퍼미션 todo 밖으로 빼기
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int checkResult = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
             if (checkResult == PackageManager.PERMISSION_DENIED) {
@@ -84,33 +93,74 @@ public class ActivityMap extends AppCompatActivity
         criteria.setPowerRequirement(Criteria.NO_REQUIREMENT);// 배터리 소모 신경안씀
         criteria.setAltitudeRequired(false); // 고도 고려 안함
         bestProvider = locationManager.getBestProvider(criteria, true);
+//        locationManager.requestLocationUpdates(bestProvider,1000, 1,locationListener);
 
+        gson = new GsonBuilder().setPrettyPrinting().create();
+
+        userLocation = getCurrentUserLocation();
         setRoadFrogList();
 
     }//create
 
+    double[] roadFrogLatLng = new double[2];
     private void setRoadFrogList() {
 //    todo 시간 보고 시간 지났으면 개구리 위치 전부 바꾸기
 
-        //todo DB 만들기 및 체크
-
-        if(true){
-            userLocation = getCurrentUserLocation();
-            for (int index = 0; index < roadFrogs.length; index++) {
-                Location randomLocation = getRandomLatLng(userLocation, 100);
-                roadFrogs[index] = randomLocation;
-                //todo DB에 추가
+        
+        //만들기 및 체크
+        long currentTime = System.currentTimeMillis();
+        if (getPref("time").equals("null")) {
+            //새로 DB에 추가
+            pref();
+        }
+        else {
+            //데이터는 있지만 시간은 초과한 경우
+            long diffHours = ( currentTime - Long.parseLong(getPref("time")) )/(1000 * 60);
+            if(diffHours>24){
+                pref();
             }
-        }else{
             //todo 기존 DB의 개구리 사용
+            Type doubleType = new TypeToken<double[]>(){}.getType();
+            for (int index = 0; index < 5; index++) {
+                roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
+                Location location = new Location("");
+                location.setLatitude(roadFrogLatLng[0]);
+                location.setLongitude(roadFrogLatLng[1]);
+                roadFrogs.add(location);
+            }
 
+            Log.i("tag", roadFrogs.get(0).getLatitude()+"");
         }
 
     }
 
-    public Location getRandomLatLng(Location location, int radius) {
-        List<LatLng> randomPoints = new ArrayList<>();
+    public void pref(){
+        for (int index = 0; index < 5; index++) {
+            Location randomLocation = getRandomLatLng(userLocation, 100);
+            roadFrogs.add( randomLocation );
+            roadFrogLatLng[0] = randomLocation.getLatitude();
+            roadFrogLatLng[1] = randomLocation.getLongitude();
+            setPref("locations"+index, gson.toJson(roadFrogLatLng));
+        };
+        long currentTime = System.currentTimeMillis();
+        setPref("time", currentTime + "");
+    }
 
+    public void setPref(String key, String value) {
+        SharedPreferences sharedPreferences = getSharedPreferences("test", MODE_PRIVATE);    // test 이름의 기본모드 설정
+        SharedPreferences.Editor editor = sharedPreferences.edit(); //sharedPreferences를 제어할 editor를 선언
+        editor.putString(key, value); // key,value 형식으로 저장
+        editor.commit();    //최종 커밋. 커밋을 해야 저장이 된다.
+    }
+
+    public String getPref(String key) {
+        // context = getApplicationContext();
+        SharedPreferences sharedPreferences = getSharedPreferences("test", MODE_PRIVATE);    // test 이름의 기본모드 설정, 만약 test key값이 있다면 해당 값을 불러옴.
+        String value = sharedPreferences.getString(key, "null");
+        return value;
+    }
+
+    public Location getRandomLatLng(Location location, int radius) {
         double x0 = location.getLatitude();
         double y0 = location.getLongitude();
 
@@ -132,7 +182,6 @@ public class ActivityMap extends AppCompatActivity
         double foundLatitude = new_x + x0;
         double foundLongitude = y + y0;
         LatLng randomLatLng = new LatLng(foundLatitude, foundLongitude);
-        randomPoints.add(randomLatLng);
         Location l1 = new Location("");
         l1.setLatitude(randomLatLng.latitude);
         l1.setLongitude(randomLatLng.longitude);
@@ -152,7 +201,7 @@ public class ActivityMap extends AppCompatActivity
             googleMap.addMarker(new MarkerOptions()
                     .position(new LatLng(frogLocation.getLatitude(), frogLocation.getLongitude()))
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_frog))
-                    .title(userLocation.distanceTo(frogLocation)+"m")
+                    .title(userLocation.distanceTo(frogLocation) + "m")
             );
             Log.i("loda", frogLocation.getLatitude() + "\n" + frogLocation.getLongitude());
         }
@@ -173,16 +222,16 @@ public class ActivityMap extends AppCompatActivity
 
     public Location getCurrentUserLocation() {
         Location currentLocation = null;
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            currentLocation = null;
-        }
-        locationManager.requestLocationUpdates(bestProvider,500, 1,locationListener);
+
         if (locationManager.isProviderEnabled("gps")) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "GPS 기능을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
             currentLocation = locationManager.getLastKnownLocation("gps");
         }else if(locationManager.isProviderEnabled("network")){
             currentLocation = locationManager.getLastKnownLocation("network");
         }
-
         if (currentLocation == null){
             Toast.makeText(this, "위치정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
         }else{
