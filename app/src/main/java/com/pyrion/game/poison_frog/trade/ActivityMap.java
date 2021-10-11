@@ -119,6 +119,7 @@ public class ActivityMap extends AppCompatActivity
             if(diffHours>24){
                 pref();
             }
+
             //todo 기존 DB의 개구리 사용
             Type doubleType = new TypeToken<double[]>(){}.getType();
             for (int index = 0; index < 5; index++) {
@@ -135,6 +136,7 @@ public class ActivityMap extends AppCompatActivity
     }
 
     public void pref(){
+        //새 개구리 DB 만들기
         for (int index = 0; index < 5; index++) {
             Location randomLocation = getRandomLatLng(userLocation, 100);
             roadFrogs.add( randomLocation );
