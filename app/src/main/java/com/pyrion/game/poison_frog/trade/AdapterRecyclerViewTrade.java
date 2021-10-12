@@ -61,18 +61,24 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                 Intent nfcIntent;
                 OneFrogSet currentFrogSet = oneFrogSetList.get(0);
                 if(currentFrogSet.getFrogState() == Frog.STATE_SOLD){
-                    //read
-                    //NFC 어디냐
-                    nfcIntent = new Intent(context, kotlin_nfc_read.class);
+//                    //<<<<<<<<<<<<NFC read>>>>
+//                    //NFC 어디냐
+//                    nfcIntent = new Intent(context, kotlin_nfc_read.class);
+
+                    Toast.makeText(context, "공유할 개구리가 없습니다.", Toast.LENGTH_SHORT).show();
+                    return;
                 }else{
                     if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
                         //운동중이던 개구리 그냥 운동 캔슬해버리기
                         cancelExercise(currentFrogSet);
                     }
-                    //write
-                    nfcIntent = new Intent(context, kotlin_nfc_write.class);
+//                    //<<<<<<<<NFC write>>>>>>>>>>>>>>
+//                    nfcIntent = new Intent(context, kotlin_nfc_write.class);
+
+                    nfcIntent = new Intent(context, ActivityServerSend.class);
                 }
-                nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc()+"");
+                nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc());
+                nfcIntent.putExtra("frog_key", currentFrogSet.getFrogKey());
                 context.startActivity(nfcIntent);
             }
         });

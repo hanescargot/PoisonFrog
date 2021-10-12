@@ -18,4 +18,29 @@
         android:layout_height="160dp"
         android:src="@drawable/main_frog_jelly"
         android:layout_centerInParent="true"/>
+
+    <FrameLayout
+        android:visibility="invisible"
+        android:id="@+id/iv_nofrog"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fly_wood_notice"
+            />
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10m 이내에 개구리가 없어요!"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+    </FrameLayout>
+
 </RelativeLayout>

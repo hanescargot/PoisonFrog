@@ -36,6 +36,7 @@ import java.util.Random;
 
 public class ActivityCamera extends AppCompatActivity {
     ImageView ivFrog;
+    View ivNoFrog;
 
     View alertNewFrogName;
     AlertDialog frogNameAlertDialog;
@@ -51,6 +52,7 @@ public class ActivityCamera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         ivFrog = findViewById(R.id.iv);
+        ivNoFrog = findViewById(R.id.iv_nofrog);
 
         locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         inflater = getLayoutInflater();
@@ -62,7 +64,7 @@ public class ActivityCamera extends AppCompatActivity {
         }else{
             //todo 없으면 근처에 개구리가 없네요라는 알림 표시
             ivFrog.setVisibility(View.INVISIBLE);
-
+            ivNoFrog.setVisibility(View.VISIBLE);
         }
 
 
@@ -112,7 +114,6 @@ public class ActivityCamera extends AppCompatActivity {
         }
         if (currentLocation == null){
             Toast.makeText(this, "위치 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-            Log.i("hhh", "위치정보 못찾음");
             Log.i("hhh", "위치정보 못찾음");
             finish();
         }else{
