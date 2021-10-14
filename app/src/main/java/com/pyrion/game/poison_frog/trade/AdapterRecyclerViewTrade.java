@@ -1,5 +1,6 @@
 package com.pyrion.game.poison_frog.trade;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -7,10 +8,12 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +34,8 @@ import com.pyrion.game.poison_frog.data.Frog;
 import com.pyrion.game.poison_frog.data.OneFrogSet;
 import com.pyrion.game.poison_frog.kotlin_nfc_read;
 import com.pyrion.game.poison_frog.kotlin_nfc_write;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -74,12 +79,25 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                     }
 //                    //<<<<<<<<NFC write>>>>>>>>>>>>>>
 //                    nfcIntent = new Intent(context, kotlin_nfc_write.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        int checkResult = ((Activity)context).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+                        if (checkResult == PackageManager.PERMISSION_DENIED) {
+                            String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+                            ((Activity)context).requestPermissions(permissions, 0);
+                            Toast.makeText(context, "위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
+                        }else{
+                            // 위치 정보 제공에 동의한 경우
+                            ((Activity)context).getIntent().putExtra("fragment_navigation", 2);
+                            nfcIntent = new Intent(((Activity)context), ActivityServerSend.class);
+                            nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc());
+                            nfcIntent.putExtra("frog_key", currentFrogSet.getFrogKey());
+                            context.startActivity(nfcIntent);
+                        }
+                    }
 
-                    nfcIntent = new Intent(context, ActivityServerSend.class);
+
                 }
-                nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc());
-                nfcIntent.putExtra("frog_key", currentFrogSet.getFrogKey());
-                context.startActivity(nfcIntent);
+
             }
         });
 

@@ -78,6 +78,7 @@ public class ActivityCamera extends AppCompatActivity {
         Location userLocation = getCurrentUserLocation();
         for(int index =0; index<5; index++){
             roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
+            Toast.makeText(this, ""+getPref("locations"+index), Toast.LENGTH_SHORT).show();
             Location frogLocation = new Location("");
 
             if(roadFrogLatLng[0]!=-1) {
