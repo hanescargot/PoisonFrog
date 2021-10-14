@@ -16,7 +16,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -33,6 +35,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
@@ -40,6 +43,8 @@ import com.google.gson.GsonBuilder;
 import com.pyrion.game.poison_frog.R;
 import com.pyrion.game.poison_frog.data.Frog;
 import com.pyrion.game.poison_frog.data.OneFrogSet;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +57,7 @@ public class ActivityServerSend extends AppCompatActivity {
     String sharedFrogLatLngString;
     String sharedFrogSetString;
     String firebaseKey;
-    Map<String, Object> user;
+    int nextFrogKey;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,66 +66,64 @@ public class ActivityServerSend extends AppCompatActivity {
 
         ImageView iv = findViewById(R.id.iv);
 
-//        Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.frog_finder);
-//        iv.startAnimation(animation_logo);
+        Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.frog_finder);
+        iv.startAnimation(animation_logo);
 
 
-//        Intent intent = getIntent();
-//        int frogSpecies = intent.getIntExtra("frog_src", Frog.SPECIES_BASIC);
-//        int currentFrogKey = intent.getIntExtra("frog_key", 0);
-//        iv.setImageResource(frogSpecies);
-//
-//        Location currentUserLocation = getCurrentUserLocation();
-//
-//        Toast.makeText(this, "" + currentUserLocation.getLatitude(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(this, "" + currentFrogKey, Toast.LENGTH_SHORT).show();
+        Intent intent = getIntent();
+        int frogSpecies = intent.getIntExtra("frog_src", Frog.SPECIES_BASIC);
+        int currentFrogKey = intent.getIntExtra("frog_key", 0);
+        nextFrogKey = intent.getIntExtra("next_frog_key", 0);
+
+        iv.setImageResource(frogSpecies);
 
 
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//        double[] sharedFrogLatLng = new double[2];
-//        sharedFrogLatLng[0] = currentUserLocation.getLatitude();
-//        sharedFrogLatLng[1] = currentUserLocation.getLongitude();
-//        sharedFrogLatLngString = gson.toJson(sharedFrogLatLng);
-//        sharedFrogSetString = gson.toJson(getUserFrogData(currentFrogKey));
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        double[] sharedFrogLatLng = new double[2];
+        Location currentUserLocation = getCurrentUserLocation();
+        sharedFrogLatLng[0] = currentUserLocation.getLatitude();
+        sharedFrogLatLng[1] = currentUserLocation.getLongitude();
+        sharedFrogLatLngString = gson.toJson(sharedFrogLatLng);
+        sharedFrogSetString = gson.toJson(getUserFrogData(currentFrogKey));
 //        //보내야 할 데이터 : oneFrogSet , currentUserData   :  종료할 때 공유중인 데이터 삭제하고 끝
 //        //답장 받으면 데이터 삭제하고 끝 // 내 개구리 DB에서 삭제하기.
-//        //TODO 서버에 DB만들기
 //        //firebase DB관리자 객체 소환
 //        //DB
+        Map<String, Object> user = new HashMap<>();
+        user.put("frog_set", sharedFrogSetString);
+        user.put("location", sharedFrogLatLngString);
+        firebaseKey = sharedFrogLatLngString+currentFrogKey;
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("road_frogs").document(firebaseKey)
+                .set(user);
 
-        user = new HashMap<>();
-        user.put("userLatLng", "AA");
-        user.put("oneFrogSet", "BB");
+//        todo 누가 개구리 가져가면 (서버에 공유되던 데이터가 없어 진다면 )개구리 DB 삭제하고 finish()
+       // 변경사항 수신 대기
+        final DocumentReference docRef = firebaseFirestore.collection("road_frogs").document(firebaseKey);
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                   //listen fail
+                    Log.i("gg", (snapshot.getData()+"error!!!"+e));
+                    return;
+                }
 
-        firebaseKey = ""+1;
-        firebaseFirestore.collection("frog").document("key").set(user); //Todo Error
+                if (snapshot != null && snapshot.exists()) {
+//                    Toast.makeText(ActivityServerSend.this, ""+snapshot.getData(), Toast.LENGTH_SHORT).show();
+                }
 
-////        todo 누가 개구리 가져가면 (서버에 공유되던 데이터가 없어 진다면 )개구리 DB 삭제하고 finish()
-//       // 변경사항 수신 대기
-//        final DocumentReference docRef = firebaseFirestore.collection("shared_frogs").document(firebaseKey);
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot snapshot,
-//                                @Nullable FirebaseFirestoreException e) {
-//                if (e != null) {
-//                   //listen fail
-//                    return;
-//                }
-//
-//                if (snapshot != null && snapshot.exists()) {
-////                    Toast.makeText(ActivityServerSend.this, ""+snapshot.getData(), Toast.LENGTH_SHORT).show();
-//
-//                }
-//                else {
-////                    Log.d(TAG, "Current data: null");
-////                    누가 가져가고 데이터 지움.
-//
-////                    delFrogDB(currentFrogKey);
-////                    finish();
-//                }
-//            }
-//        });
+                else {
+//                  Log.d(TAG, "Current data: null");
+                    Toast.makeText(ActivityServerSend.this, "개구리 전달 완료", Toast.LENGTH_SHORT).show();
+                    delFrogDB(currentFrogKey);
+                    Log.i("gg", "가져감");
+                    finish();
+
+                }
+            }
+        });
     }
 
 
@@ -149,25 +152,23 @@ public class ActivityServerSend extends AppCompatActivity {
         return null;
     }
 
-
-
     @Override
     public void finish() {
-//        //서버로에 공유되던 정보 삭제
-//        firebaseFirestore.collection("shared_frogs").document(firebaseKey)
-//                .delete()
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.i("jjj", "DocumentSnapshot successfully deleted!");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.i("jjj", "Error deleting document", e);
-//                    }
-//                });
+        //서버로에 공유되던 정보 삭제
+        firebaseFirestore.collection("shared_frogs").document(firebaseKey)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("jjj", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i("jjj", "Error deleting document", e);
+                    }
+                });
         super.finish();
     }
 
@@ -176,6 +177,13 @@ public class ActivityServerSend extends AppCompatActivity {
         SQLiteDatabase database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
         database_frog.execSQL("DELETE FROM frogs_data_set "+
                 "WHERE frog_key =" +"'"+currentFrogKey+"'");
+
+        SQLiteDatabase database_user = openOrCreateDatabase("userDB.db", MODE_PRIVATE, null);
+        Cursor cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);
+        cursor_user.moveToNext();
+        database_user.execSQL("UPDATE user_data_set SET"
+                +" selected_frog_key = " + nextFrogKey
+        );
     }
 
 

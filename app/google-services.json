@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "242158036847",
-    "project_id": "poisonfrog",
-    "storage_bucket": "poisonfrog.appspot.com"
+    "project_number": "756872849315",
+    "project_id": "android-1bf51",
+    "storage_bucket": "android-1bf51.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:242158036847:android:3a701f9a41e1d97495aa9a",
+        "mobilesdk_app_id": "1:756872849315:android:267031e38b2cbad7c7dc16",
         "android_client_info": {
           "package_name": "com.pyrion.game.poison_frog"
         }
       },
       "oauth_client": [
         {
-          "client_id": "242158036847-8e88lc8hhf7v4no8m2rhhuu28rtvh20d.apps.googleusercontent.com",
+          "client_id": "756872849315-93ldpuutg6mgjt1ek1d6hpc0ivaki3n0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgLQYLDDD9jdZyOXVJnrzqg7TReQ0ubuU"
+          "current_key": "AIzaSyDHV2YUXFRjPpu0ljJ7MKeleU-yGPdno_Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "242158036847-8e88lc8hhf7v4no8m2rhhuu28rtvh20d.apps.googleusercontent.com",
+              "client_id": "756872849315-93ldpuutg6mgjt1ek1d6hpc0ivaki3n0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

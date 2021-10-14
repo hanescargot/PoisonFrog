@@ -72,30 +72,41 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
                     Toast.makeText(context, "공유할 개구리가 없습니다.", Toast.LENGTH_SHORT).show();
                     return;
-                }else{
-                    if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
-                        //운동중이던 개구리 그냥 운동 캔슬해버리기
-                        cancelExercise(currentFrogSet);
+                }
+                int aliveFrogNum = 0;
+                for (OneFrogSet oneFrogSet : oneFrogSetList){
+                    if(oneFrogSet.getFrogState() == Frog.STATE_ALIVE){
+                        aliveFrogNum += 1;
                     }
+                }
+                if(aliveFrogNum<3){
+                    //모든개구리를 확인 했을 때 상태가 살아있는게 2마리 이상이어야함
+                     Toast.makeText(context, "마지막 개구리는 공유할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+//이제 개구리 공유하는 과정
+                if(currentFrogSet.getFrogState() == Frog.STATE_EXERCISE){
+                    //운동중이던 개구리 그냥 운동 캔슬해버리기
+                    cancelExercise(currentFrogSet);
+                }
 //                    //<<<<<<<<NFC write>>>>>>>>>>>>>>
 //                    nfcIntent = new Intent(context, kotlin_nfc_write.class);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        int checkResult = ((Activity)context).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-                        if (checkResult == PackageManager.PERMISSION_DENIED) {
-                            String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
-                            ((Activity)context).requestPermissions(permissions, 0);
-                            Toast.makeText(context, "위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
-                        }else{
-                            // 위치 정보 제공에 동의한 경우
-                            ((Activity)context).getIntent().putExtra("fragment_navigation", 2);
-                            nfcIntent = new Intent(((Activity)context), ActivityServerSend.class);
-                            nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc());
-                            nfcIntent.putExtra("frog_key", currentFrogSet.getFrogKey());
-                            context.startActivity(nfcIntent);
-                        }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    int checkResult = ((Activity)context).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+                    if (checkResult == PackageManager.PERMISSION_DENIED) {
+                        String[] permissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
+                        ((Activity)context).requestPermissions(permissions, 0);
+                        Toast.makeText(context, "위치 권한을 허용해 주세요.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        // 위치 정보 제공에 동의한 경우
+                        ((Activity)context).getIntent().putExtra("fragment_navigation", 2);
+                        nfcIntent = new Intent(context, ActivityServerSend.class);//
+                        nfcIntent.putExtra("frog_src", currentFrogSet.getFrogSrc());
+                        nfcIntent.putExtra("frog_key", currentFrogSet.getFrogKey());
+                        nfcIntent.putExtra("next_frog_key", oneFrogSetList.get(1).getFrogKey());
+                        context.startActivity(nfcIntent);
                     }
-
-
                 }
 
             }
@@ -258,11 +269,16 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
                 public void onClick(View v) {
                     OneFrogSet selectedFrogSet = oneFrogSetList.get(getLayoutPosition());
 
-                    if(oneFrogSetList.size()<3){
-                        //Only one house left
-                        //can not sell the house
-                        //add 다이어로그 집을 팔수 없습니다.
+                    int aliveFrogNum = 0;
+                    for (OneFrogSet oneFrogSet : oneFrogSetList){
+                        if(oneFrogSet.getFrogState() == Frog.STATE_ALIVE){
+                            aliveFrogNum += 1;
+                        }
+                    }
+                    if(aliveFrogNum<3){
+                        //모든개구리를 확인 했을 때 상태가 살아있는게 2마리 이상이어야함
                         showRefuseDialogDialog("마지막 집 판매 불가능");
+                        return;
                     }else{
                         showHouseSellAlertDialog( getLayoutPosition() );
                     }
