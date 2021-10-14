@@ -78,7 +78,6 @@ public class ActivityCamera extends AppCompatActivity {
         Location userLocation = getCurrentUserLocation();
         for(int index =0; index<5; index++){
             roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
-            Toast.makeText(this, ""+getPref("locations"+index), Toast.LENGTH_SHORT).show();
             Location frogLocation = new Location("");
 
             if(roadFrogLatLng[0]!=-1) {
@@ -135,14 +134,19 @@ public class ActivityCamera extends AppCompatActivity {
                 //이름짓기 얼럿
                 showNewFrogNameAlert();
                 ivFrog.setVisibility(View.GONE);
-                //todo 데이터에서 개구리 없애기
-                roadFrogLatLng[0] = (double)-1;
-                roadFrogLatLng[1] = (double)-1;
-                setPref("locations" + minDistanceIndex, gson.toJson(roadFrogLatLng));;
             }
         });
     }
 
+    @Override
+    public void finish() {
+        //todd shared preference 데이터에서 개구리 없애기
+//        잡던 안잡던 사라져야함 .
+        roadFrogLatLng[0] = (double)-1;
+        roadFrogLatLng[1] = (double)-1;
+        setPref("locations" + minDistanceIndex, gson.toJson(roadFrogLatLng));;
+        super.finish();
+    }
 
     public void setPref(String key, String value) {
         SharedPreferences sharedPreferences = getSharedPreferences("test", MODE_PRIVATE);    // test 이름의 기본모드 설정

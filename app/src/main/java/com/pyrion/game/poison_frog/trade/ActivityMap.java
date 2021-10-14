@@ -18,6 +18,11 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -59,7 +64,6 @@ public class ActivityMap extends AppCompatActivity
     LocationManager locationManager;
     Criteria criteria;
     Location userLocation;
-    LatLng userLatLng;
     ArrayList<Location> roadFrogs = new ArrayList<>();
     String bestProvider;
     Gson gson;
@@ -202,6 +206,21 @@ public class ActivityMap extends AppCompatActivity
         userLocation = getCurrentUserLocation();
         Log.i("hhh", "값 가져옴");
         //todo 서버에서 사용자들의 개구리 가져오기
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("road_frogs")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                        }
+                    }
+                });
+
 //        37.560797, 127.034571
         //랜덤 생성된 개구리 표시
         for (Location frogLocation : roadFrogs) {

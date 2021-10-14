@@ -35,6 +35,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -53,11 +54,15 @@ public class ActivityServerSend extends AppCompatActivity {
 
     LocationManager locationManager;
     FirebaseFirestore firebaseFirestore;
-
+    DocumentReference docRef;
     String sharedFrogLatLngString;
     String sharedFrogSetString;
     String firebaseKey;
     int nextFrogKey;
+    int currentFrogKey;
+    EventListener<DocumentSnapshot> eventListener;
+
+    ListenerRegistration listenerRegistration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,14 +74,12 @@ public class ActivityServerSend extends AppCompatActivity {
         Animation animation_logo = AnimationUtils.loadAnimation(this, R.anim.frog_finder);
         iv.startAnimation(animation_logo);
 
-
         Intent intent = getIntent();
         int frogSpecies = intent.getIntExtra("frog_src", Frog.SPECIES_BASIC);
-        int currentFrogKey = intent.getIntExtra("frog_key", 0);
+        currentFrogKey = intent.getIntExtra("frog_key", 0);
         nextFrogKey = intent.getIntExtra("next_frog_key", 0);
 
         iv.setImageResource(frogSpecies);
-
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         double[] sharedFrogLatLng = new double[2];
@@ -99,13 +102,13 @@ public class ActivityServerSend extends AppCompatActivity {
 
 //        todo 누가 개구리 가져가면 (서버에 공유되던 데이터가 없어 진다면 )개구리 DB 삭제하고 finish()
        // 변경사항 수신 대기
-        final DocumentReference docRef = firebaseFirestore.collection("road_frogs").document(firebaseKey);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
+        eventListener = new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot snapshot,
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
-                   //listen fail
+                    //listen fail
                     Log.i("gg", (snapshot.getData()+"error!!!"+e));
                     return;
                 }
@@ -116,17 +119,25 @@ public class ActivityServerSend extends AppCompatActivity {
 
                 else {
 //                  Log.d(TAG, "Current data: null");
-                    Toast.makeText(ActivityServerSend.this, "개구리 전달 완료", Toast.LENGTH_SHORT).show();
-                    delFrogDB(currentFrogKey);
-                    Log.i("gg", "가져감");
-                    finish();
-
+                    if(noFrog){
+                        Toast.makeText(ActivityServerSend.this, "개구리 전달 완료", Toast.LENGTH_SHORT).show();
+                        Log.i("gg", "가져감");
+                        //개구리 공유되고 없으면 db삭제
+                        delFrogDB(currentFrogKey);
+                        noFrog = true;
+                        finish();
+                    }
                 }
             }
-        });
+        };
+        docRef = firebaseFirestore.collection("road_frogs").document(firebaseKey);
+        if (listenerRegistration == null ) {
+            listenerRegistration = docRef.addSnapshotListener(eventListener);
+        }
     }
 
 
+    boolean noFrog = false;
     public Location getCurrentUserLocation() {
         Location currentLocation = null;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -153,25 +164,32 @@ public class ActivityServerSend extends AppCompatActivity {
     }
 
     @Override
-    public void finish() {
-        //서버로에 공유되던 정보 삭제
-        firebaseFirestore.collection("shared_frogs").document(firebaseKey)
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i("jjj", "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.i("jjj", "Error deleting document", e);
-                    }
-                });
+    public void finish( ) {
+        if (listenerRegistration != null) {
+            listenerRegistration.remove();
+        }
+        if(!noFrog) {
+            //공유되어서 서버 DB 사라지지 않고 공유안돼서 남아있을 때 서버에 공유되던 정보 삭제
+            Log.i("gg", "삭제함");
+            firebaseFirestore.collection("road_frogs").document(firebaseKey)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("jjj", "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("jjj", "Error deleting document", e);
+                        }
+                    });
+
+        }
+
         super.finish();
     }
-
 
     public void delFrogDB(int currentFrogKey){
         SQLiteDatabase database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);

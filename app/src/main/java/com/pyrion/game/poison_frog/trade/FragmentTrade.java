@@ -96,10 +96,7 @@ public class FragmentTrade extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //         허용안하면 샤용할 수 없도록 하기 앱 설치할 때 부터
-        Log.i("camera", "start");
-        Toast.makeText(getActivity(), "start", Toast.LENGTH_SHORT).show();
         switch (requestCode){
-
             case 0:
                 if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     // 위치 정보 제공에 동의한 경우

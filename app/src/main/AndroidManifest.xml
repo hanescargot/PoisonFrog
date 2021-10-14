@@ -3,7 +3,7 @@
     package="com.pyrion.game.poison_frog">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -63,7 +63,7 @@
         <!-- TODO 출시 하기전에 출시용 인증서로 바꾸기 꼭 . -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCgLQYLDDD9jdZyOXVJnrzqg7TReQ0ubuU" />
+            android:value="AIzaSyA-yfBigBXD-olOgQRdDrxxrEXS50qLJ0I" />
     </application>
 
 </manifest>
