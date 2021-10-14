@@ -130,7 +130,7 @@ public class ActivityServerSend extends AppCompatActivity {
             }
         };
         docRef = firebaseFirestore.collection("road_frogs").document(firebaseKey);
-        docRef.addSnapshotListener(eventListener);
+        listenerRegistration = docRef.addSnapshotListener(eventListener);
     }
 
 
@@ -162,7 +162,7 @@ public class ActivityServerSend extends AppCompatActivity {
 
     @Override
     public void finish( ) {
-        docRef.delete();
+        listenerRegistration.remove();
         if(!noFrog) {
             //공유되어서 서버 DB 사라지지 않고 공유안돼서 남아있을 때 서버에 공유되던 정보 삭제
             Log.i("gg", "삭제함");
