@@ -1,5 +1,6 @@
 package com.pyrion.game.poison_frog.trade;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -22,16 +23,25 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.pyrion.game.poison_frog.R;
 import com.pyrion.game.poison_frog.center.FragmentCenter;
 import com.pyrion.game.poison_frog.data.Frog;
+import com.pyrion.game.poison_frog.data.OneFrogSet;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class ActivityCamera extends AppCompatActivity {
@@ -47,6 +57,9 @@ public class ActivityCamera extends AppCompatActivity {
     Gson gson;
     Float minDistance= null; //key_index , distance
     int minDistanceIndex= -1;
+
+    FirebaseFirestore firebaseFirestore;
+    boolean isFromServer = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +67,15 @@ public class ActivityCamera extends AppCompatActivity {
         ivFrog = findViewById(R.id.iv);
         ivNoFrog = findViewById(R.id.iv_nofrog);
 
+
         locationManager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         inflater = getLayoutInflater();
         gson = new GsonBuilder().setPrettyPrinting().create();
-        ///todo 가까운 개구리가 있는지 체크
-        if(isNearFrog()){
-            //있으면 개구리 생성
-            setRandomFrogSpecies();
-        }else{
-            //todo 없으면 근처에 개구리가 없네요라는 알림 표시
-            ivFrog.setVisibility(View.INVISIBLE);
-            ivNoFrog.setVisibility(View.VISIBLE);
-        }
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        setFirebaseDB();
+
+
+
 
 
     }
@@ -92,6 +102,31 @@ public class ActivityCamera extends AppCompatActivity {
         }
         if(minDistanceIndex != -1 && minDistance!=null && minDistance<10){
             //10미터 이내에 개구리가 있다.
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    OneFrogSet nearOneFrogSet = new OneFrogSet();
+    public boolean isNearServerFrog(){
+        //가장 가까운 개구리만 보여줌
+        Location userLocation = getCurrentUserLocation();
+        for(int index = 0; index< serverRoadFrogLocations.size(); index++){
+            Location serverFrogLocation = new Location("");
+            serverFrogLocation.setLatitude(serverRoadFrogsLatLng[0]);
+            serverFrogLocation.setLongitude(serverRoadFrogsLatLng[1]);
+
+            if(minDistance==null || minDistance>userLocation.distanceTo(serverFrogLocation)){
+                minDistanceIndex=index;
+                minDistance=userLocation.distanceTo(serverFrogLocation);
+            }
+
+        }
+
+        if(minDistanceIndex != -1 && minDistance!=null && minDistance<10){
+            //10미터 이내에 개구리가 있다.
+            nearOneFrogSet = serverRoadOneFrogSets.get(minDistanceIndex);
             return true;
         }else{
             return false;
@@ -131,20 +166,42 @@ public class ActivityCamera extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(ActivityCamera.this, Frog.getStringSpecies(newFrogType)+" 포획 성공", Toast.LENGTH_SHORT).show();
-                //이름짓기 얼럿
-                showNewFrogNameAlert();
-                ivFrog.setVisibility(View.GONE);
+
+
+                    //이름짓기 얼럿
+                    showNewFrogNameAlert();
+                    ivFrog.setVisibility(View.GONE);
+
             }
         });
     }
 
     @Override
     public void finish() {
-        //todd shared preference 데이터에서 개구리 없애기
+        if(isFromServer){
+            //todo 서버로부터 지우기
+            firebaseFirestore.collection("road_frogs").document(serverKeyList.get(minDistanceIndex))
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("jjj", "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("jjj", "Error deleting document", e);
+                        }
+                    });
+        }else{
+            //todd shared preference 데이터에서 개구리 없애기
 //        잡던 안잡던 사라져야함 .
-        roadFrogLatLng[0] = (double)-1;
-        roadFrogLatLng[1] = (double)-1;
-        setPref("locations" + minDistanceIndex, gson.toJson(roadFrogLatLng));;
+            roadFrogLatLng[0] = (double)-1;
+            roadFrogLatLng[1] = (double)-1;
+            setPref("locations" + minDistanceIndex, gson.toJson(roadFrogLatLng));;
+        }
+
         super.finish();
     }
 
@@ -209,5 +266,84 @@ public class ActivityCamera extends AppCompatActivity {
                 + Frog.SIZE_DEFAULT + "','"
                 + Frog.POWER_DEFAULT + "')"
         );
+    }
+
+    void addNewServerFrogDB(){
+        SQLiteDatabase database_frog;
+        database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
+        database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
+                + Frog.HOUSE_TYPE_LENT + "','"
+                + nearOneFrogSet.getCreatorName() + "','"
+                + nearOneFrogSet.getFrogName() + "','"
+                + nearOneFrogSet.getFrogState() + "','"
+                + nearOneFrogSet.getFrogSpecies() + "','"
+                + nearOneFrogSet.getFrogSize() + "','"
+                + nearOneFrogSet.getFrogPower() + "')"
+        );
+    }
+
+    ArrayList<Location> serverRoadFrogLocations = new ArrayList<>();
+    ArrayList<String> serverKeyList = new ArrayList<>();
+    double[] serverRoadFrogsLatLng = new double[2];
+
+    ArrayList<OneFrogSet> serverRoadOneFrogSets = new ArrayList<>();
+    public void setFirebaseDB(){
+        //todo 서버에서 사용자들의 개구리 가져오기
+
+        firebaseFirestore.collection("road_frogs")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Map<String, Object> user = new HashMap<>();
+                            Location location = new Location("");
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.getData();
+//                                location[0]   oneFrogSet[1] 여긴 지도여서 location 만 필요함
+
+                                serverKeyList.add( document.getId() );
+                                String locationString = (String)user.get("location");
+                                serverRoadFrogsLatLng =  gson.fromJson(locationString, double[].class);
+                                location.setLatitude(serverRoadFrogsLatLng[0]);
+                                location.setLongitude(serverRoadFrogsLatLng[1]);
+                                serverRoadFrogLocations.add(location);
+                                Log.i("!!import", locationString);
+
+                                String frogSetString = (String)user.get("frog_set");
+                                serverRoadOneFrogSets.add(gson.fromJson(frogSetString, OneFrogSet.class));
+
+                            }
+
+
+                            ///서버에가까운 개구리가 있는지 체크
+                            if(isNearServerFrog()){
+                                ivFrog.setImageResource(nearOneFrogSet.getFrogSrc());
+                                isFromServer = true;
+
+                                ivFrog.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(ActivityCamera.this, nearOneFrogSet.getFrogSpecies()+" 포획 성공", Toast.LENGTH_SHORT).show();
+                                        //서버 정보대로 DB 추가
+                                        addNewServerFrogDB();
+                                        finish();
+                                    }
+                                });
+                            }else if(isNearFrog()){
+                                //있으면 개구리 생성
+                                setRandomFrogSpecies();
+                            }else{
+                                //todo 없으면 근처에 개구리가 없네요라는 알림 표시
+                                ivFrog.setVisibility(View.INVISIBLE);
+                                ivNoFrog.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                        }
+                    }
+                });
+
+
     }
 }

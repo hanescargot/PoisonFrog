@@ -46,7 +46,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.zip.Inflater;
 
@@ -65,6 +67,7 @@ public class ActivityMap extends AppCompatActivity
     Criteria criteria;
     Location userLocation;
     ArrayList<Location> roadFrogs = new ArrayList<>();
+    ArrayList<Location> serverRoadFrogs = new ArrayList<>();
     String bestProvider;
     Gson gson;
 
@@ -107,9 +110,10 @@ public class ActivityMap extends AppCompatActivity
     }//create
 
     double[] roadFrogLatLng = new double[2];
+    double[] serverRoadFrogsLatLng = new double[2];
 
     private void setRoadFrogList() {
-//    todo 시간 보고 시간 지났으면 개구리 위치 전부 바꾸기
+//    시간 보고 시간 지났으면 개구리 위치 전부 바꾸기
 
         //만들기 및 체크
         long currentTime = System.currentTimeMillis();
@@ -123,7 +127,7 @@ public class ActivityMap extends AppCompatActivity
                 pref();
             }
 
-            //todo 기존 DB의 개구리 사용
+            //기존 DB의 개구리 사용
             Type doubleType = new TypeToken<double[]>() {
             }.getType();
             for (int index = 0; index < 5; index++) {
@@ -136,7 +140,50 @@ public class ActivityMap extends AppCompatActivity
                     roadFrogs.add(location);
                 }
             }
+
+            //서버의 근처 개구리 리스트 serverRoadFrogs 만들기
+            setFirebaseDB();
         }
+
+    }
+
+    public void setFirebaseDB(){
+        //todo 서버에서 사용자들의 개구리 가져오기
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("road_frogs")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Map<String, Object> user = new HashMap<>();
+                            Location location = new Location("");
+
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                user = document.getData();
+//                                location[0]   oneFrogSet[1] 여긴 지도여서 location 만 필요함
+                                String locationString = (String)user.get("location");
+                                serverRoadFrogsLatLng =  gson.fromJson(locationString, double[].class);
+                                location.setLatitude(serverRoadFrogsLatLng[0]);
+                                location.setLongitude(serverRoadFrogsLatLng[1]);
+                                serverRoadFrogs.add(location);
+                                Log.i("!!import", locationString);
+
+                                //todo 서버에서 가져온 개구리 표시
+                                for (Location frogLocation : serverRoadFrogs) {
+                                    googleMap.addMarker(new MarkerOptions()
+                                            .position(new LatLng(frogLocation.getLatitude(), frogLocation.getLongitude()))
+                                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_frog))
+                                            .title(userLocation.distanceTo(frogLocation) + "m")
+                                    );
+                                    Log.i("loda", frogLocation.getLatitude() + "\n" + frogLocation.getLongitude());
+                                }
+                            }
+                        } else {
+                        }
+                    }
+                });
+
 
     }
 
@@ -205,21 +252,7 @@ public class ActivityMap extends AppCompatActivity
         this.googleMap = googleMap;
         userLocation = getCurrentUserLocation();
         Log.i("hhh", "값 가져옴");
-        //todo 서버에서 사용자들의 개구리 가져오기
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("road_frogs")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG", document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                        }
-                    }
-                });
+
 
 //        37.560797, 127.034571
         //랜덤 생성된 개구리 표시
@@ -231,6 +264,9 @@ public class ActivityMap extends AppCompatActivity
             );
             Log.i("loda", frogLocation.getLatitude() + "\n" + frogLocation.getLongitude());
         }
+
+
+
 //        높을수록 확대:15 default
         googleMap.setMinZoomPreference(10.0f);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), 15));

@@ -115,25 +115,22 @@ public class ActivityServerSend extends AppCompatActivity {
 
                 if (snapshot != null && snapshot.exists()) {
 //                    Toast.makeText(ActivityServerSend.this, ""+snapshot.getData(), Toast.LENGTH_SHORT).show();
+                    Log.i("gggg", "데이터 있음");
                 }
 
                 else {
 //                  Log.d(TAG, "Current data: null");
-                    if(noFrog){
-                        Toast.makeText(ActivityServerSend.this, "개구리 전달 완료", Toast.LENGTH_SHORT).show();
-                        Log.i("gg", "가져감");
-                        //개구리 공유되고 없으면 db삭제
-                        delFrogDB(currentFrogKey);
-                        noFrog = true;
-                        finish();
-                    }
+                    Toast.makeText(ActivityServerSend.this, "개구리 전달 완료", Toast.LENGTH_SHORT).show();
+                    Log.i("gggg", "가져감");
+                    //개구리 공유되고 없으면 db삭제
+                    delFrogDB(currentFrogKey);
+                    noFrog = true;
+                    finish();
                 }
             }
         };
         docRef = firebaseFirestore.collection("road_frogs").document(firebaseKey);
-        if (listenerRegistration == null ) {
-            listenerRegistration = docRef.addSnapshotListener(eventListener);
-        }
+        docRef.addSnapshotListener(eventListener);
     }
 
 
@@ -165,9 +162,7 @@ public class ActivityServerSend extends AppCompatActivity {
 
     @Override
     public void finish( ) {
-        if (listenerRegistration != null) {
-            listenerRegistration.remove();
-        }
+        docRef.delete();
         if(!noFrog) {
             //공유되어서 서버 DB 사라지지 않고 공유안돼서 남아있을 때 서버에 공유되던 정보 삭제
             Log.i("gg", "삭제함");
