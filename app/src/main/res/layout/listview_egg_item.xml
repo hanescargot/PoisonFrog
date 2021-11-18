@@ -9,7 +9,7 @@
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:background="@color/purple_200"
+        android:background="@color/white"
         android:layout_height="wrap_content"
         android:text="붉은색 개구리알"
         android:layout_above="@+id/iv_item"
@@ -26,7 +26,8 @@
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:text="Free"
-        android:backgroundTint="@color/purple_200"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
         android:layout_below="@+id/iv_item"
         android:layout_centerHorizontal="true"/>
 

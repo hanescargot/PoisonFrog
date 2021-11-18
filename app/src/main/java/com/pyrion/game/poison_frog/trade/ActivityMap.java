@@ -13,6 +13,11 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -35,6 +40,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import android.location.Location;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -104,7 +110,6 @@ public class ActivityMap extends AppCompatActivity
 //            locationManager.requestLocationUpdates("network", 1000, 1, locationListener);
 //        }
 
-
         setRoadFrogList();
 
     }//create
@@ -120,13 +125,14 @@ public class ActivityMap extends AppCompatActivity
         if (getPref("time").equals("null")) {
             //새로 DB에 추가
             pref();
+            Log.i("newFrog", "t새로 만들기");
         } else {
             //데이터는 있지만 시간은 초과한 경우
             long diffHours = (currentTime - Long.parseLong(getPref("time"))) / (1000 * 60);
             if (diffHours > 24) {
                 pref();
             }
-
+            Log.i("newFrog", "t새로 안만듬");
             //기존 DB의 개구리 사용
             Type doubleType = new TypeToken<double[]>() {
             }.getType();
@@ -189,8 +195,12 @@ public class ActivityMap extends AppCompatActivity
 
     public void pref() {
         //새 개구리 DB 만들기
-        userLocation = getCurrentUserLocation();
-        Log.i("hhh", "값 가져옴");
+//        userLocation = getCurrentUserLocation();
+        requestMyLocation("makeNewFrogDB");
+    }
+
+    public void makeNewFrogDB(){
+        Log.i("newFrog", "make New FRog");
         for (int index = 0; index < 5; index++) {
             Location randomLocation = getRandomLatLng(userLocation, 100);
             roadFrogs.add(randomLocation);
@@ -198,9 +208,9 @@ public class ActivityMap extends AppCompatActivity
             roadFrogLatLng[1] = randomLocation.getLongitude();
             setPref("locations" + index, gson.toJson(roadFrogLatLng));
         }
-        ;
         long currentTime = System.currentTimeMillis();
         setPref("time", currentTime + "");
+
     }
 
     public void setPref(String key, String value) {
@@ -250,11 +260,18 @@ public class ActivityMap extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        userLocation = getCurrentUserLocation();
+//        userLocation = getCurrentUserLocation();
+        requestMyLocation("setMap");
         Log.i("hhh", "값 가져옴");
 
 
-//        37.560797, 127.034571
+
+
+
+
+    }
+    public void setGoogleMap(){
+        //        37.560797, 127.034571
         //랜덤 생성된 개구리 표시
         for (Location frogLocation : roadFrogs) {
             googleMap.addMarker(new MarkerOptions()
@@ -278,8 +295,6 @@ public class ActivityMap extends AppCompatActivity
             return;
         }
         googleMap.setMyLocationEnabled(true);
-
-
     }
 
     public Location getCurrentUserLocation() {
@@ -324,6 +339,66 @@ public class ActivityMap extends AppCompatActivity
         @Override
         public void onLocationChanged(@NonNull Location location) {
 //      1m 이내에 개구리 있으면 애니메이션 주기
+        }
+    };
+
+
+
+    /////여기서부터는 교육 내용 실습한 내 위치 찾기 기능
+//    내가 쓴 방법은 Location Manager로 찾았었으나 구글 내위치 검색 라이브러리 쓰는 방법
+
+    Location myLocation;
+    FusedLocationProviderClient locationProviderClient;
+    void requestMyLocation(String key){
+        //Google Map에서 사용하고 있는 내위치검색 API 라이브러리 적용 Fused Location API : play-service-location
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // 실시간 위치검색 조건 설정
+        LocationRequest request = LocationRequest.create();
+        request.setInterval(1000); //1ch
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {return;}
+
+
+        if (key.equals("setMap")){
+            Log.i("newFrog", "setMap");
+            locationProviderClient.requestLocationUpdates(request, locationCallback, Looper.getMainLooper());
+        }
+        if(key.equals("makeNewFrogDB")) {
+            Log.i("newFrog", "make New FRog1");
+            locationProviderClient.requestLocationUpdates(request, locationCallback2, Looper.getMainLooper());
+        }
+    }
+
+
+    LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull @NotNull LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            myLocation = locationResult.getLastLocation();
+            locationProviderClient.removeLocationUpdates(locationCallback);
+
+            //위치정보 얻기 완료
+            userLocation = myLocation;
+            setGoogleMap();
+            Log.i("newFrog", "ddd");
+        }
+    };
+
+    LocationCallback locationCallback2 = new LocationCallback() {
+        @Override
+        public void onLocationResult(@NonNull @NotNull LocationResult locationResult) {
+            super.onLocationResult(locationResult);
+            myLocation = locationResult.getLastLocation();
+            locationProviderClient.removeLocationUpdates(locationCallback2);
+
+            //위치정보 얻기 완료
+            userLocation = myLocation;
+            makeNewFrogDB();
         }
     };
 

@@ -135,11 +135,11 @@ public class ActivityFight extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void changeFrogDB(String dataName , int data) {
+    private void changeFrogDB(String dataKey, int dataValue) {
         //frog_size, frog_power
          SQLiteDatabase database_frog = this.openOrCreateDatabase("frogsDB.db", this.MODE_PRIVATE, null);
          database_frog.execSQL("UPDATE frogs_data_set SET "
-                +dataName + "=" + data
+                + dataKey + "=" + dataValue
                 +" WHERE frog_key =" + userFrogSet.getFrogKey()
         );
     }

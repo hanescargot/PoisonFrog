@@ -32,10 +32,6 @@ import com.pyrion.game.poison_frog.center.Exercise.AlarmReceiver;
 import com.pyrion.game.poison_frog.center.FragmentCenter;
 import com.pyrion.game.poison_frog.data.Frog;
 import com.pyrion.game.poison_frog.data.OneFrogSet;
-import com.pyrion.game.poison_frog.kotlin_nfc_read;
-import com.pyrion.game.poison_frog.kotlin_nfc_write;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
@@ -229,10 +225,10 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
         }
         return;
     }
-
     @Override
     public int getItemCount() {
-        return oneFrogSetList.size();
+        oneFrogSetList = getOneFrogSetList();
+    return oneFrogSetList.size();
     }
 
     class ViewHolderFrog extends RecyclerView.ViewHolder{
@@ -287,14 +283,12 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
 
         }
     }
-    private void updateSelectedFrogDB(String dataName ,int data, int frogKey) {
+    private void updateSelectedFrogDB(String columnName, int data, int frogKey) {
         database_frog = context.openOrCreateDatabase("frogsDB.db", context.MODE_PRIVATE, null);
         database_frog.execSQL("UPDATE frogs_data_set SET "
-                +dataName+"=" + data
+                + columnName +"=" + data
                 + " WHERE frog_key =" + frogKey
         );
-
-
     }
 
     class ViewHolderEvent extends RecyclerView.ViewHolder{
@@ -381,6 +375,9 @@ public class AdapterRecyclerViewTrade extends RecyclerView.Adapter {
             );
         }
 
+    }
+    ArrayList<OneFrogSet> getOneFrogSetList(){
+        return oneFrogSetList;
     }
 
     void setOneFrogSetList(){

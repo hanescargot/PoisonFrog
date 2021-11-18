@@ -48,6 +48,8 @@ public class ActivityCamera extends AppCompatActivity {
     ImageView ivFrog;
     View ivNoFrog;
 
+    int MAX_DISTANCE = 100; //100m 이내의 개구리만 카메라에 보여진다.
+
     View alertNewFrogName;
     AlertDialog frogNameAlertDialog;
     EditText newFrogNameEditText;
@@ -90,18 +92,25 @@ public class ActivityCamera extends AppCompatActivity {
             roadFrogLatLng = gson.fromJson(getPref("locations" + index), doubleType);
             Location frogLocation = new Location("");
 
-            if(roadFrogLatLng[0]!=-1) {
-                frogLocation.setLatitude(roadFrogLatLng[0]);
-                frogLocation.setLongitude(roadFrogLatLng[1]);
 
-                if(minDistance==null || minDistance>userLocation.distanceTo(frogLocation)){
-                    minDistanceIndex=index;
-                    minDistance=userLocation.distanceTo(frogLocation);
+            try {
+                if(roadFrogLatLng[0]!=-1) {
+                    frogLocation.setLatitude(roadFrogLatLng[0]);
+                    frogLocation.setLongitude(roadFrogLatLng[1]);
+
+                    if(minDistance==null || minDistance>userLocation.distanceTo(frogLocation)){
+                        minDistanceIndex=index;
+                        minDistance=userLocation.distanceTo(frogLocation);
+                    }
                 }
+            }catch (Exception e){
+                //New frog
+                Toast.makeText(this, "개구리가 모두 숨어있습니다. 지도를 한번 봐주세요", Toast.LENGTH_SHORT).show();
             }
+
         }
-        if(minDistanceIndex != -1 && minDistance!=null && minDistance<10){
-            //10미터 이내에 개구리가 있다.
+        if(minDistanceIndex != -1 && minDistance!=null && minDistance<MAX_DISTANCE){
+            //100미터 이내에 개구리가 있다.
             return true;
         }else{
             return false;
@@ -271,7 +280,14 @@ public class ActivityCamera extends AppCompatActivity {
     void addNewServerFrogDB(){
         SQLiteDatabase database_frog;
         database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
-        database_frog.execSQL("INSERT INTO frogs_data_set(house_type, creator_name, frog_name, frog_state, frog_species, frog_size, frog_power) VALUES('"
+        database_frog.execSQL("INSERT INTO frogs_data_set(" +
+                "house_type," +
+                " creator_name," +
+                " frog_name," +
+                " frog_state," +
+                " frog_species," +
+                " frog_size," +
+                " frog_power) VALUES('"
                 + Frog.HOUSE_TYPE_LENT + "','"
                 + nearOneFrogSet.getCreatorName() + "','"
                 + nearOneFrogSet.getFrogName() + "','"
@@ -279,8 +295,7 @@ public class ActivityCamera extends AppCompatActivity {
                 + nearOneFrogSet.getFrogSpecies() + "','"
                 + nearOneFrogSet.getFrogSize() + "','"
                 + nearOneFrogSet.getFrogPower() + "')"
-        );
-    }
+        ); }
 
     ArrayList<Location> serverRoadFrogLocations = new ArrayList<>();
     ArrayList<String> serverKeyList = new ArrayList<>();

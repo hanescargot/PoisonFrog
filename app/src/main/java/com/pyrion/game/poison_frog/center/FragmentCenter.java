@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -97,7 +98,7 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inflater= getLayoutInflater();
+        inflater= getActivity().getLayoutInflater();
 
         deadFrogMsgs = getResources().getStringArray(R.array.dead_frog_msg);
         soledFrogMsgs = getResources().getStringArray(R.array.soled_frog_msg);
@@ -182,7 +183,7 @@ public class FragmentCenter extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.i("Lifecycle:","Fragment onResume 1page");
         // set current data from DB
         getCurrentUserDB();
         getCurrentFrogDB();
@@ -191,6 +192,7 @@ public class FragmentCenter extends Fragment {
         // set userDB from current and set money UI
         moneyStringTextView.setText((currentUserMoney)+"");
         updateSelectedFrogState(currentFrogSet.getFrogState()); //set frog UI
+        getActivity().getIntent().putExtra("fragment_navigation", 1);
     }
 
     private void changeExerciseState( double currentTime) {
@@ -624,7 +626,7 @@ public class FragmentCenter extends Fragment {
 
     void showFrogDataAlert() {
         inflater = LayoutInflater.from( getActivity() );
-        AlertDialog.Builder frogDataDialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder frogDataDialogBuilder = new AlertDialog.Builder(getActivity());
         View viewFrogData = inflater.inflate(R.layout.alert_frog_data, null);
 
         ((TextView)viewFrogData.findViewById(R.id.frog_name)).setText(currentFrogSet.getFrogName());
@@ -649,7 +651,7 @@ public class FragmentCenter extends Fragment {
         exerciseTime = exerciseTimeMax;
 
         inflater = LayoutInflater.from( getActivity() );
-        AlertDialog.Builder timerAlertBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder timerAlertBuilder = new AlertDialog.Builder(getActivity());
         View viewTimerAlert = inflater.inflate(R.layout.alert_exercse_time_setting, null);
 
         TextView setTime =viewTimerAlert.findViewById(R.id.tv_time);
@@ -1102,6 +1104,7 @@ public class FragmentCenter extends Fragment {
             }
         }
         if(countUserDB == 0){
+            //unboxing;
             showNewUserNameAlert();
         }
 

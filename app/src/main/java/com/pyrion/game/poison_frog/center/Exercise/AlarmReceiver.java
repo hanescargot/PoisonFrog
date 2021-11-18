@@ -147,7 +147,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setAutoCancel(true);
 
         // 알림창 아이콘
-         builder.setSmallIcon(R.drawable.normal);
+         builder.setSmallIcon(R.drawable.frog_0_normal);
          builder.setLargeIcon(BitmapFactory.decodeResource( context.getResources(), frogSpecies));
 
         // 알림창 실행

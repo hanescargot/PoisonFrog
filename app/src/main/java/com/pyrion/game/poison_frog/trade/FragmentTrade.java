@@ -34,11 +34,17 @@ public class FragmentTrade extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("Lifecycle:","Fragment onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("Lifecycle:","Fragment onCreateView");
         view = inflater.inflate(R.layout.fragment_trade_page, container, false);
+        tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
+        adapter = new AdapterRecyclerViewTrade(getActivity(), view);
+        tradeFrogRecyclerView.setAdapter(adapter);
+
 
         ImageView map = view.findViewById(R.id.map);
         ImageView camera = view.findViewById(R.id.camera);
@@ -79,7 +85,7 @@ public class FragmentTrade extends Fragment {
                         Toast.makeText(getActivity(), "ask", Toast.LENGTH_SHORT).show();
                         requestPermissions(permissions,10);
                     }else{
-                        getActivity().getIntent().putExtra("fragment_navigation", 2);
+                        getActivity().getIntent().putExtra("fragment_navigation", PageNumber);
                         Intent intent = new Intent(getActivity(), ActivityCamera.class);
                         getActivity().startActivity(intent);
                     }
@@ -91,6 +97,7 @@ public class FragmentTrade extends Fragment {
 
         return view;
     }
+    int PageNumber = 2;
     //다이얼로그 선택하면 발동하는 메소드
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
@@ -126,9 +133,10 @@ public class FragmentTrade extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        tradeFrogRecyclerView = view.findViewById(R.id.trade_frog_recyclerview);
-        adapter = new AdapterRecyclerViewTrade(getActivity(), view);
-        tradeFrogRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        Log.i("Lifecycle:","Fragment onResume 2page");
+        getActivity().getIntent().putExtra("fragment_navigation", 2);
+
     }
 
     @Override
@@ -139,7 +147,7 @@ public class FragmentTrade extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Log.i("Lifecycle:","Fragment onViewCreated");
     }
 
 }

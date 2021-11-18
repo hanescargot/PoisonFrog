@@ -67,52 +67,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tab"
-        android:orientation="vertical"
-        >
+        android:layout_marginTop="19dp"
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/egg_src"
             android:layout_width="300dp"
-            android:layout_gravity="center_horizontal"
             android:layout_height="300dp"
+            android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_egg" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/egg_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
             android:layout_weight="1"
             android:background="@color/white"
-            android:layout_alignParentBottom="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-
-            android:scrollbarSize="10dp"
-            android:scrollbarFadeDuration="0"
             android:scrollbarAlwaysDrawHorizontalTrack="true"
-            >
 
-<!--            <LinearLayout-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_width="780dp"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:weightSum="3">-->
-<!--                <ImageView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:src="@drawable/big_blue"/>-->
-<!--                <ImageView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:src="@drawable/big_blue"/>-->
-<!--                <ImageView-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:src="@drawable/big_blue"/>-->
-<!--            </LinearLayout>-->
+            android:scrollbarFadeDuration="0"
+            android:scrollbarSize="10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            <!--            <LinearLayout-->
+            <!--                android:orientation="horizontal"-->
+            <!--                android:layout_width="780dp"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:weightSum="3">-->
+            <!--                <ImageView-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:src="@drawable/big_blue"/>-->
+            <!--                <ImageView-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:src="@drawable/big_blue"/>-->
+            <!--                <ImageView-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:src="@drawable/big_blue"/>-->
+            <!--            </LinearLayout>-->
 
         </androidx.recyclerview.widget.RecyclerView>
 

@@ -88,6 +88,8 @@ public class FragmentEgg extends Fragment {
         adapter = new AdapterRecyclerViewEgg(getActivity(), eggItemArrayList, userMoney, textViewMoney, eggSrc);
         eggRecyclerView.setAdapter(adapter);
 
+        getActivity().getIntent().putExtra("fragment_navigation", 0);
+
 
     }
 

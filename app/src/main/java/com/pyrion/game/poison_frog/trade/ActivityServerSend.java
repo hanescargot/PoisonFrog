@@ -9,16 +9,13 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -26,29 +23,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.core.Tag;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pyrion.game.poison_frog.R;
 import com.pyrion.game.poison_frog.data.Frog;
 import com.pyrion.game.poison_frog.data.OneFrogSet;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ActivityServerSend extends AppCompatActivity {
 
@@ -92,13 +81,14 @@ public class ActivityServerSend extends AppCompatActivity {
 //        //답장 받으면 데이터 삭제하고 끝 // 내 개구리 DB에서 삭제하기.
 //        //firebase DB관리자 객체 소환
 //        //DB
-        Map<String, Object> user = new HashMap<>();
-        user.put("frog_set", sharedFrogSetString);
-        user.put("location", sharedFrogLatLngString);
-        firebaseKey = sharedFrogLatLngString+currentFrogKey;
+        Random random = new Random();
+        Map<String, Object> sendData = new HashMap<>();
+        sendData.put("frog_set", sharedFrogSetString);
+        sendData.put("location", sharedFrogLatLngString);
+        firebaseKey = sharedFrogLatLngString+currentFrogKey+random.nextInt(1000);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("road_frogs").document(firebaseKey)
-                .set(user);
+                .set(sendData);
 
 //        todo 누가 개구리 가져가면 (서버에 공유되던 데이터가 없어 진다면 )개구리 DB 삭제하고 finish()
        // 변경사항 수신 대기
@@ -186,10 +176,10 @@ public class ActivityServerSend extends AppCompatActivity {
         super.finish();
     }
 
-    public void delFrogDB(int currentFrogKey){
+    public void delFrogDB(int frogKey){
         SQLiteDatabase database_frog = openOrCreateDatabase("frogsDB.db", MODE_PRIVATE, null);
         database_frog.execSQL("DELETE FROM frogs_data_set "+
-                "WHERE frog_key =" +"'"+currentFrogKey+"'");
+                "WHERE frog_key =" +"'"+ frogKey +"'");
 
         SQLiteDatabase database_user = openOrCreateDatabase("userDB.db", MODE_PRIVATE, null);
         Cursor cursor_user = database_user.rawQuery("SELECT * FROM user_data_set", null);

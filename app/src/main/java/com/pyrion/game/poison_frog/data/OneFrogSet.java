@@ -11,16 +11,16 @@ public class OneFrogSet {
     private int frogSpecies;
     private int frogSize;
     private int frogPower;
-    private int getFrogState;
+    private int frogState;
 
     // constructor
 
     public OneFrogSet(){
-        //default is buy new house
+        //default dataset
         this.houseType = Frog.HOUSE_TYPE_BUY_NEW;
         this.creatorName = "Anonymous";
         this.frogName = "NullFrogName";
-        this.getFrogState = Frog.STATE_ALIVE;
+        this.frogState = Frog.STATE_ALIVE;
         this.frogSpecies = Frog.SPECIES_BASIC;
         this.frogSize = Frog.SIZE_DEFAULT;
         this.frogPower = Frog.POWER_DEFAULT;
@@ -39,7 +39,7 @@ public class OneFrogSet {
         this.houseType = houseType;
         this.creatorName = creatorName;
         this.frogName = frogName;
-        this.getFrogState = frogSTate;
+        this.frogState = frogSTate;
         this.frogSpecies = frogSpecies;
         this.frogSize = frogSize;
         this.frogPower = frogPower;
@@ -80,13 +80,13 @@ public class OneFrogSet {
     }
 
     public int getFrogState() {
-        return getFrogState;
+        return frogState;
     }
 
 
 
     public int getFrogSrc(){
-        int frogState = this.getFrogState;
+        int frogState = this.frogState;
         switch (frogState){
             case (Frog.STATE_ALIVE):
             case (Frog.STATE_EXERCISE):
@@ -97,7 +97,7 @@ public class OneFrogSet {
                 return R.drawable.main_gift;
         }
         // Null Image
-        return (R.drawable.normal);
+        return (R.drawable.frog_0_normal);
     }
 
 
@@ -137,7 +137,7 @@ public class OneFrogSet {
 
 
     public void setFrogState(int frogState) {
-        this.getFrogState = frogState;
+        this.frogState = frogState;
     }
 
 

@@ -24,7 +24,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_below="@id/enemy_name"
-        android:src="@drawable/normal"/>
+        android:src="@drawable/frog_0_normal"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -207,7 +207,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginRight="32dp"
-            android:src="@drawable/ic_arrow_left"
+            android:src="@drawable/magic_wand"
+            android:padding="16dp"
             android:layout_toLeftOf="@+id/my_frog_iv"
             android:layout_above="@+id/my_frog_iv"
             android:onClick="onSpecialSkill"/>
@@ -216,7 +217,8 @@
             android:id="@+id/sill_normal"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_arrow_left"
+            android:src="@drawable/sword"
+            android:padding="16dp"
             android:layout_toRightOf="@+id/skill_special"
             android:layout_above="@+id/skill_special"
             android:onClick="onNormalSkill"/>
@@ -224,7 +226,8 @@
             android:id="@+id/skill_run"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_arrow_left"
+            android:src="@drawable/lake"
+            android:padding="16dp"
             android:layout_marginLeft="32dp"
             android:layout_toLeftOf="@+id/skill_special"
             android:layout_below="@+id/skill_special"

@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.pyrion.game.poison_frog.R;
 
@@ -33,11 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        Log.i("Lifecycle:","Activity onResume");
         super.onResume();
         intent = getIntent();
         fragmentNavigation = intent.getIntExtra("fragment_navigation", 1);
         viewPager.setCurrentItem(fragmentNavigation, false);
-
         getIntent().removeExtra("fragment_navigation");
     }
 

@@ -47,6 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/tv"
+            android:background="@drawable/round_box_black_btn"
+            android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:text="무료로 구매하기"/>
 

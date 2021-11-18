@@ -15,18 +15,15 @@ public class Frog {
     public static final int STATE_DEATH = 3;
     public static final int STATE_EXERCISE = 4;
 
-    //frog state
+    //frog species
     public static final int FROG_SPECIES_COUNT = 7;
-    public static final int SPECIES_BASIC = R.drawable.normal;
-
-    public static final int SPECIES_SPIDER = R.drawable.spider;
-    public static final int SPECIES_HORN = R.drawable.horn;
-
-    public static final int SPECIES_JELLY = R.drawable.jelly;
-    public static final int SPECIES_DEATH = R.drawable.death;
-
-    public static final int SPECIES_SNAKE = R.drawable.snake;
-    public static final int SPECIES_FIRE = R.drawable.fire;
+    public static final int SPECIES_BASIC = R.drawable.frog_0_normal;
+    public static final int SPECIES_SPIDER = R.drawable.frog_1_spider;
+    public static final int SPECIES_HORN = R.drawable.frog_2_horn;
+    public static final int SPECIES_JELLY = R.drawable.frog_3_jelly;
+    public static final int SPECIES_DEATH = R.drawable.frog_4_death;
+    public static final int SPECIES_SNAKE = R.drawable.frog_5_snake;
+    public static final int SPECIES_FIRE = R.drawable.frog_6_fire;
 
     //house type
     public static final int HOUSE_TYPE_BUY_NEW = 0;
