@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background= "#00000000">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:layout_height="300dp"
+        android:paddingBottom="24dp"
+        android:src="@drawable/fly_wood_notice"/>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="새 개구리 이름을 입력하세요"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp"/>
+        <EditText
+            android:id="@+id/new_frog_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="개구리 이름 "
+            android:textSize="16dp"
+            android:inputType="text"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="right">
+            <ImageView
+                android:id="@+id/main_buy_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/main_buy_button"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</FrameLayout>

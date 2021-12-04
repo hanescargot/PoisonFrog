@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="320dp"
+        android:layout_gravity="top"
+        >
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/trade_center_bg" />
+
+
+<!--        main frog -->
+        <ImageView
+            android:id="@+id/trade_frog_center_src"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/frog_0_normal"/>
+
+        <TextView
+
+            android:id="@+id/notice_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_below="@id/trade_frog_center_src"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="16dp"
+            android:textStyle="bold"
+            android:text="개구리를 누르면 공유됩니다."
+            android:textColor="@color/white"
+            />
+    </RelativeLayout>
+
+<!---->
+
+
+    <RelativeLayout
+        android:padding="24dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/wood_bg_big"
+        android:layout_width="wrap_content"
+        android:layout_height="480dp">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_alignParentBottom="true"
+            android:id="@+id/trade_frog_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"/>
+    </RelativeLayout>
+
+
+    <!--top wood-->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_wood"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="80dp"
+        />
+
+
+
+
+    <LinearLayout
+        android:id="@+id/icon"
+        android:layout_gravity="top|right"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/map"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_map"
+            android:background="@drawable/icon_bg"
+            android:padding="8dp"
+            android:layout_marginRight="8dp"
+            />
+
+        <ImageView
+            android:id="@+id/camera"
+            android:layout_gravity="center_vertical"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_camera"
+            android:background="@drawable/icon_bg"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+
+</FrameLayout>

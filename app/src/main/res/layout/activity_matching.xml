@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pyrion.game.poison_frog.IntroActivity"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/iv_power"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/main_frog_jelly"
+        android:layout_centerInParent="true"
+        android:paddingBottom="96dp"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="비슷한 상대를 찾는 중 입니다."
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="96dp"
+        android:textColor="@color/white"/>
+
+</RelativeLayout>

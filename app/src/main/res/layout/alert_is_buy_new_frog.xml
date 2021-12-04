@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <ImageView
+        android:id="@+id/wood"
+        android:layout_width="240dp"
+        android:layout_height="160dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/fly_wood_notice"/>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:layout_toRightOf="@id/cancel_button"
+        android:textStyle="bold"
+        android:textSize="16dp"
+        android:textColor="@color/white"
+        android:text="새 개구리를 구매하시겠습니까?"/>
+
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignLeft="@id/wood"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="24dp"
+        android:src="@drawable/frog_0_normal"/>
+
+    <ImageView
+        android:id="@+id/cancel_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@id/wood"
+        android:src="@drawable/main_cancel_button" />
+
+    <LinearLayout
+        android:id="@+id/pay_button"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/iv">
+
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="-100"
+            android:layout_marginRight="8dp"
+            android:textSize="24sp"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/main_dollar" />
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

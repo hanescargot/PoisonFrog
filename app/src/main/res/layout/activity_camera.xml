@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <!--    디바이스의 카메라의 미리보기용 뷰-->
+    <!--    프로그래머가 만든 뷰 (SurfaceView를 상속받아서 MyCameraViw를 만든 것임)-->
+    <com.pyrion.game.poison_frog.trade.CameraView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/main_frog_jelly"
+        android:layout_centerInParent="true"/>
+
+    <FrameLayout
+        android:visibility="invisible"
+        android:id="@+id/iv_nofrog"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/fly_wood_notice"
+            />
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10m 이내에 개구리가 없어요!"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            />
+    </FrameLayout>
+
+</RelativeLayout>

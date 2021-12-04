@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="320dp"
+    android:layout_height="240dp"
+
+    android:layout_gravity="center"
+    android:gravity="center"
+    >
+
+    <ImageView
+        android:layout_width="320dp"
+        android:layout_height="240dp"
+        android:background="@drawable/fly_wood_notice"
+        android:layout_centerInParent="true"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:paddingTop="24dp"
+        android:layout_marginStart="0dp">
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv"
+                android:layout_width="80dp"
+                android:layout_height="72dp"
+                android:layout_alignTop="@id/tv"
+                android:layout_toLeftOf="@id/tv"
+                android:src="@drawable/main_frog_jelly" />
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="160dp"
+                android:layout_height="80dp"
+                android:clickable="true"
+                android:maxLines="3"
+                android:padding="8dp"
+                android:text="상대 개구리가 도망쳤습니다."
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/pay_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout"
+            android:layout_marginRight="16dp"
+            android:layout_alignRight="@id/layout"
+            android:clickable="true">
+
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:text="+100"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/main_dollar" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

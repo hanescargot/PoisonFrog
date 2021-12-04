@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="264dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:text="붉은색 개구리알"
+        android:layout_above="@+id/iv_item"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/iv_item"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/main_gift"/>
+    <Button
+        android:id="@+id/btn_price"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Free"
+        android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:layout_below="@+id/iv_item"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
